@@ -1,6 +1,6 @@
 [build]
   publish = "."
-  command = "npm install"
+  command = "npm install && npm install --prefix why-workshop-app"
 
 [functions]
   directory = "why-workshop-app/netlify/functions"
