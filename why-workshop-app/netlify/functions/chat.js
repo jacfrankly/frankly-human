@@ -1,7 +1,5 @@
 import Anthropic from '@anthropic-ai/sdk';
 
-const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
-
 // Global system prompt — cached to reduce token cost by ~90%
 const SYSTEM_PROMPT = `You are a compassionate design coach inside the Why Workshop by Jacinta McMahon (Frankly Human).
 
@@ -200,6 +198,8 @@ export const handler = async (event) => {
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: JSON.stringify({ error: 'Method not allowed' }) };
   }
+
+  const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
   let body;
   try {
