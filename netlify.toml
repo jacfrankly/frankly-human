@@ -1,2 +1,23 @@
 [build]
   publish = "."
+  command = "cd why-workshop-app && npm install"
+
+[functions]
+  directory = "why-workshop-app/netlify/functions"
+  node_bundler = "esbuild"
+
+[[redirects]]
+  from = "/api/chat"
+  to = "/.netlify/functions/chat"
+  status = 200
+
+[[redirects]]
+  from = "/api/subscribe"
+  to = "/.netlify/functions/subscribe"
+  status = 200
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"

@@ -1,0 +1,5 @@
+why-workshop-app/.env
+why-workshop-app/node_modules/
+why-workshop-app/.netlify/
+node_modules/
+.env
