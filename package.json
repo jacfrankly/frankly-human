@@ -1,0 +1,7 @@
+{
+  "name": "frankly-human",
+  "type": "module",
+  "dependencies": {
+    "@anthropic-ai/sdk": "latest"
+  }
+}
