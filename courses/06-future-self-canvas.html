@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>D2M · Module 06 · Future Self Canvas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..900,0..100;1,9..144,300..900,0..100&family=Inter:wght@400;500;600&family=Allura&family=Patrick+Hand&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink:    #100000;
+    --paper:  #FBF7EE;
+    --paper2: #F4EFE2;
+    --sand:   #E0D2B5;
+    --teal:   #47ACA4;
+    --pink:   #FF3990;
+    --yellow: #FFBD59;
+    --plum:   #7A1F4A;
+    --muted:  #7A736B;
+    --w: 1587px;
+    --h: 1123px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #888; display: flex; align-items: flex-start; justify-content: center; min-height: 100vh; padding: 32px; padding-bottom: 72px; font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+  .canvas-outer { width: var(--w); height: var(--h); transform-origin: top center; box-shadow: 0 12px 64px rgba(0,0,0,0.45); }
+  .canvas { width: var(--w); height: var(--h); background: var(--paper); color: var(--ink); display: flex; flex-direction: column; overflow: hidden; }
+
+  /* Header */
+  .canvas-header { background: var(--teal); color: var(--ink); padding: 20px 40px 18px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+  .canvas-header .eyebrow { font-family: 'Inter'; font-size: 9px; letter-spacing: 0.24em; text-transform: uppercase; opacity: 0.55; margin-bottom: 4px; }
+  .canvas-header .module-title { font-family: 'DM Serif Display', serif; font-size: 26px; line-height: 1; letter-spacing: -0.01em; }
+  .canvas-header .module-title em { font-style: italic; color: var(--plum); }
+  .canvas-header-right { text-align: right; }
+  .canvas-header .tagline { font-family: 'Fraunces', serif; font-size: 12px; font-variation-settings: "SOFT" 60, "opsz" 144; font-style: italic; color: rgba(16,0,0,0.6); margin-bottom: 6px; }
+  .canvas-header .brand { font-family: 'Allura', cursive; font-size: 22px; color: var(--plum); line-height: 1; }
+
+  /* Stripe */
+  .stripe { height: 4px; background: linear-gradient(90deg, var(--teal) 0 25%, var(--pink) 25% 50%, var(--yellow) 50% 75%, var(--plum) 75% 100%); flex-shrink: 0; }
+
+  /* Grid */
+  .canvas-body { flex: 1; display: grid; grid-template-columns: 1.2fr 1fr 1fr 1fr; min-height: 0; }
+
+  /* Zone */
+  .zone { border-right: 1px solid var(--ink); display: flex; flex-direction: column; padding: 22px 24px 20px; position: relative; overflow: hidden; }
+  .zone:last-child { border-right: none; }
+  .zone-accent { position: absolute; top: 0; left: 0; right: 0; height: 4px; }
+  .zone-number { font-family: 'Inter'; font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+  .zone-number::before { content: ''; display: inline-block; width: 18px; height: 1px; background: currentColor; }
+  .zone-title { font-family: 'DM Serif Display', serif; font-size: 20px; line-height: 1.05; letter-spacing: -0.01em; margin-bottom: 4px; }
+  .zone-title em { font-style: italic; }
+  .zone-prompt { font-family: 'Fraunces', serif; font-size: 11px; font-variation-settings: "SOFT" 50, "opsz" 144; color: var(--muted); line-height: 1.45; margin-bottom: 14px; }
+
+  /* Lines */
+  .lines { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; }
+  .line { border-bottom: 1px solid var(--sand); height: 28px; flex-shrink: 0; }
+  .line-label { font-family: 'Patrick Hand', cursive; font-size: 9px; letter-spacing: 0.1em; color: var(--muted); padding-bottom: 3px; margin-top: 14px; border-bottom: 1px solid var(--ink); }
+  .line-label:first-child { margin-top: 0; }
+
+  /* Future Self mini-map (zone 1) */
+  .fs-mini { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-bottom: 12px; }
+  .fs-mini-cell { border: 1px solid var(--sand); padding: 6px 8px; }
+  .fs-mini-cell.full { grid-column: span 2; border-color: var(--teal); }
+  .fs-mini-label { font-family: 'Patrick Hand', cursive; font-size: 8.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 3px; }
+  .fs-mini-cell.full .fs-mini-label { color: var(--teal); }
+  .fs-mini-line { border-bottom: 1px dashed var(--sand); height: 16px; margin-bottom: 2px; }
+
+  /* Gap cards (zone 2) */
+  .gap-mini { display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
+  .gap-mini-card { border-left: 2.5px solid; padding: 6px 8px; }
+  .gap-mini-card.identity    { border-color: var(--teal); }
+  .gap-mini-card.behaviour   { border-color: var(--pink); }
+  .gap-mini-card.environment { border-color: var(--yellow); }
+  .gap-mini-label { font-family: 'Patrick Hand', cursive; font-size: 8.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 3px; }
+  .gap-mini-line { border-bottom: 1px dashed var(--sand); height: 16px; margin-bottom: 2px; }
+
+  /* Bridge visual (zone 3) */
+  .bridge-row { display: flex; align-items: stretch; gap: 0; margin-bottom: 10px; }
+  .bridge-node { flex: 1; border: 1.5px solid var(--ink); padding: 8px 10px; }
+  .bridge-node.future { border-color: var(--teal); background: rgba(71,172,164,0.07); }
+  .bridge-node-label { font-family: 'Patrick Hand', cursive; font-size: 8px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 3px; }
+  .bridge-node.future .bridge-node-label { color: var(--teal); }
+  .bridge-node-line { border-bottom: 1px dashed var(--sand); height: 14px; margin-bottom: 2px; }
+  .bridge-arrow { font-family: 'DM Serif Display', serif; font-size: 14px; color: var(--muted); padding: 0 5px; display: flex; align-items: center; flex-shrink: 0; }
+
+  /* Pull quote */
+  .pull-quote { font-family: 'DM Serif Display', serif; font-size: 12px; font-style: italic; line-height: 1.4; color: var(--plum); padding: 8px 12px; border-left: 2px solid var(--teal); margin: 8px 0 12px; background: rgba(71,172,164,0.07); }
+
+  /* Shift box (zone 4) */
+  .shift-box { border: 1.5px solid var(--ink); padding: 10px 12px; margin-bottom: 10px; }
+  .shift-box-label { font-family: 'Patrick Hand', cursive; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+  .shift-box-line { border-bottom: 1px solid var(--ink); height: 24px; margin-bottom: 4px; }
+  .shift-box-sub  { border-bottom: 1px dashed var(--sand); height: 18px; }
+
+  /* Takeaway strip */
+  .takeaway { border-top: 1px solid var(--ink); background: var(--paper2); padding: 12px 40px; display: flex; align-items: center; gap: 24px; flex-shrink: 0; }
+  .takeaway-label { font-family: 'Inter'; font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; white-space: nowrap; color: var(--teal); font-weight: 600; }
+  .takeaway-line  { flex: 1; border-bottom: 1.5px solid var(--teal); }
+  .takeaway-sig   { font-family: 'Allura', cursive; font-size: 17px; color: var(--muted); white-space: nowrap; line-height: 1; }
+
+  /* Print bar */
+  .print-bar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(16,0,0,0.85); color: #FBF7EE; display: flex; align-items: center; justify-content: center; gap: 24px; padding: 14px; font-family: 'Inter'; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; }
+  .print-bar button { background: var(--teal); color: var(--ink); border: none; padding: 10px 24px; font-family: 'Inter'; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; cursor: pointer; font-weight: 600; }
+  .print-bar button:hover { background: #379b93; }
+  .print-bar a { color: var(--sand); text-decoration: none; opacity: 0.7; }
+  .print-bar a:hover { opacity: 1; }
+
+  @media print {
+    @page { size: A3 landscape; margin: 0; }
+    html, body { width: 420mm; height: 297mm; margin: 0; padding: 0; overflow: hidden; background: none; display: block; }
+    .canvas-outer { transform: none !important; width: 420mm; height: 297mm; box-shadow: none; page-break-after: avoid; }
+    .canvas { width: 420mm; height: 297mm; overflow: hidden; }
+    .print-bar { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="canvas-outer" id="canvasOuter">
+  <div class="canvas">
+
+    <div class="canvas-header">
+      <div>
+        <div class="eyebrow">Design to Me · Module 06</div>
+        <div class="module-title">Future <em>Self</em></div>
+      </div>
+      <div class="canvas-header-right">
+        <div class="tagline">"You can't design a life you haven't imagined."</div>
+        <div class="brand">frankly human.</div>
+      </div>
+    </div>
+
+    <div class="stripe"></div>
+
+    <div class="canvas-body">
+
+      <!-- Zone 1: Future Self Map -->
+      <div class="zone">
+        <div class="zone-accent" style="background:var(--teal);"></div>
+        <div class="zone-number">01 · Future Self Map</div>
+        <div class="zone-title">Who I'm <em>Becoming</em></div>
+        <p class="zone-prompt">12–18 months from now. Not a fantasy — a direction.</p>
+
+        <div class="fs-mini">
+          <div class="fs-mini-cell full">
+            <div class="fs-mini-label">Identity — who I am becoming</div>
+            <div class="fs-mini-line"></div>
+            <div class="fs-mini-line"></div>
+          </div>
+          <div class="fs-mini-cell">
+            <div class="fs-mini-label">Behaviour</div>
+            <div class="fs-mini-line"></div>
+            <div class="fs-mini-line"></div>
+          </div>
+          <div class="fs-mini-cell">
+            <div class="fs-mini-label">Environment</div>
+            <div class="fs-mini-line"></div>
+            <div class="fs-mini-line"></div>
+          </div>
+          <div class="fs-mini-cell">
+            <div class="fs-mini-label">Relationships</div>
+            <div class="fs-mini-line"></div>
+            <div class="fs-mini-line"></div>
+          </div>
+          <div class="fs-mini-cell">
+            <div class="fs-mini-label">Work</div>
+            <div class="fs-mini-line"></div>
+            <div class="fs-mini-line"></div>
+          </div>
+        </div>
+
+        <div class="lines" style="flex:1;">
+          <div class="line-label">What feels most alive in this version of me…</div>
+          <div class="line"></div>
+          <div class="line"></div>
+        </div>
+      </div>
+
+      <!-- Zone 2: Gap Identification -->
+      <div class="zone">
+        <div class="zone-accent" style="background:var(--pink);"></div>
+        <div class="zone-number">02 · Gap Identification</div>
+        <div class="zone-title">The <em>Gaps</em></div>
+        <p class="zone-prompt">Not failures — design opportunities. Name them honestly.</p>
+
+        <div class="gap-mini">
+          <div class="gap-mini-card identity">
+            <div class="gap-mini-label">Identity gap</div>
+            <div class="gap-mini-line"></div>
+            <div class="gap-mini-line"></div>
+          </div>
+          <div class="gap-mini-card behaviour">
+            <div class="gap-mini-label">Behaviour gap</div>
+            <div class="gap-mini-line"></div>
+            <div class="gap-mini-line"></div>
+          </div>
+          <div class="gap-mini-card environment">
+            <div class="gap-mini-label">Environment / support gap</div>
+            <div class="gap-mini-line"></div>
+            <div class="gap-mini-line"></div>
+          </div>
+        </div>
+
+        <div class="lines" style="flex:1;">
+          <div class="line-label">The gap that matters most right now…</div>
+          <div class="line"></div>
+          <div class="line"></div>
+          <div class="line-label">What closing it would make possible…</div>
+          <div class="line"></div>
+          <div class="line"></div>
+        </div>
+      </div>
+
+      <!-- Zone 3: Behaviour Bridge -->
+      <div class="zone">
+        <div class="zone-accent" style="background:var(--yellow);"></div>
+        <div class="zone-number">03 · Behaviour Bridge</div>
+        <div class="zone-title">The Smallest <em>Step</em></div>
+        <p class="zone-prompt">You don't become your future self through willpower — you become them through behaviour.</p>
+
+        <div class="bridge-row">
+          <div class="bridge-node">
+            <div class="bridge-node-label">Present self</div>
+            <div class="bridge-node-line"></div>
+            <div class="bridge-node-line"></div>
+          </div>
+          <div class="bridge-arrow">→</div>
+          <div class="bridge-node future">
+            <div class="bridge-node-label">Behaviour bridge</div>
+            <div class="bridge-node-line"></div>
+            <div class="bridge-node-line"></div>
+          </div>
+        </div>
+
+        <div class="lines" style="flex:1;">
+          <div class="line-label">The 5% version of this behaviour…</div>
+          <div class="line"></div>
+          <div class="line"></div>
+          <div class="line-label">What would make this easier…</div>
+          <div class="line"></div>
+          <div class="line"></div>
+          <div class="line-label">The value this behaviour honours…</div>
+          <div class="line"></div>
+          <div class="line"></div>
+        </div>
+      </div>
+
+      <!-- Zone 4: Integration -->
+      <div class="zone">
+        <div class="zone-accent" style="background:var(--plum);"></div>
+        <div class="zone-number">04 · Integration</div>
+        <div class="zone-title">What I'm <em>Choosing</em></div>
+        <p class="zone-prompt">One shift. One behaviour. One week.</p>
+
+        <div class="pull-quote">"Your future self becomes real the moment you act like them."</div>
+
+        <div class="shift-box">
+          <div class="shift-box-label">The one behaviour I'm beginning this week</div>
+          <div class="shift-box-line"></div>
+          <div class="shift-box-sub"></div>
+        </div>
+
+        <div class="lines" style="flex:1;">
+          <div class="line-label">What I want to carry into Module 07…</div>
+          <div class="line"></div>
+          <div class="line"></div>
+          <div class="line-label">The constraint this behaviour respects…</div>
+          <div class="line"></div>
+          <div class="line"></div>
+          <div class="line-label">What my future self would say to me today…</div>
+          <div class="line"></div>
+          <div class="line"></div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="takeaway">
+      <div class="takeaway-label">One behaviour I'll begin this week →</div>
+      <div class="takeaway-line"></div>
+      <div class="takeaway-sig">frankly human.</div>
+    </div>
+
+  </div>
+</div>
+
+<div class="print-bar">
+  <a href="06-future-self.html">← Back to module</a>
+  <span>Module 06 · Future Self — A3 Canvas</span>
+  <button onclick="window.print()">Print A3 →</button>
+</div>
+
+<script>
+  function scaleCanvas() {
+    var outer = document.getElementById('canvasOuter');
+    var scale = Math.min(1, (window.innerWidth - 64) / 1587);
+    outer.style.transform = 'scale(' + scale + ')';
+  }
+  scaleCanvas();
+  window.addEventListener('resize', scaleCanvas);
+</script>
+</body>
+</html>

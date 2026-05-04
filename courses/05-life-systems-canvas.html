@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>D2M · Module 05 · Life Systems Canvas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..900,0..100;1,9..144,300..900,0..100&family=Inter:wght@400;500;600&family=Allura&family=Patrick+Hand&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink:    #100000;
+    --paper:  #FBF7EE;
+    --paper2: #F4EFE2;
+    --sand:   #E0D2B5;
+    --teal:   #47ACA4;
+    --pink:   #FF3990;
+    --yellow: #FFBD59;
+    --plum:   #7A1F4A;
+    --muted:  #7A736B;
+    --w: 1587px;
+    --h: 1123px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #888; display: flex; align-items: flex-start; justify-content: center; min-height: 100vh; padding: 32px; padding-bottom: 72px; font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+  .canvas-outer { width: var(--w); height: var(--h); transform-origin: top center; box-shadow: 0 12px 64px rgba(0,0,0,0.45); }
+  .canvas { width: var(--w); height: var(--h); background: var(--paper); color: var(--ink); display: flex; flex-direction: column; overflow: hidden; }
+
+  /* Header */
+  .canvas-header { background: var(--plum); color: var(--paper); padding: 20px 40px 18px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+  .canvas-header .eyebrow { font-family: 'Inter'; font-size: 9px; letter-spacing: 0.24em; text-transform: uppercase; opacity: 0.65; margin-bottom: 4px; }
+  .canvas-header .module-title { font-family: 'DM Serif Display', serif; font-size: 26px; line-height: 1; letter-spacing: -0.01em; }
+  .canvas-header .module-title em { font-style: italic; color: var(--yellow); }
+  .canvas-header-right { text-align: right; }
+  .canvas-header .tagline { font-family: 'Fraunces', serif; font-size: 12px; font-variation-settings: "SOFT" 60, "opsz" 144; font-style: italic; color: rgba(255,255,255,0.7); margin-bottom: 6px; }
+  .canvas-header .brand { font-family: 'Allura', cursive; font-size: 22px; color: rgba(255,255,255,0.85); line-height: 1; }
+
+  /* Stripe */
+  .stripe { height: 4px; background: linear-gradient(90deg, var(--teal) 0 25%, var(--pink) 25% 50%, var(--yellow) 50% 75%, var(--plum) 75% 100%); flex-shrink: 0; }
+
+  /* Grid */
+  .canvas-body { flex: 1; display: grid; grid-template-columns: 1.1fr 1fr 1fr 1fr; min-height: 0; }
+
+  /* Zone */
+  .zone { border-right: 1px solid var(--ink); display: flex; flex-direction: column; padding: 22px 24px 20px; position: relative; overflow: hidden; }
+  .zone:last-child { border-right: none; }
+  .zone-accent { position: absolute; top: 0; left: 0; right: 0; height: 4px; }
+  .zone-number { font-family: 'Inter'; font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+  .zone-number::before { content: ''; display: inline-block; width: 18px; height: 1px; background: currentColor; }
+  .zone-title { font-family: 'DM Serif Display', serif; font-size: 20px; line-height: 1.05; letter-spacing: -0.01em; margin-bottom: 4px; }
+  .zone-title em { font-style: italic; }
+  .zone-prompt { font-family: 'Fraunces', serif; font-size: 11px; font-variation-settings: "SOFT" 50, "opsz" 144; color: var(--muted); line-height: 1.45; margin-bottom: 14px; }
+
+  /* Lines */
+  .lines { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; }
+  .line { border-bottom: 1px solid var(--sand); height: 28px; flex-shrink: 0; }
+  .line-label { font-family: 'Patrick Hand', cursive; font-size: 9px; letter-spacing: 0.1em; color: var(--muted); padding-bottom: 3px; margin-top: 14px; border-bottom: 1px solid var(--ink); }
+  .line-label:first-child { margin-top: 0; }
+
+  /* Systems mini-grid (zone 1) */
+  .systems-mini { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-bottom: 12px; }
+  .system-cell { padding: 7px 8px; border-left: 3px solid; }
+  .system-cell.work  { border-color: var(--teal);   background: rgba(71,172,164,0.08); }
+  .system-cell.rel   { border-color: var(--pink);   background: rgba(255,57,144,0.06); }
+  .system-cell.self  { border-color: var(--yellow); background: rgba(255,189,89,0.1);  }
+  .system-cell.env   { border-color: var(--plum);   background: rgba(122,31,74,0.06);  }
+  .system-cell-label { font-family: 'Patrick Hand', cursive; font-size: 8.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 3px; }
+  .system-cell-line  { border-bottom: 1px dashed var(--sand); height: 16px; margin-bottom: 2px; }
+
+  /* Friction row (zone 2) */
+  .friction-box { border: 1.5px solid var(--ink); padding: 9px 11px; margin-bottom: 10px; }
+  .friction-box-label { font-family: 'Patrick Hand', cursive; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 5px; }
+  .friction-box-line { border-bottom: 1px solid var(--ink); height: 22px; margin-bottom: 4px; }
+  .friction-box-sub  { border-bottom: 1px dashed var(--sand); height: 18px; }
+
+  /* Leverage visual (zone 3) */
+  .leverage-row { display: flex; align-items: center; gap: 0; margin-bottom: 12px; }
+  .leverage-node { flex: 1; border: 1.5px solid var(--ink); padding: 7px 8px; text-align: center; }
+  .leverage-node-label { font-family: 'Patrick Hand', cursive; font-size: 8px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 3px; }
+  .leverage-node-line  { border-bottom: 1px dashed var(--sand); height: 14px; }
+  .leverage-arrow { font-family: 'DM Serif Display', serif; font-size: 14px; color: var(--muted); padding: 0 5px; flex-shrink: 0; }
+
+  /* Pull quote */
+  .pull-quote { font-family: 'DM Serif Display', serif; font-size: 12px; font-style: italic; line-height: 1.4; color: var(--plum); padding: 8px 12px; border-left: 2px solid var(--yellow); margin: 8px 0 12px; background: rgba(255,189,89,0.1); }
+
+  /* Shift box (zone 4) */
+  .shift-box { border: 1.5px solid var(--ink); padding: 10px 12px; margin-bottom: 10px; }
+  .shift-box-label { font-family: 'Patrick Hand', cursive; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+  .shift-box-line { border-bottom: 1px solid var(--ink); height: 24px; margin-bottom: 4px; }
+  .shift-box-sub  { border-bottom: 1px dashed var(--sand); height: 18px; }
+
+  /* Takeaway strip */
+  .takeaway { border-top: 1px solid var(--ink); background: var(--paper2); padding: 12px 40px; display: flex; align-items: center; gap: 24px; flex-shrink: 0; }
+  .takeaway-label { font-family: 'Inter'; font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; white-space: nowrap; color: var(--plum); font-weight: 600; }
+  .takeaway-line  { flex: 1; border-bottom: 1.5px solid var(--plum); }
+  .takeaway-sig   { font-family: 'Allura', cursive; font-size: 17px; color: var(--muted); white-space: nowrap; line-height: 1; }
+
+  /* Print bar */
+  .print-bar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(16,0,0,0.85); color: #FBF7EE; display: flex; align-items: center; justify-content: center; gap: 24px; padding: 14px; font-family: 'Inter'; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; }
+  .print-bar button { background: var(--plum); color: var(--paper); border: none; padding: 10px 24px; font-family: 'Inter'; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; cursor: pointer; font-weight: 600; }
+  .print-bar button:hover { background: #5e1738; }
+  .print-bar a { color: var(--sand); text-decoration: none; opacity: 0.7; }
+  .print-bar a:hover { opacity: 1; }
+
+  @media print {
+    @page { size: A3 landscape; margin: 0; }
+    html, body { width: 420mm; height: 297mm; margin: 0; padding: 0; overflow: hidden; background: none; display: block; }
+    .canvas-outer { transform: none !important; width: 420mm; height: 297mm; box-shadow: none; page-break-after: avoid; }
+    .canvas { width: 420mm; height: 297mm; overflow: hidden; }
+    .print-bar { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="canvas-outer" id="canvasOuter">
+  <div class="canvas">
+
+    <div class="canvas-header">
+      <div>
+        <div class="eyebrow">Design to Me · Module 05</div>
+        <div class="module-title">Life <em>Systems</em></div>
+      </div>
+      <div class="canvas-header-right">
+        <div class="tagline">"You don't need to fix yourself. You need to redesign your system."</div>
+        <div class="brand">frankly human.</div>
+      </div>
+    </div>
+
+    <div class="stripe"></div>
+
+    <div class="canvas-body">
+
+      <!-- Zone 1: Systems Map -->
+      <div class="zone">
+        <div class="zone-accent" style="background:var(--teal);"></div>
+        <div class="zone-number">01 · Systems Map</div>
+        <div class="zone-title">The Four <em>Systems</em></div>
+        <p class="zone-prompt">Map the current state of each system — not ideal, honest.</p>
+
+        <div class="systems-mini">
+          <div class="system-cell work">
+            <div class="system-cell-label">Work</div>
+            <div class="system-cell-line"></div>
+            <div class="system-cell-line"></div>
+          </div>
+          <div class="system-cell rel">
+            <div class="system-cell-label">Relationships</div>
+            <div class="system-cell-line"></div>
+            <div class="system-cell-line"></div>
+          </div>
+          <div class="system-cell self">
+            <div class="system-cell-label">Self</div>
+            <div class="system-cell-line"></div>
+            <div class="system-cell-line"></div>
+          </div>
+          <div class="system-cell env">
+            <div class="system-cell-label">Environment</div>
+            <div class="system-cell-line"></div>
+            <div class="system-cell-line"></div>
+          </div>
+        </div>
+
+        <div class="lines" style="flex:1;">
+          <div class="line-label">The system under most strain right now…</div>
+          <div class="line"></div>
+          <div class="line"></div>
+          <div class="line-label">What that's costing me…</div>
+          <div class="line"></div>
+          <div class="line"></div>
+        </div>
+      </div>
+
+      <!-- Zone 2: System Friction -->
+      <div class="zone">
+        <div class="zone-accent" style="background:var(--pink);"></div>
+        <div class="zone-number">02 · System Friction</div>
+        <div class="zone-title">Where It's <em>Broken</em></div>
+        <p class="zone-prompt">Friction is a design signal, not a character flaw. What's the system doing that you keep working around?</p>
+
+        <div class="friction-box">
+          <div class="friction-box-label">The friction I keep hitting</div>
+          <div class="friction-box-line"></div>
+          <div class="friction-box-sub"></div>
+        </div>
+        <div class="friction-box">
+          <div class="friction-box-label">The workaround I've built</div>
+          <div class="friction-box-line"></div>
+          <div class="friction-box-sub"></div>
+        </div>
+
+        <div class="lines" style="flex:1;">
+          <div class="line-label">What the friction is actually telling me…</div>
+          <div class="line"></div>
+          <div class="line"></div>
+          <div class="line-label">The real constraint underneath…</div>
+          <div class="line"></div>
+          <div class="line"></div>
+        </div>
+      </div>
+
+      <!-- Zone 3: Leverage Point -->
+      <div class="zone">
+        <div class="zone-accent" style="background:var(--yellow);"></div>
+        <div class="zone-number">03 · Leverage Point</div>
+        <div class="zone-title">Small Shift, <em>Big Change</em></div>
+        <p class="zone-prompt">Where in the system would a small change produce the biggest relief?</p>
+
+        <div class="leverage-row">
+          <div class="leverage-node">
+            <div class="leverage-node-label">Current pattern</div>
+            <div class="leverage-node-line"></div>
+            <div class="leverage-node-line"></div>
+          </div>
+          <div class="leverage-arrow">→</div>
+          <div class="leverage-node" style="border-color:var(--yellow);">
+            <div class="leverage-node-label" style="color:var(--plum);">Leverage point</div>
+            <div class="leverage-node-line" style="border-color:var(--yellow);"></div>
+            <div class="leverage-node-line" style="border-color:var(--yellow);"></div>
+          </div>
+        </div>
+
+        <div class="lines" style="flex:1;">
+          <div class="line-label">Why this point? What changes downstream…</div>
+          <div class="line"></div>
+          <div class="line"></div>
+          <div class="line-label">What I'd stop doing if I pulled this lever…</div>
+          <div class="line"></div>
+          <div class="line"></div>
+          <div class="line-label">The smallest action to test it…</div>
+          <div class="line"></div>
+          <div class="line"></div>
+        </div>
+      </div>
+
+      <!-- Zone 4: System Shift -->
+      <div class="zone">
+        <div class="zone-accent" style="background:var(--plum);"></div>
+        <div class="zone-number">04 · System Shift</div>
+        <div class="zone-title">Redesigning <em>the System</em></div>
+        <p class="zone-prompt">Name the redesign. Not a full overhaul — one structural change that makes the right behaviour easier.</p>
+
+        <div class="pull-quote">"You don't rise to your goals. You fall to the level of your systems."</div>
+
+        <div class="shift-box">
+          <div class="shift-box-label">The structural change I'm making</div>
+          <div class="shift-box-line"></div>
+          <div class="shift-box-sub"></div>
+        </div>
+
+        <div class="lines" style="flex:1;">
+          <div class="line-label">What this shift makes easier…</div>
+          <div class="line"></div>
+          <div class="line"></div>
+          <div class="line-label">The value this system redesign honours…</div>
+          <div class="line"></div>
+          <div class="line-label">What I'll notice when it's working…</div>
+          <div class="line"></div>
+          <div class="line"></div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="takeaway">
+      <div class="takeaway-label">One system shift I'll honour this week →</div>
+      <div class="takeaway-line"></div>
+      <div class="takeaway-sig">frankly human.</div>
+    </div>
+
+  </div>
+</div>
+
+<div class="print-bar">
+  <a href="05-life-systems.html">← Back to module</a>
+  <span>Module 05 · Life Systems — A3 Canvas</span>
+  <button onclick="window.print()">Print A3 →</button>
+</div>
+
+<script>
+  function scaleCanvas() {
+    var outer = document.getElementById('canvasOuter');
+    var scale = Math.min(1, (window.innerWidth - 64) / 1587);
+    outer.style.transform = 'scale(' + scale + ')';
+  }
+  scaleCanvas();
+  window.addEventListener('resize', scaleCanvas);
+</script>
+</body>
+</html>
