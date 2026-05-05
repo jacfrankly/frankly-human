@@ -28,7 +28,7 @@
   }
 
   * { box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
+  html { scroll-behavior: smooth; scroll-snap-type: y mandatory; }
   body {
     margin: 0; padding: 0;
     font-family: 'Inter', sans-serif;
@@ -87,16 +87,22 @@
     text-align: right;
   }
 
-  /* ---- Slides — mobile-first natural scroll ---- */
+  /* ---- Slides — full viewport, scroll-snap ---- */
   .slide {
-    padding: 72px 24px 56px;
-    position: relative; overflow: hidden;
-  }
-  /* Section openers: impactful but not full-viewport-height on mobile */
-  .slide-opener {
-    min-height: 60vw;
+    min-height: 100dvh;
     display: flex; flex-direction: column; justify-content: center;
-    padding: 80px 24px 56px;
+    padding: 80px 24px 64px;
+    position: relative; overflow: hidden;
+    scroll-snap-align: start;
+  }
+  /* Long-content slides: natural scroll height, no snap */
+  .slide-long {
+    min-height: auto;
+    scroll-snap-align: none;
+  }
+  /* Section openers: inherit 100dvh from .slide, just carries the ::after decoration */
+  .slide-opener {
+    padding: 80px 24px 64px;
   }
   .slide-paper  { background: var(--paper); }
   .slide-paper2 { background: var(--paper-2); }
@@ -480,7 +486,7 @@
   }
   .pdot:hover, .pdot.on { opacity: 0.75; transform: scale(1.5); }
 
-  /* ---- Floating presenter bubble ---- */
+  /* ---- Floating presenter bubble — circular, ~1/8 screen width as radius ---- */
   .presenter-bubble {
     position: fixed;
     bottom: 24px;
@@ -488,74 +494,79 @@
     z-index: 200;
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
-    gap: 10px;
+    align-items: center;
+    gap: 6px;
   }
   .bubble-toggle {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 4px;
+    gap: 5px;
     background: none;
     border: none;
     cursor: pointer;
     padding: 0;
   }
+  /* Avatar circle: ~1/8 screen width (radius), so diameter ≈ 25vw, min 90px */
   .bubble-avatar {
-    width: 56px;
-    height: 56px;
+    width: clamp(90px, 25vw, 130px);
+    height: clamp(90px, 25vw, 130px);
     border-radius: 999px;
     background: var(--plum);
     border: 3px solid var(--paper);
-    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    box-shadow: 0 6px 28px rgba(0,0,0,0.28);
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: transform 0.2s;
+    transition: transform 0.2s, box-shadow 0.2s;
   }
-  .bubble-toggle:hover .bubble-avatar { transform: scale(1.08); }
+  .bubble-toggle:hover .bubble-avatar,
+  .bubble-toggle:focus .bubble-avatar { transform: scale(1.06); box-shadow: 0 8px 36px rgba(0,0,0,0.36); }
   .bubble-play {
     color: var(--paper);
-    font-size: 16px;
-    margin-left: 3px;
+    font-size: 22px;
+    margin-left: 4px;
   }
   .bubble-name {
     font-family: 'Patrick Hand', cursive;
     font-size: 13px;
     color: var(--charcoal);
   }
+  /* Open video panel: larger circle, video crops to fill */
   .bubble-panel {
-    width: 280px;
-    background: var(--ink);
-    border-radius: 4px;
+    width: clamp(200px, 55vw, 280px);
+    height: clamp(200px, 55vw, 280px);
+    border-radius: 999px;
     overflow: hidden;
-    box-shadow: 0 8px 40px rgba(0,0,0,0.35);
+    box-shadow: 0 10px 48px rgba(0,0,0,0.4);
+    border: 4px solid var(--paper);
     position: relative;
-  }
-  @media (min-width: 480px) {
-    .bubble-panel { width: 320px; }
+    background: var(--ink);
   }
   .bubble-video-wrap {
+    width: 100%;
+    height: 100%;
     position: relative;
-    padding-bottom: 56.25%;
-    height: 0;
     overflow: hidden;
   }
+  /* Oversize iframe and center to simulate cover-crop inside circle */
   .bubble-video-wrap iframe {
     position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
+    width: 300%;
+    height: 300%;
+    top: -100%;
+    left: -100%;
     border: none;
   }
   .bubble-close {
     position: absolute;
-    top: 6px; right: 8px;
-    background: rgba(0,0,0,0.5);
+    top: 10px; right: 10px;
+    background: rgba(0,0,0,0.55);
     border: none;
     color: var(--paper);
     font-size: 18px;
-    width: 28px;
-    height: 28px;
+    width: 32px;
+    height: 32px;
     border-radius: 999px;
     cursor: pointer;
     display: flex;
@@ -565,13 +576,14 @@
     z-index: 10;
   }
 
-  /* ---- Responsive topbar at larger sizes ---- */
+  /* ---- Responsive topbar + slide sizing at larger sizes ---- */
   @media (min-width: 680px) {
     .topbar { padding: 15px 48px; }
     .topbar .brand { font-size: 18px; }
     .topbar .section-label { font-size: 11px; }
     .slide { padding: 100px 64px 72px; }
     .slide-opener { padding: 100px 64px 72px; }
+    .slide-long { min-height: auto; }
   }
 </style>
 </head>
@@ -912,7 +924,7 @@
 <!-- =========================================================
      SLIDE 11 · VALUES LIST — Activity
      ========================================================= -->
-<section class="slide slide-paper" id="s11" style="padding-top:88px;">
+<section class="slide slide-long slide-paper" id="s11" style="padding-top:88px;">
   <div class="content">
     <div class="eyebrow">Activity · Your values</div>
 
@@ -1273,7 +1285,7 @@
 <!-- =========================================================
      SLIDE 23 · HOW DESIGN WORKS — Process
      ========================================================= -->
-<section class="slide slide-paper2" id="s23">
+<section class="slide slide-long slide-paper2" id="s23">
   <div class="content">
     <div class="eyebrow">Design thinking · The process</div>
 
@@ -1552,7 +1564,7 @@
 <!-- =========================================================
      SLIDE 31 · OBJECTIONS — I Hear You (dark)
      ========================================================= -->
-<section class="slide slide-plum" id="s31">
+<section class="slide slide-long slide-plum" id="s31">
   <div class="content">
     <span class="sig" style="font-size:clamp(28px,7vw,40px); color:var(--yellow); margin-bottom:4px;">I hear you.</span>
     <h2 class="serif h3" style="color:var(--paper); max-width:540px; margin-bottom:8px;">
