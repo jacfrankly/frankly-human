@@ -1,0 +1,1731 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Ground Swell — Frankly Human</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..900,0..100;1,9..144,300..900,0..100&family=Inter:wght@400;500;600&family=Patrick+Hand&family=Allura&display=swap" rel="stylesheet">
+<style>
+  /* =====================================================
+     FH Style Guide 2 — Coaching register
+     Mobile-first version
+     Palette: Ink · Paper · Teal · Pink · Yellow · Plum
+     Type: DM Serif Display · Fraunces · Inter · Allura · Patrick Hand
+  ===================================================== */
+  :root {
+    --ink:      #100000;
+    --charcoal: #423B3B;
+    --paper:    #FBF7EE;
+    --paper-2:  #F4EFE2;
+    --sand:     #E0D2B5;
+    --teal:     #47ACA4;
+    --pink:     #FF3990;
+    --yellow:   #FFBD59;
+    --plum:     #7A1F4A;
+    --muted:    #7A736B;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-snap-type: y mandatory; }
+  body {
+    margin: 0; padding: 0;
+    font-family: 'Inter', sans-serif;
+    font-size: 18px; line-height: 1.55;
+    background: var(--paper);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---- Sketch mark primitives ---- */
+  .mark-circle, .mark-underline {
+    position: relative; display: inline;
+  }
+  .mark-underline svg, .mark-circle svg {
+    position: absolute; pointer-events: none; overflow: visible;
+  }
+  .mark-underline svg { bottom: -10px; left: -4%; width: 108%; height: 16px; }
+  .mark-circle svg   { top: -18%; left: -10%; width: 120%; height: 136%; }
+  .mark-underline svg path,
+  .mark-circle svg path {
+    fill: none; stroke-width: 3.5; stroke-linecap: round; stroke-linejoin: round;
+  }
+  .mark-pink   svg path { stroke: var(--pink); }
+  .mark-yellow svg path { stroke: var(--yellow); }
+  .mark-teal   svg path { stroke: var(--teal); }
+  .mark-plum   svg path { stroke: var(--plum); }
+  .mark-highlight {
+    background: linear-gradient(180deg, transparent 52%, var(--yellow) 52%, var(--yellow) 90%, transparent 90%);
+    padding: 0 3px;
+  }
+  .mark-highlight.pink {
+    background: linear-gradient(180deg, transparent 52%, var(--pink) 52%, var(--pink) 90%, transparent 90%);
+    padding: 0 3px; color: var(--paper);
+  }
+
+  /* ---- Topbar ---- */
+  .topbar {
+    position: fixed; top: 0; z-index: 50; width: 100%;
+    background: var(--paper);
+    border-bottom: 1px solid var(--ink);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 20px;
+    font-family: 'Inter', sans-serif;
+    font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--ink);
+  }
+  .topbar .brand {
+    font-family: 'DM Serif Display', serif;
+    font-size: 16px; letter-spacing: -0.01em;
+    text-transform: none;
+  }
+  .topbar .brand em { font-style: italic; color: var(--plum); }
+  .topbar .section-label {
+    font-size: 10px; letter-spacing: 0.16em;
+    opacity: 0.6;
+    text-align: right;
+  }
+
+  /* ---- Slides — full viewport, scroll-snap ---- */
+  .slide {
+    min-height: 100dvh;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 80px 24px 64px;
+    position: relative; overflow: hidden;
+    scroll-snap-align: start;
+  }
+  /* Long-content slides: natural scroll height, no snap */
+  .slide-long {
+    min-height: auto;
+    scroll-snap-align: none;
+  }
+  /* Section openers: inherit 100dvh from .slide, just carries the ::after decoration */
+  .slide-opener {
+    padding: 80px 24px 64px;
+  }
+  .slide-paper  { background: var(--paper); }
+  .slide-paper2 { background: var(--paper-2); }
+  .slide-ink    { background: var(--ink); color: var(--paper); }
+  .slide-teal   { background: var(--teal); color: var(--ink); }
+  .slide-pink   { background: var(--pink); color: var(--paper); }
+  .slide-plum   { background: var(--plum); color: var(--paper); }
+  .slide-yellow { background: var(--yellow); color: var(--ink); }
+  .slide-sand   { background: var(--sand); color: var(--ink); }
+
+  /* CSS decorative element on openers (replaces blob images) */
+  .slide-opener::after {
+    content: '';
+    position: absolute;
+    width: 60vw;
+    height: 60vw;
+    border-radius: 999px;
+    opacity: 0.07;
+    pointer-events: none;
+    right: -20vw;
+    bottom: -20vw;
+    transform: rotate(25deg);
+    z-index: 0;
+  }
+  .slide-ink.slide-opener::after    { background: var(--yellow); }
+  .slide-pink.slide-opener::after   { background: var(--paper); }
+  .slide-teal.slide-opener::after   { background: var(--plum); }
+  .slide-yellow.slide-opener::after { background: var(--plum); }
+  .slide-plum.slide-opener::after   { background: var(--yellow); }
+  .slide-paper.slide-opener::after  { background: var(--teal); }
+
+  /* ---- Eyebrow ---- */
+  .eyebrow {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--charcoal);
+    display: inline-flex; align-items: center; gap: 14px;
+    margin-bottom: 22px;
+    position: relative; z-index: 1;
+  }
+  .eyebrow::before {
+    content: ''; display: inline-block;
+    width: 28px; height: 1px; background: var(--ink);
+    flex-shrink: 0;
+  }
+  .slide-ink  .eyebrow { color: rgba(251,247,238,0.6); }
+  .slide-ink  .eyebrow::before { background: var(--yellow); }
+  .slide-plum .eyebrow { color: rgba(251,247,238,0.6); }
+  .slide-plum .eyebrow::before { background: var(--yellow); }
+  .slide-pink .eyebrow { color: rgba(251,247,238,0.7); }
+  .slide-pink .eyebrow::before { background: var(--paper); }
+  .slide-teal .eyebrow { color: rgba(16,0,0,0.55); }
+  .slide-yellow .eyebrow { color: rgba(16,0,0,0.55); }
+
+  /* ---- Primary type: DM Serif Display ---- */
+  .serif {
+    font-family: 'DM Serif Display', serif;
+    font-weight: 400; letter-spacing: -0.015em; line-height: 0.95;
+  }
+  .serif em { font-style: italic; color: var(--plum); }
+  .slide-ink  .serif em { color: var(--yellow); }
+  .slide-plum .serif em { color: var(--yellow); }
+  .slide-pink .serif em { color: var(--yellow); }
+  .slide-teal .serif em { color: var(--plum); }
+
+  .h1 { font-size: clamp(52px, 13vw, 160px); margin: 0 0 28px; }
+  .h2 { font-size: clamp(36px, 9vw, 96px);  margin: 0 0 24px; max-width: 880px; }
+  .h3 { font-size: clamp(28px, 7vw, 60px);  margin: 0 0 20px; max-width: 760px; }
+
+  /* Signature / Allura script */
+  .sig {
+    font-family: 'Allura', cursive;
+    color: var(--plum); line-height: 1;
+    display: block; transform: rotate(-3deg); transform-origin: left;
+  }
+  .slide-ink  .sig { color: var(--yellow); }
+  .slide-plum .sig { color: var(--yellow); }
+  .slide-pink .sig { color: var(--paper); }
+  .slide-teal .sig { color: var(--plum); }
+
+  /* Fraunces editorial body */
+  .fran {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-variation-settings: "SOFT" 50, "opsz" 144;
+    line-height: 1.5;
+  }
+  .fran em { font-style: italic; color: var(--plum); }
+  .slide-ink  .fran { color: rgba(251,247,238,0.85); }
+  .slide-ink  .fran em { color: var(--yellow); }
+  .slide-plum .fran { color: rgba(251,247,238,0.85); }
+  .slide-plum .fran em { color: var(--yellow); }
+  .slide-pink .fran { color: rgba(251,247,238,0.85); }
+  .slide-teal .fran em { color: var(--plum); }
+
+  .body-lg { font-size: clamp(18px, 4vw, 24px); max-width: 660px; margin: 0 0 20px; }
+  .body-md { font-size: clamp(17px, 3.5vw, 20px); max-width: 640px; margin: 0 0 16px; }
+  .body-sm { font-size: 15px; max-width: 580px; margin: 0 0 12px; color: var(--charcoal); line-height: 1.6; }
+
+  /* Patrick Hand label */
+  .hand {
+    font-family: 'Patrick Hand', cursive;
+    font-size: 16px; line-height: 1.4;
+  }
+
+  /* ---- Content wrapper ---- */
+  .content { position: relative; z-index: 1; }
+
+  /* ---- Painted stripe (4-colour) ---- */
+  .stripe-bar {
+    position: absolute; top: 0; left: 0; right: 0; height: 5px;
+    background: linear-gradient(90deg,
+      var(--teal) 0 25%, var(--pink) 25% 50%,
+      var(--yellow) 50% 75%, var(--plum) 75% 100%);
+    z-index: 2;
+  }
+
+  /* ---- Pull-quote ---- */
+  .pull-quote {
+    position: relative; padding: 0 0 0 8px; max-width: 800px; margin: 20px 0;
+  }
+  .pull-quote .glyph {
+    font-family: 'DM Serif Display', serif;
+    font-size: 120px; line-height: 0.6;
+    color: var(--pink); opacity: 0.7;
+    display: block; margin-bottom: -20px;
+    user-select: none;
+  }
+  .slide-ink  .pull-quote .glyph { color: var(--pink); }
+  .slide-plum .pull-quote .glyph { color: var(--yellow); opacity: 0.6; }
+  .pull-quote .q {
+    font-family: 'DM Serif Display', serif;
+    font-style: italic;
+    font-size: clamp(22px, 3.5vw, 38px);
+    line-height: 1.15;
+    color: var(--ink);
+    position: relative; z-index: 1;
+  }
+  .slide-ink  .pull-quote .q { color: var(--paper); }
+  .slide-plum .pull-quote .q { color: var(--paper); }
+  .pull-quote .attr {
+    font-family: 'Inter'; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--muted); margin-top: 14px; display: block;
+  }
+  .slide-ink  .pull-quote .attr { color: rgba(251,247,238,0.55); }
+  .slide-plum .pull-quote .attr { color: rgba(251,247,238,0.55); }
+
+  /* ---- Signature title block ---- */
+  .sig-opener { text-align: center; }
+  .sig-opener .sig-line { font-size: 56px; margin-bottom: 6px; }
+  .sig-opener .main {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(56px, 10vw, 128px);
+    line-height: 0.9; letter-spacing: -0.02em;
+    margin: 0;
+  }
+  .sig-opener .main em { font-style: italic; color: var(--plum); }
+
+  /* ---- Word-on-blob ---- */
+  .word-blob { position: relative; display: flex; align-items: center; justify-content: center; min-height: 180px; }
+  .word-blob .bg-blob { display: none; } /* images hidden — no assets */
+  .word-blob .word {
+    position: relative; z-index: 2;
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(56px, 9vw, 120px);
+    line-height: 0.92; text-align: center;
+    letter-spacing: -0.015em;
+  }
+  .word-blob .word em { font-style: italic; color: var(--plum); }
+
+  /* ---- Two-col — stacked on mobile, side-by-side at 680px ---- */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 32px;
+    align-items: start;
+  }
+  @media (min-width: 680px) {
+    .two-col { grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; max-width: 1140px; }
+    .two-col-start { align-items: start; }
+  }
+
+  /* ---- Section number (watermark) ---- */
+  .bg-num {
+    position: absolute; bottom: -24px; right: 28px;
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(100px, 22vw, 320px);
+    line-height: 0.85; letter-spacing: -0.04em;
+    pointer-events: none; user-select: none; opacity: 0.04;
+    font-style: italic; z-index: 0;
+  }
+
+  /* ---- Card / panel ---- */
+  .card {
+    border: 1px solid var(--ink); padding: 28px;
+    background: var(--paper); position: relative;
+  }
+  @media (min-width: 680px) {
+    .card { padding: 36px; }
+  }
+  .card-sand  { background: var(--sand); }
+  .card-paper2 { background: var(--paper-2); }
+  .card-ink   { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .card-teal  { background: var(--teal); border-color: var(--teal); }
+  .card-plum  { background: var(--plum); border-color: var(--plum); color: var(--paper); }
+
+  .card .card-eyebrow {
+    font-family: 'Inter'; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 10px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .card .card-eyebrow .dot { width: 8px; height: 8px; border-radius: 999px; background: var(--pink); }
+  .card-ink .card-eyebrow { color: rgba(251,247,238,0.6); }
+  .card-ink .card-eyebrow .dot { background: var(--yellow); }
+  .card-plum .card-eyebrow { color: rgba(251,247,238,0.6); }
+
+  /* ---- Activity block ---- */
+  .activity {
+    border: 1px solid var(--ink);
+    width: 100%; overflow: hidden;
+  }
+  .activity-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 24px;
+    background: var(--ink); color: var(--paper);
+  }
+  .activity-head .act-label {
+    font-family: 'Inter'; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; opacity: 0.6;
+  }
+  .activity-head .act-time {
+    font-family: 'Inter'; font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase;
+    background: var(--yellow); color: var(--ink); padding: 4px 10px; font-weight: 600;
+  }
+  .activity-body { padding: 24px; background: var(--paper-2); }
+  .activity-instruction {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(20px, 2.8vw, 28px); line-height: 1.15;
+    letter-spacing: -0.01em; margin: 0 0 20px;
+  }
+  .activity-instruction em { font-style: italic; color: var(--plum); }
+  .activity-rules { list-style: none; padding: 0; margin: 0; counter-reset: rules; }
+  .activity-rules li {
+    counter-increment: rules;
+    display: flex; gap: 16px; align-items: baseline;
+    padding: 11px 0; border-top: 1px solid rgba(16,0,0,0.1);
+    font-family: 'Fraunces', serif;
+    font-size: 16px; line-height: 1.45;
+    font-variation-settings: "SOFT" 50, "opsz" 144;
+    color: var(--charcoal);
+  }
+  .activity-rules li::before {
+    content: counter(rules, decimal-leading-zero);
+    font-family: 'Inter'; font-size: 10px; letter-spacing: 0.12em;
+    color: var(--pink); flex-shrink: 0; padding-top: 2px;
+  }
+
+  /* ---- Values grid / pattern grid ---- */
+  .values-grid, .pattern-grid {
+    border: 1px solid var(--ink);
+    max-width: 880px;
+    margin: 20px 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .values-col {
+    padding: 16px 14px;
+    border-right: 1px solid var(--ink);
+  }
+  .values-col:last-child {
+    border-right: none;
+    grid-column: 1 / -1;
+    border-top: 1px solid var(--ink);
+  }
+  @media (min-width: 900px) {
+    .values-grid, .pattern-grid { grid-template-columns: repeat(3, 1fr); }
+    .values-col { padding: 20px 22px; }
+    .values-col:last-child {
+      grid-column: auto;
+      border-top: none;
+    }
+  }
+  .v-head {
+    font-family: 'Inter'; font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--muted); padding-bottom: 8px; border-bottom: 1px solid var(--ink); margin-bottom: 10px;
+  }
+  .v-item { font-family: 'Fraunces', serif; font-size: 13px; line-height: 1.9; font-variation-settings: "SOFT" 50, "opsz" 144; }
+  .v-write { margin-top: 14px; padding: 14px; background: rgba(255,57,144,0.06); border: 1px dashed rgba(255,57,144,0.3); }
+  .v-write .v-label { font-family: 'Patrick Hand'; font-size: 14px; color: var(--charcoal); margin-bottom: 8px; }
+  .v-write .v-line { height: 24px; border-bottom: 1px solid rgba(16,0,0,0.2); margin-bottom: 8px; }
+  .v-write .v-line:last-child { margin-bottom: 0; }
+
+  /* ---- Process steps — wrap/center on mobile, arrows hidden ---- */
+  .process { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 20px; max-width: 920px; margin: 36px 0; }
+  .process-step { flex: 0 0 auto; text-align: center; }
+  .step-circle {
+    width: 56px; height: 56px; border: 1.5px solid var(--ink);
+    border-radius: 999px; margin: 0 auto 12px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--paper);
+  }
+  .step-circle svg { width: 24px; height: 24px; }
+  .step-circle.active { background: var(--teal); border-color: var(--teal); }
+  .step-circle.active svg { stroke: var(--ink); }
+  .step-name { font-family: 'DM Serif Display', serif; font-size: 17px; display: block; letter-spacing: -0.01em; }
+  .step-sub { font-family: 'Inter'; font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); display: block; margin-top: 2px; }
+  .process-arrow { display: none; }
+  @media (min-width: 680px) {
+    .process { flex-wrap: nowrap; justify-content: flex-start; gap: 0; }
+    .process-step { flex: 1; }
+    .process-arrow { display: block; flex-shrink: 0; width: 32px; text-align: center; color: var(--muted); margin-bottom: 28px; font-size: 16px; }
+  }
+
+  /* ---- Why framework ---- */
+  .why-frame { display: grid; grid-template-columns: 1fr; gap: 14px; max-width: 840px; margin: 24px 0; }
+  @media (min-width: 680px) {
+    .why-frame { grid-template-columns: 1fr 1fr; gap: 20px; }
+  }
+  .why-card { border: 1px solid var(--ink); padding: 24px; background: var(--paper); }
+  .why-card.filled { background: var(--paper-2); }
+  .why-label { font-family: 'Inter'; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+  .why-text { font-family: 'DM Serif Display', serif; font-size: 24px; letter-spacing: -0.01em; margin: 0 0 10px; }
+  .why-example { font-family: 'Fraunces', serif; font-style: italic; font-size: 17px; color: var(--teal); line-height: 1.35; font-variation-settings: "SOFT" 50, "opsz" 144; }
+
+  /* ---- Numbered list ---- */
+  .num-list { list-style: none; padding: 0; margin: 0; max-width: 720px; counter-reset: items; }
+  .num-list li {
+    counter-increment: items;
+    display: flex; gap: 20px; padding: 18px 0;
+    border-bottom: 1px solid rgba(16,0,0,0.1);
+  }
+  .num-list li::before {
+    content: counter(items, decimal-leading-zero);
+    font-family: 'Inter'; font-size: 10px; letter-spacing: 0.12em; color: var(--pink);
+    flex-shrink: 0; padding-top: 3px;
+  }
+  .list-title { font-family: 'DM Serif Display', serif; font-size: 18px; margin: 0 0 3px; letter-spacing: -0.01em; }
+  .list-desc { font-family: 'Fraunces', serif; font-size: 14px; color: var(--muted); margin: 0; line-height: 1.5; font-variation-settings: "SOFT" 50, "opsz" 144; }
+
+  /* ---- Objections — 1 col mobile, 3 col at 900px ---- */
+  .obj-grid { display: grid; grid-template-columns: 1fr; gap: 16px; max-width: 1080px; margin-top: 36px; }
+  @media (min-width: 900px) {
+    .obj-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+  .obj-card { border: 1px solid rgba(251,247,238,0.2); padding: 28px; background: rgba(251,247,238,0.06); }
+  .obj-tag { font-family: 'Inter'; font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--yellow); margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+  .obj-title { font-family: 'DM Serif Display', serif; font-size: 18px; color: var(--paper); margin: 0 0 10px; letter-spacing: -0.01em; font-style: italic; }
+  .obj-body { font-family: 'Fraunces', serif; font-size: 14px; color: rgba(251,247,238,0.72); line-height: 1.55; margin: 0; font-variation-settings: "SOFT" 50, "opsz" 144; }
+
+  /* ---- Separator ---- */
+  .rule { border: none; border-top: 1px solid rgba(16,0,0,0.15); margin: 24px 0; max-width: 580px; }
+  .slide-ink .rule  { border-color: rgba(251,247,238,0.18); }
+  .slide-plum .rule { border-color: rgba(251,247,238,0.18); }
+
+  /* ---- CTA button ---- */
+  .btn {
+    display: inline-block;
+    font-family: 'Inter'; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+    border: 1.5px solid var(--ink); padding: 15px 30px;
+    color: var(--ink); text-decoration: none; cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+  }
+  .btn:hover { background: var(--ink); color: var(--paper); }
+  .btn-yellow { background: var(--yellow); border-color: var(--yellow); color: var(--ink); }
+  .btn-yellow:hover { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+  .btn-pink { background: var(--pink); border-color: var(--pink); color: var(--paper); }
+  .btn-pink:hover { background: var(--plum); border-color: var(--plum); }
+
+  /* ---- Progress dots — hidden on mobile, visible at 680px ---- */
+  .progress {
+    position: fixed; right: 18px; top: 50%; transform: translateY(-50%);
+    display: none; flex-direction: column; gap: 7px; z-index: 40;
+  }
+  @media (min-width: 680px) {
+    .progress { display: flex; }
+  }
+  .pdot {
+    width: 4px; height: 4px; border-radius: 999px;
+    background: var(--ink); opacity: 0.18; cursor: pointer;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+  .pdot:hover, .pdot.on { opacity: 0.75; transform: scale(1.5); }
+
+  /* ---- Floating presenter bubble — circular, ~1/8 screen width as radius ---- */
+  .presenter-bubble {
+    position: fixed;
+    bottom: 24px;
+    right: 20px;
+    z-index: 200;
+    display: flex;
+    flex-direction: column-reverse; /* toggle stays at bottom, video floats above */
+    align-items: center;
+    gap: 8px;
+  }
+  .bubble-toggle {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+  }
+  /* Avatar circle: ~1/8 screen width (radius), so diameter ≈ 25vw, min 90px */
+  .bubble-avatar {
+    width: clamp(90px, 25vw, 130px);
+    height: clamp(90px, 25vw, 130px);
+    border-radius: 999px;
+    background: var(--plum);
+    border: 3px solid var(--paper);
+    box-shadow: 0 6px 28px rgba(0,0,0,0.28);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .bubble-toggle:hover .bubble-avatar,
+  .bubble-toggle:focus .bubble-avatar { transform: scale(1.06); box-shadow: 0 8px 36px rgba(0,0,0,0.36); }
+  .bubble-play {
+    color: var(--paper);
+    font-size: 22px;
+    margin-left: 4px;
+  }
+  .bubble-close-icon {
+    display: none;
+    color: var(--paper);
+    font-size: 22px;
+    line-height: 1;
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+  }
+  .bubble-name {
+    font-family: 'Patrick Hand', cursive;
+    font-size: 13px;
+    color: var(--charcoal);
+  }
+  /* Open state: toggle shrinks to a small × */
+  .presenter-bubble.is-open .bubble-avatar {
+    width: 36px;
+    height: 36px;
+    background: var(--charcoal);
+    border-width: 2px;
+  }
+  .presenter-bubble.is-open .bubble-play { display: none; }
+  .presenter-bubble.is-open .bubble-close-icon { display: block; font-size: 16px; }
+  .presenter-bubble.is-open .bubble-name { display: none; }
+  .presenter-bubble.is-open .bubble-toggle:hover .bubble-avatar,
+  .presenter-bubble.is-open .bubble-toggle:focus .bubble-avatar {
+    transform: scale(1.12);
+    background: var(--ink);
+  }
+  /* Open video panel: larger circle, video crops to fill */
+  .bubble-panel {
+    width: clamp(200px, 55vw, 280px);
+    height: clamp(200px, 55vw, 280px);
+    border-radius: 999px;
+    overflow: hidden;
+    box-shadow: 0 10px 48px rgba(0,0,0,0.4);
+    border: 4px solid var(--paper);
+    position: relative;
+    background: var(--ink);
+  }
+  .bubble-video-wrap {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+  }
+  /* Oversize iframe and center to simulate cover-crop inside circle */
+  .bubble-video-wrap iframe {
+    position: absolute;
+    width: 300%;
+    height: 300%;
+    top: -100%;
+    left: -100%;
+    border: none;
+  }
+  .bubble-close {
+    position: absolute;
+    top: 10px; right: 10px;
+    background: rgba(0,0,0,0.55);
+    border: none;
+    color: var(--paper);
+    font-size: 18px;
+    width: 32px;
+    height: 32px;
+    border-radius: 999px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    z-index: 10;
+  }
+
+  /* ---- Responsive topbar + slide sizing at larger sizes ---- */
+  @media (min-width: 680px) {
+    .topbar { padding: 15px 48px; }
+    .topbar .brand { font-size: 18px; }
+    .topbar .section-label { font-size: 11px; }
+    .slide { padding: 100px 64px 72px; }
+    .slide-opener { padding: 100px 64px 72px; }
+    .slide-long { min-height: auto; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ---- Topbar ---- -->
+<header class="topbar">
+  <div class="brand"><em>frankly</em> human.</div>
+  <span class="section-label" id="section-label">Ground Swell · 6 Weeks</span>
+</header>
+
+<!-- Progress dots -->
+<nav class="progress" id="progress" aria-label="Slide navigation"></nav>
+
+
+<!-- =========================================================
+     SLIDE 01 · COVER
+     ========================================================= -->
+<section class="slide slide-paper" id="s1" style="padding-top: 88px; min-height: 70vh; display: flex; flex-direction: column; justify-content: center;">
+  <div class="stripe-bar"></div>
+
+  <div class="content">
+    <div class="sig-opener" style="text-align:left; max-width:900px;">
+      <span class="sig sig-line" style="font-size:clamp(32px,8vw,52px); margin-bottom:4px;">a 6-week women's circle</span>
+      <h1 class="serif h1" style="margin-bottom:4px;">Ground <em>Swell.</em></h1>
+    </div>
+
+    <p class="fran body-lg" style="max-width:540px; margin-top:24px; margin-bottom:40px;">
+      A gentle, creative program to help you feel like yourself again.
+    </p>
+
+    <div style="display:flex; gap:14px; align-items:center; flex-wrap:wrap; font-family:'Inter'; font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:var(--muted);">
+      <span>Frankly Human · 2024</span>
+      <span style="opacity:0.4;">—</span>
+      <span>Women's Circle</span>
+      <span style="opacity:0.4;">—</span>
+      <span>franklyhuman.com</span>
+    </div>
+  </div>
+</section>
+
+
+<!-- =========================================================
+     SLIDE 02 · WELCOME
+     ========================================================= -->
+<section class="slide slide-paper" id="s2">
+  <div class="content">
+    <div class="eyebrow">Welcome</div>
+
+    <div class="two-col">
+      <div>
+        <span class="sig" style="font-size:clamp(32px,8vw,48px); margin-bottom:2px;">hi, I'm</span>
+        <h2 class="serif h1" style="margin-bottom:24px; line-height:0.9;">Jacinta.</h2>
+
+        <p class="fran body-lg" style="margin-bottom:16px;">
+          I help women create wholehearted growth — the courage and action to live a life in full colour.
+        </p>
+
+        <p class="fran body-md" style="color:var(--charcoal);">
+          Ground Swell is the gentle starting point. Six weeks. Real reflection. A warm, supported space.
+        </p>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:16px;">
+        <div class="card card-paper2">
+          <div class="card-eyebrow"><div class="dot"></div>The question I start from</div>
+          <p class="serif" style="font-size:22px; line-height:1.1; margin:0 0 12px;">What does your world need that you are uniquely qualified to offer?</p>
+          <p class="body-sm">I help you discover how to bring that to life — with authenticity and imperfect creative action.</p>
+        </div>
+
+        <div style="border:1px solid rgba(16,0,0,0.18); padding:16px 20px; display:flex; align-items:center; gap:12px;">
+          <div style="width:8px; height:8px; background:var(--pink); border-radius:999px; flex-shrink:0;"></div>
+          <span style="font-family:'Inter'; font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:var(--charcoal);">frankly human.com · @franklyhumanux</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- =========================================================
+     SLIDE 03 · THE HONEST TRUTH
+     ========================================================= -->
+<section class="slide slide-paper2" id="s3">
+  <div class="content" style="max-width:1100px; width:100%;">
+    <div class="eyebrow">The honest truth</div>
+
+    <div class="two-col">
+      <div class="word-blob" style="justify-content:flex-start;">
+        <div class="word">
+          something <em>to shift.</em>
+        </div>
+      </div>
+
+      <div>
+        <h2 class="serif h2">
+          You've spent years showing up for everyone else.
+        </h2>
+        <p class="fran body-md" style="color:var(--charcoal);">
+          And somewhere along the way, you stopped showing up for yourself.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- =========================================================
+     SLIDE 04 · WHAT YOU'LL WALK AWAY WITH
+     ========================================================= -->
+<section class="slide slide-paper" id="s4">
+  <div class="content">
+    <div class="eyebrow">What You Can Expect</div>
+
+    <div class="two-col two-col-start">
+      <div>
+        <span class="sig" style="font-size:clamp(28px,7vw,40px); margin-bottom:4px;">by the end you'll</span>
+        <h2 class="serif h2">Feel like <em>yourself</em> again.</h2>
+        <p class="fran body-lg" style="margin-bottom:16px;">
+          Clarity, confidence, and a gentle plan — built around your values. Not perfect. True.
+        </p>
+        <p class="fran body-sm">
+          Ground Swell isn't about changing everything. It's about changing the things that matter.
+        </p>
+      </div>
+
+      <div>
+        <div style="border:1px solid var(--ink); overflow:hidden;">
+          <div style="background:var(--ink); padding:18px 24px;">
+            <span style="font-family:'Inter'; font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:rgba(251,247,238,0.6);">You'll walk away with</span>
+          </div>
+          <div>
+            <div style="display:flex; gap:16px; align-items:baseline; padding:20px 24px; border-bottom:1px solid rgba(16,0,0,0.1);">
+              <span class="serif" style="font-size:clamp(48px,10vw,72px); color:var(--pink); line-height:0.85; flex-shrink:0;">1</span>
+              <span class="serif" style="font-size:19px;">A clear sense of your why</span>
+            </div>
+            <div style="display:flex; gap:16px; align-items:baseline; padding:20px 24px; border-bottom:1px solid rgba(16,0,0,0.1);">
+              <span class="serif" style="font-size:clamp(48px,10vw,72px); color:var(--teal); line-height:0.85; flex-shrink:0;">3</span>
+              <span class="serif" style="font-size:19px;">Values you're ready to act on</span>
+            </div>
+            <div style="display:flex; gap:16px; align-items:baseline; padding:20px 24px;">
+              <span class="serif" style="font-size:clamp(48px,10vw,72px); color:var(--plum); line-height:0.85; flex-shrink:0;">∞</span>
+              <span class="serif" style="font-size:19px;">A gentle plan for what's next</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- =========================================================
+     SLIDE 05 · SECTION OPENER — Your Why
+     ========================================================= -->
+<section class="slide slide-ink slide-opener" id="s5">
+  <div class="content" style="position:relative; z-index:1;">
+    <div class="eyebrow">Session 01</div>
+
+    <span class="sig" style="font-size:clamp(28px,7vw,44px); color:var(--yellow); margin-bottom:8px;">reconnect with</span>
+    <h2 class="serif h2" style="color:var(--paper); max-width:820px;">
+      Your <em>why.</em>
+    </h2>
+
+    <p class="fran body-lg" style="color:rgba(251,247,238,0.65); max-width:520px;">
+      Before you can move forward, you need to know what's pulling you.
+    </p>
+  </div>
+
+  <div class="bg-num" style="color:var(--paper);">01</div>
+</section>
+
+
+<!-- =========================================================
+     SLIDE 06 · YOUR WHY DETAIL
+     ========================================================= -->
+<section class="slide slide-paper" id="s6">
+  <div class="content">
+    <div class="eyebrow">Session 01 · Your Why</div>
+
+    <div class="two-col two-col-start" style="gap:40px;">
+      <div>
+        <h3 class="serif h3">Your 'why' is your internal compass.</h3>
+        <p class="fran body-md" style="color:var(--charcoal);">Most people haven't revisited theirs since their early twenties. It shapes every decision — even when you're not listening to it.</p>
+
+        <div class="pull-quote" style="margin-top:0;">
+          <span class="glyph" style="font-size:80px; margin-bottom:-16px;">"</span>
+          <p class="q" style="font-size:32px;">When do you feel most like yourself?</p>
+        </div>
+      </div>
+
+      <ul class="num-list">
+        <li>
+          <div>
+            <p class="list-title">Waiting for clarity before you start</p>
+          </div>
+        </li>
+        <li>
+          <div>
+            <p class="list-title">Living by borrowed values</p>
+          </div>
+        </li>
+        <li>
+          <div>
+            <p class="list-title">Confusing ambition with meaning</p>
+          </div>
+        </li>
+        <li>
+          <div>
+            <p class="list-title">Ignoring the emotional data</p>
+          </div>
+        </li>
+        <li style="border-bottom:none;">
+          <div>
+            <p class="list-title">Believing the right time exists</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+
+<!-- =========================================================
+     SLIDE 07 · ACTIVITY — Values reflection
+     ========================================================= -->
+<section class="slide slide-paper2" id="s7">
+  <div class="content">
+    <div class="eyebrow">Opening reflection</div>
+
+    <div class="activity">
+      <div class="activity-head">
+        <span class="act-label">Activity</span>
+        <span class="act-time">8 minutes</span>
+      </div>
+      <div class="activity-body">
+        <p class="activity-instruction">What <em>lights</em> you up?</p>
+        <ul class="activity-rules">
+          <li>Choose 6 words from the list that feel true right now.</li>
+          <li>Circle the 3 that matter most.</li>
+          <li>Star the 1 that feels like your anchor.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- =========================================================
+     SLIDE 08 · TESTIMONIAL — Kate
+     ========================================================= -->
+<section class="slide slide-plum" id="s8">
+  <div class="content">
+    <div class="eyebrow">In their words · Kate</div>
+
+    <div class="pull-quote">
+      <span class="glyph">"</span>
+      <p class="q">I felt like it was confronting for me. I'm a pretty transparent person and I did really enjoy kinda digging deep — just to map them out. It felt like a good way to begin.</p>
+      <span class="attr">Kate · Ground Swell participant · confronted and relieved</span>
+    </div>
+
+    <hr class="rule" style="margin-top:32px;">
+
+    <p class="fran" style="font-size:17px; color:rgba(251,247,238,0.7); max-width:540px; line-height:1.5; font-variation-settings:'SOFT' 50,'opsz' 144;">
+      Confronted and relieved is exactly where the work starts. Not comfortable — <em style="color:var(--yellow);">clear.</em>
+    </p>
+  </div>
+</section>
+
+
+<!-- =========================================================
+     SLIDE 09 · SECTION OPENER — Walk in Your Shoes
+     ========================================================= -->
+<section class="slide slide-paper slide-opener" id="s9">
+  <div class="content" style="width:100%; display:flex; flex-direction:column; align-items:flex-start; position:relative; z-index:1;">
+    <div class="eyebrow">Session 02</div>
+
+    <div style="display:flex; flex-direction:column; align-items:flex-start; max-width:900px; width:100%;">
+      <span class="sig" style="font-size:clamp(28px,7vw,44px); margin-bottom:4px;">make sense of</span>
+      <div class="word-blob" style="min-height:160px; width:100%; justify-content:flex-start;">
+        <div class="word" style="font-size:clamp(56px,13vw,120px);">your <em>story.</em></div>
+      </div>
+    </div>
+
+    <p class="fran body-md" style="color:var(--charcoal); max-width:520px; margin-top:16px;">
+      Not the edited version. The real one.
+    </p>
+  </div>
+
+  <div class="bg-num" style="color:var(--ink);">02</div>
+</section>
+
+
+<!-- =========================================================
+     SLIDE 10 · WALK IN YOUR SHOES
+     ========================================================= -->
+<section class="slide slide-paper2" id="s10">
+  <div class="content">
+    <div class="eyebrow">Reflection · Your patterns</div>
+
+    <div class="pull-quote" style="margin-bottom:32px;">
+      <span class="glyph">"</span>
+      <p class="q" style="font-size:clamp(22px,4vw,48px);">Your past isn't a problem — it's a pattern library.</p>
+    </div>
+
+    <p class="fran body-md" style="max-width:560px; margin-bottom:32px;">
+      Patterns show you what shaped you, what protected you, and what you've outgrown. Seeing them clearly is the first act of freedom.
+    </p>
+
+    <div style="display:flex; gap:14px; flex-wrap:wrap;">
+      <div style="border:1px solid var(--ink); padding:14px 28px; background:var(--paper);">
+        <span class="serif" style="font-size:28px; color:var(--teal);">Behavioural</span>
+      </div>
+      <div style="border:1px solid var(--ink); padding:14px 28px; background:var(--paper);">
+        <span class="serif" style="font-size:28px; color:var(--pink);">Emotional</span>
+      </div>
+      <div style="border:1px solid var(--ink); padding:14px 28px; background:var(--paper);">
+        <span class="serif" style="font-size:28px; color:var(--plum);">Relational</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- =========================================================
+     SLIDE 11 · PATTERN SPOTTING (SLIDE-LONG)
+     ========================================================= -->
+<section class="slide slide-long slide-paper" id="s11" style="padding-top:88px;">
+  <div class="content">
+    <div class="eyebrow">Activity · Your patterns</div>
+
+    <div class="activity" style="margin-bottom:16px;">
+      <div class="activity-head">
+        <span class="act-label">Activity</span>
+        <span class="act-time">8 minutes</span>
+      </div>
+      <div class="activity-body" style="padding:20px 24px;">
+        <p class="activity-instruction">What story have you been <em>telling yourself?</em></p>
+        <ul class="activity-rules">
+          <li>List 3 patterns you still carry.</li>
+          <li>What role have you been playing?</li>
+          <li>What did you learn early about who you had to be?</li>
+          <li>Circle the pattern that runs the show.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="pattern-grid">
+      <div class="values-col">
+        <div class="v-head">Behavioural</div>
+        <div class="v-item">People-pleasing</div>
+        <div class="v-item">Perfectionism</div>
+        <div class="v-item">Overgiving</div>
+        <div class="v-item">Shrinking</div>
+        <div class="v-item">Busyness as worth</div>
+        <div class="v-item">Saying yes / meaning no</div>
+        <div class="v-write">
+          <div class="v-label">One pattern I'm ready to release</div>
+          <div class="v-line"></div>
+          <div class="v-line" style="border:none;"></div>
+        </div>
+      </div>
+      <div class="values-col">
+        <div class="v-head">Emotional</div>
+        <div class="v-item">Guilt about wanting more</div>
+        <div class="v-item">Fear of being too much</div>
+        <div class="v-item">Numbing restlessness</div>
+        <div class="v-item">Grief for unlived life</div>
+        <div class="v-item">Chronic low-level anxiety</div>
+        <div class="v-item">Disconnection from joy</div>
+        <div class="v-write">
+          <div class="v-label">One pattern I'm ready to release</div>
+          <div class="v-line"></div>
+          <div class="v-line" style="border:none;"></div>
+        </div>
+      </div>
+      <div class="values-col">
+        <div class="v-head">Relational</div>
+        <div class="v-item">Carrying others' emotions</div>
+        <div class="v-item">Difficulty asking for help</div>
+        <div class="v-item">Over-explaining yourself</div>
+        <div class="v-item">Performing strength</div>
+        <div class="v-item">Minimising your needs</div>
+        <div class="v-item">Longing for deeper connection</div>
+        <div class="v-write">
+          <div class="v-label">One pattern I'm ready to release</div>
+          <div class="v-line"></div>
+          <div class="v-line" style="border:none;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- =========================================================
+     SLIDE 12 · HOW ARE YOU EXPERIENCING THESE?
+     ========================================================= -->
+<section class="slide slide-paper2" id="s12">
+  <div class="content">
+    <div class="eyebrow">Reflection · Good, Bad, Ugly</div>
+
+    <h2 class="serif h3" style="max-width:680px; margin-bottom:12px;">
+      What are you ready to outgrow?
+    </h2>
+    <p class="fran body-md" style="max-width:540px; margin-bottom:28px;">
+      When something no longer fits, you feel it before you name it. That restlessness is information.
+    </p>
+
+    <div style="display:grid; grid-template-columns:1fr; gap:14px; max-width:720px;">
+      <div class="card card-sand" style="padding:22px;">
+        <div class="card-eyebrow" style="margin-bottom:8px;"><div class="dot" style="background:var(--teal);"></div>Release</div>
+        <p class="fran body-sm" style="color:var(--charcoal); margin:0;">What you're done carrying.</p>
+      </div>
+      <div class="card" style="padding:22px;">
+        <div class="card-eyebrow" style="margin-bottom:8px;"><div class="dot" style="background:var(--yellow);"></div>Keep</div>
+        <p class="fran body-sm" style="color:var(--charcoal); margin:0;">What's served you.</p>
+      </div>
+      <div class="card" style="padding:22px;">
+        <div class="card-eyebrow" style="margin-bottom:8px;"><div class="dot"></div>Become</div>
+        <p class="fran body-sm" style="color:var(--charcoal); margin:0;">What wants to grow.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- =========================================================
+     SLIDE 13 · TESTIMONIAL — Cath
+     ========================================================= -->
+<section class="slide slide-teal" id="s13">
+  <div class="content">
+    <div class="eyebrow">In their words · Cath</div>
+
+    <div class="pull-quote">
+      <span class="glyph" style="color:var(--plum);">"</span>
+      <p class="q" style="color:var(--ink);">I have got a really clear sense of my why statement. Such a good place to start unpacking some of those deeper questions. A positive and safe sharing environment.</p>
+      <span class="attr" style="color:rgba(16,0,0,0.55);">Cath · Ground Swell participant · purposeful growth kickstarted</span>
+    </div>
+
+    <hr class="rule">
+    <p class="fran" style="font-size:17px; color:rgba(16,0,0,0.65); max-width:520px; line-height:1.5; font-variation-settings:'SOFT' 50,'opsz' 144;">
+      Safe enough to go deep. That's the whole design. <em style="color:var(--plum);">Clear</em> — not finished.
+    </p>
+  </div>
+</section>
+
+
+<!-- =========================================================
+     SLIDE 14 · SECTION OPENER — Set Your Sights
+     ========================================================= -->
+<section class="slide slide-pink slide-opener" id="s14">
+  <div class="content" style="position:relative; z-index:1;">
+    <div class="eyebrow">Session 03</div>
+
+    <span class="sig" style="font-size:clamp(28px,7vw,44px); color:var(--paper); margin-bottom:4px;">time to</span>
+    <h2 class="serif h2" style="color:var(--paper); max-width:760px; margin-bottom:20px;">
+      Set your <em>sights.</em>
+    </h2>
+    <p class="fran body-lg" style="color:rgba(251,247,238,0.85); max-width:520px;">
+      Desire is data. What you want tells you where your values already live.
+    </p>
+  </div>
+
+  <div class="bg-num" style="color:var(--paper);">03</div>
+</section>
+
+
+<!-- =========================================================
+     SLIDE 15 · ACTIVITY — Desire inventory
+     ========================================================= -->
+<section class="slide slide-paper" id="s15">
+  <div class="content">
+    <div class="eyebrow">Activity · Imperfect desire</div>
+
+    <div class="two-col two-col-start" style="gap:40px;">
+      <div>
+        <h3 class="serif h3">Write without editing or shrinking.</h3>
+        <p class="fran body-md" style="color:var(--charcoal);">
+          The things you want but haven't said out loud are the signal.
+        </p>
+        <span style="font-family:'Patrick Hand'; font-size:15px; color:var(--muted);">#desire-is-data</span>
+      </div>
+
+      <div>
+        <div class="activity">
+          <div class="activity-head">
+            <span class="act-label">Activity</span>
+            <span class="act-time">10 minutes</span>
+          </div>
+          <div class="activity-body">
+            <p class="activity-instruction">What do you want <em>more</em> of?</p>
+            <ul class="activity-rules">
+              <li>Write without editing or shrinking.</li>
+              <li>What do you secretly want?</li>
+              <li>What scares you because it matters?</li>
+              <li>What have you been waiting for permission to want?</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- =========================================================
+     SLIDE 16 · WHAT DO YOU WANT MORE OF
+     ========================================================= -->
+<section class="slide slide-paper2" id="s16">
+  <div class="content">
+    <div class="eyebrow">Reflection · Intention</div>
+
+    <div class="pull-quote">
+      <span class="glyph">"</span>
+      <p class="q">What do you want to do <span class="mark-underline mark-pink">more<svg viewBox="0 0 60 16" preserveAspectRatio="none"><path d="M2 12 Q15 6 30 10 Q45 14 58 8"/></svg></span> of — and what is that telling you?</p>
+    </div>
+
+    <p class="fran body-md" style="max-width:540px; color:var(--charcoal);">
+      The things you keep deprioritising signal where you've been living outside your values. Not laziness — <em>misalignment.</em>
+    </p>
+
+    <span style="font-family:'Patrick Hand'; font-size:15px; color:var(--muted); margin-top:8px; display:inline-block;">#intention</span>
+  </div>
+</section>
+
+
+<!-- =========================================================
+     SLIDE 17 · THE RIPPLE
+     ========================================================= -->
+<section class="slide slide-paper" id="s17">
+  <div class="content">
+    <div class="eyebrow">Reflection · Impact</div>
+
+    <div class="pull-quote">
+      <span class="glyph">"</span>
+      <p class="q">What shifts for you — and for the people around you — when you start living this?</p>
+    </div>
+
+    <p class="fran body-md" style="max-width:580px; color:var(--charcoal);">
+      Ground Swell isn't solo work. You living more fully makes something possible for someone else.
+    </p>
+  </div>
+</section>
+
+
+<!-- =========================================================
+     SLIDE 18 · SECTION OPENER — Edge of Glory
+     ========================================================= -->
+<section class="slide slide-ink slide-opener" id="s18">
+  <div class="content" style="position:relative; z-index:1;">
+    <div class="eyebrow">Session 04</div>
+
+    <span class="sig" style="font-size:clamp(28px,7vw,44px); color:var(--yellow); margin-bottom:4px;">protect your</span>
+    <h2 class="serif h2" style="color:var(--paper); max-width:800px;">
+      Edge of <em>glory.</em>
+    </h2>
+    <p class="fran body-lg" style="color:rgba(251,247,238,0.65); max-width:520px;">
+      Boundaries are not walls. They are the shape of your values.
+    </p>
+  </div>
+
+  <div class="bg-num" style="color:var(--paper);">04</div>
+</section>
+
+
+<!-- =========================================================
+     SLIDE 19 · EDGE OF GLORY DETAIL
+     ========================================================= -->
+<section class="slide slide-paper" id="s19">
+  <div class="content">
+    <div class="eyebrow">Crafting Your Boundaries · The framework</div>
+
+    <h2 class="serif h3" style="margin-bottom:28px;">Two parts. That's the whole framework.</h2>
+
+    <div class="why-frame">
+      <div class="why-card">
+        <div class="why-label">I'm no longer available for…</div>
+        <div class="why-text">[What you're done carrying]</div>
+        <div class="why-example">The specific, honest thing.</div>
+      </div>
+      <div class="why-card filled">
+        <div class="why-label">What I need instead…</div>
+        <div class="why-text">[What you want more of]</div>
+        <div class="why-example">Name it — not just the lack.</div>
+      </div>
+    </div>
+
+    <div style="border:1px solid var(--pink); padding:24px 28px; max-width:640px; background:rgba(255,57,144,0.04); margin-top:4px;">
+      <span style="font-family:'Inter'; font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:var(--pink);">Example</span>
+      <p class="fran" style="font-style:italic; font-size:22px; line-height:1.3; color:var(--ink); margin:10px 0 0; font-variation-settings:'SOFT' 50,'opsz' 144;">
+        'I'm not available for last-minute requests that undermine my rest. I need 48 hours' notice.'
+      </p>
+    </div>
+
+    <p class="fran body-sm" style="margin-top:16px;">Say it once. Kindly. Clearly. You don't need to justify it.</p>
+  </div>
+</section>
+
+
+<!-- =========================================================
+     SLIDE 20 · ACTIVITY — Boundary work
+     ========================================================= -->
+<section class="slide slide-paper2" id="s20">
+  <div class="content">
+    <div class="eyebrow">Activity · Write it</div>
+
+    <div class="activity">
+      <div class="activity-head">
+        <span class="act-label">Activity</span>
+        <span class="act-time">12 minutes</span>
+      </div>
+      <div class="activity-body">
+        <p class="activity-instruction">Write your boundary. <em>First draft only.</em></p>
+        <ul class="activity-rules">
+          <li>Start with 'I'm no longer available for…'</li>
+          <li>Complete 'What I need instead is…'</li>
+          <li>Read it aloud. If it sounds like an apology, rewrite it.</li>
+          <li>Say it as if you believe it.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- =========================================================
+     SLIDE 21 · SECTION OPENER — People as Poetry
+     ========================================================= -->
+<section class="slide slide-yellow slide-opener" id="s21">
+  <div class="content" style="position:relative; z-index:1;">
+    <div class="eyebrow">Session 05</div>
+
+    <span class="sig" style="font-size:clamp(28px,7vw,44px); color:var(--plum); margin-bottom:4px;">get inspired by</span>
+    <h2 class="serif h2" style="max-width:820px; color:var(--ink);">
+      People as <em>poetry.</em>
+    </h2>
+
+    <p class="fran body-lg" style="color:rgba(16,0,0,0.7); max-width:520px;">
+      You become the people you're surrounded by.
+    </p>
+  </div>
+
+  <div class="bg-num" style="color:var(--ink);">05</div>
+</section>
+
+
+<!-- =========================================================
+     SLIDE 22 · WHAT RELATIONSHIPS ARE
+     ========================================================= -->
+<section class="slide slide-paper" id="s22">
+  <div class="content">
+    <div class="eyebrow">Design thinking · The foundation</div>
+
+    <div class="two-col">
+      <div>
+        <h2 class="serif h2">
+          Relationships are <em>resources</em> — and drains.
+        </h2>
+        <p class="fran body-lg" style="margin-bottom:16px;">
+          Not just emotionally. Energetically. The people around you shape your confidence, your identity, your sense of what's possible.
+        </p>
+        <p class="fran body-sm" style="color:var(--charcoal);">
+          A relationship ecosystem isn't about cutting people out. It's about seeing clearly — and choosing where to invest.
+        </p>
+      </div>
+
+      <div style="display:flex; align-items:center; justify-content:center;">
+        <div style="position:relative; width:min(200px, 60vw); height:min(200px, 60vw);">
+          <svg viewBox="0 0 240 240" fill="none" stroke="var(--ink)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:100%; height:100%;" aria-hidden="true">
+            <polygon points="120,14 226,120 120,226 14,120"/>
+            <line x1="120" y1="14" x2="120" y2="226" opacity="0.12"/>
+            <line x1="14" y1="120" x2="226" y2="120" opacity="0.12"/>
+            <circle cx="120" cy="14"  r="7" fill="var(--teal)"   stroke="none"/>
+            <circle cx="226" cy="120" r="7" fill="var(--pink)"   stroke="none"/>
+            <circle cx="120" cy="226" r="7" fill="var(--teal)"   stroke="none"/>
+            <circle cx="14"  cy="120" r="7" fill="var(--yellow)" stroke="none"/>
+          </svg>
+          <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-family:'Inter'; font-size:9px; letter-spacing:0.18em; text-transform:uppercase; color:var(--muted); text-align:center; line-height:1.7;">Nourish<br/>↕<br/>Drain</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- =========================================================
+     SLIDE 23 · THE GROUND SWELL WAY (SLIDE-LONG)
+     ========================================================= -->
+<section class="slide slide-long slide-paper2" id="s23">
+  <div class="content">
+    <div class="eyebrow">The Ground Swell Way · The process</div>
+
+    <h2 class="serif h3" style="margin-bottom:36px;">How Ground Swell works — in five moves.</h2>
+
+    <div class="process">
+      <div class="process-step">
+        <div class="step-circle" style="background:var(--paper);">
+          <svg viewBox="0 0 40 40" fill="none" stroke="var(--ink)" stroke-width="2" stroke-linecap="round">
+            <circle cx="18" cy="18" r="9"/><line x1="24" y1="24" x2="34" y2="34"/>
+          </svg>
+        </div>
+        <span class="step-name">Understand</span>
+        <span class="step-sub">See</span>
+      </div>
+      <div class="process-arrow">→</div>
+      <div class="process-step">
+        <div class="step-circle" style="background:var(--paper);">
+          <svg viewBox="0 0 40 40" fill="none" stroke="var(--ink)" stroke-width="2" stroke-linecap="round">
+            <circle cx="20" cy="15" r="5"/><line x1="20" y1="20" x2="20" y2="33"/>
+            <line x1="14" y1="27" x2="26" y2="27"/>
+          </svg>
+        </div>
+        <span class="step-name">Focus</span>
+        <span class="step-sub">Choose</span>
+      </div>
+      <div class="process-arrow">→</div>
+      <div class="process-step">
+        <div class="step-circle active">
+          <svg viewBox="0 0 40 40" fill="none" stroke="var(--ink)" stroke-width="2" stroke-linecap="round">
+            <circle cx="20" cy="18" r="7"/>
+            <line x1="20" y1="5" x2="20" y2="10"/><line x1="20" y1="26" x2="20" y2="31"/>
+            <line x1="5" y1="18" x2="10" y2="18"/><line x1="30" y1="18" x2="35" y2="18"/>
+          </svg>
+        </div>
+        <span class="step-name">Explore</span>
+        <span class="step-sub">Get curious</span>
+      </div>
+      <div class="process-arrow">→</div>
+      <div class="process-step">
+        <div class="step-circle" style="background:var(--paper);">
+          <svg viewBox="0 0 40 40" fill="none" stroke="var(--ink)" stroke-width="2" stroke-linecap="round">
+            <rect x="8" y="14" width="24" height="17" rx="2"/><line x1="8" y1="20" x2="32" y2="20"/>
+            <line x1="20" y1="9" x2="20" y2="14"/>
+          </svg>
+        </div>
+        <span class="step-name">Make</span>
+        <span class="step-sub">Try</span>
+      </div>
+      <div class="process-arrow">→</div>
+      <div class="process-step">
+        <div class="step-circle" style="background:var(--paper);">
+          <svg viewBox="0 0 40 40" fill="none" stroke="var(--ink)" stroke-width="2" stroke-linecap="round">
+            <polyline points="8,22 16,30 32,12"/>
+          </svg>
+        </div>
+        <span class="step-name">Test</span>
+        <span class="step-sub">Learn</span>
+      </div>
+    </div>
+
+    <p class="fran body-sm" style="color:var(--charcoal);">Not linear. Not once. A loop — use it every time life wants to redesign itself.</p>
+    <span style="font-family:'Patrick Hand'; font-size:15px; color:var(--muted);">#the-ground-swell-way</span>
+  </div>
+</section>
+
+
+<!-- =========================================================
+     SLIDE 24 · PROTOTYPE YOUR LIFE
+     ========================================================= -->
+<section class="slide slide-paper" id="s24">
+  <div class="content">
+    <div class="eyebrow">Design thinking in life</div>
+
+    <h2 class="serif h2" style="max-width:880px;">
+      What is the least amount of work we need to <em>learn</em> the next most important thing?
+    </h2>
+
+    <div style="display:flex; gap:40px; flex-wrap:wrap; align-items:flex-start; margin-top:12px;">
+      <p class="fran body-lg" style="max-width:420px; color:var(--charcoal); margin-bottom:0;">
+        You don't need the whole plan. You need the next useful experiment.
+      </p>
+      <div style="display:flex; flex-direction:column; gap:8px; margin-top:4px;">
+        <span style="font-family:'Patrick Hand'; font-size:16px; color:var(--charcoal); opacity:0.6;">#prototype-life</span>
+        <span style="font-family:'Patrick Hand'; font-size:16px; color:var(--charcoal); opacity:0.6;">#small-and-real</span>
+        <span style="font-family:'Patrick Hand'; font-size:16px; color:var(--charcoal); opacity:0.6;">#embrace-ambiguity</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- =========================================================
+     SLIDE 25 · REAL STORY
+     ========================================================= -->
+<section class="slide slide-paper2" id="s25">
+  <div class="content">
+    <div class="eyebrow">A real story · In practice</div>
+
+    <div class="two-col two-col-start" style="gap:40px;">
+      <div>
+        <span class="sig" style="font-size:clamp(28px,7vw,40px); color:var(--pink); margin-bottom:6px;">in her late 40s,</span>
+        <h2 class="serif h3" style="margin-bottom:20px;">
+          From quietly exhausted to <em>quietly purposeful.</em>
+        </h2>
+        <p class="fran body-lg" style="color:var(--charcoal); margin-bottom:14px;">
+          In the middle of a successful life, she wanted something to shift. Not dramatically — meaningfully.
+        </p>
+        <p class="fran body-sm" style="color:var(--muted);">
+          She didn't upend everything. She ran one small experiment — a felt experience — to find out if one of her desires might be real.
+        </p>
+      </div>
+
+      <div>
+        <div class="card card-ink" style="padding:32px;">
+          <div class="card-eyebrow">The lesson</div>
+          <p class="serif" style="font-size:24px; line-height:1.15; margin:12px 0 14px; color:var(--paper); letter-spacing:-0.01em;">
+            A felt experience is a great way to find out if one of your ideas might work for you.
+          </p>
+          <p class="fran" style="font-size:14px; color:rgba(251,247,238,0.65); line-height:1.5; margin:0; font-variation-settings:'SOFT' 50,'opsz' 144;">
+            You don't need to burn it down to find out. Start small.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- =========================================================
+     SLIDE 26 · READY?
+     ========================================================= -->
+<section class="slide slide-paper" id="s26">
+  <div class="content">
+    <div class="eyebrow">The invitation</div>
+
+    <h2 class="serif" style="font-size:clamp(32px,6vw,76px); line-height:1.02; margin:0 0 16px; max-width:900px; letter-spacing:-0.015em;">
+      Ready to feel more like <em>yourself?</em>
+    </h2>
+    <h2 class="serif" style="font-size:clamp(24px,4.5vw,56px); line-height:1.02; margin:10px 0; max-width:900px; letter-spacing:-0.015em; opacity:0.7;">
+      Ready to stop waiting for the right time and start moving <span class="mark-underline mark-yellow">gently<svg viewBox="0 0 100 16" preserveAspectRatio="none"><path d="M2 12 Q25 4 50 10 Q75 14 98 7"/></svg></span>?
+    </h2>
+    <h2 class="serif" style="font-size:clamp(20px,3.5vw,48px); line-height:1.02; margin:10px 0; max-width:900px; letter-spacing:-0.015em; opacity:0.5;">
+      Ready to stop striving — and start <em>living?</em>
+    </h2>
+
+    <span style="font-family:'Patrick Hand'; font-size:15px; color:var(--muted); margin-top:28px; display:inline-block;">#by-design-not-accident</span>
+  </div>
+</section>
+
+
+<!-- =========================================================
+     SLIDE 27 · NOTHING CHANGES
+     ========================================================= -->
+<section class="slide slide-ink" id="s27">
+  <div class="content">
+    <h2 class="serif" style="font-size:clamp(40px,9vw,130px); margin:0 0 32px; color:var(--paper); max-width:900px; line-height:0.92; letter-spacing:-0.02em;">
+      Nothing changes,<br/>if nothing <em style="color:var(--yellow);">changes.</em>
+    </h2>
+
+    <p class="fran body-lg" style="color:rgba(251,247,238,0.7); max-width:500px;">
+      The work you've done today is a start. Not a plan — a start. The next move is <em>yours.</em>
+    </p>
+
+    <span style="font-family:'Patrick Hand'; font-size:15px; color:rgba(251,247,238,0.45); margin-top:20px; display:inline-block;">#how-might-we</span>
+  </div>
+</section>
+
+
+<!-- =========================================================
+     SLIDE 28 · SECTION OPENER — Ground Swell invitation
+     ========================================================= -->
+<section class="slide slide-teal slide-opener" id="s28">
+  <div class="content" style="position:relative; z-index:1;">
+    <div class="eyebrow">Now</div>
+
+    <span class="sig" style="font-size:clamp(28px,7vw,44px); color:var(--plum); margin-bottom:4px;">how might we…</span>
+    <h2 class="serif h2" style="color:var(--ink); max-width:820px; margin-bottom:20px;">
+      Prototype a life you <em>love.</em>
+    </h2>
+    <p class="fran body-lg" style="color:rgba(16,0,0,0.7);">Welcome to Ground Swell.</p>
+  </div>
+
+  <div class="bg-num" style="color:var(--ink);">GS</div>
+</section>
+
+
+<!-- =========================================================
+     SLIDE 29 · WHAT IS GROUND SWELL
+     ========================================================= -->
+<section class="slide slide-paper" id="s29">
+  <div class="content">
+    <div class="eyebrow">Ground Swell · What it is</div>
+
+    <div class="two-col two-col-start">
+      <div>
+        <span class="sig" style="font-size:clamp(28px,7vw,40px); color:var(--pink); margin-bottom:4px;">a 6-week</span>
+        <h2 class="serif h3" style="margin-bottom:20px;">women's circle.</h2>
+        <p class="fran body-lg" style="color:var(--charcoal); margin-bottom:14px;">
+          From quietly exhausted to living with clarity and warmth. Designed by you, for you.
+        </p>
+        <p class="fran body-sm" style="color:var(--muted);">
+          Ground Swell teaches you to think like a designer — someone who creates something from nothing — to gently redesign the life you're already living.
+        </p>
+        <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:22px; font-family:'Patrick Hand'; font-size:16px; color:var(--charcoal);">
+          <span style="border:1px solid var(--ink); padding:6px 14px; transform:rotate(-2deg);">Gentle</span>
+          <span style="border:1px solid var(--ink); padding:6px 14px; transform:rotate(2deg);">Simple</span>
+          <span style="border:1px solid var(--ink); padding:6px 14px; transform:rotate(-1deg);">Supported</span>
+        </div>
+      </div>
+
+      <div>
+        <div style="border:1px solid var(--ink); overflow:hidden;">
+          <div style="background:var(--ink); padding:18px 24px;">
+            <span style="font-family:'Inter'; font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:rgba(251,247,238,0.6);">6 Sessions · 6 Unique Experiences</span>
+          </div>
+          <div>
+            <div style="padding:16px 24px; border-bottom:1px solid rgba(16,0,0,0.1); display:flex; gap:14px; align-items:baseline;">
+              <span style="font-family:'Inter'; font-size:10px; color:var(--pink); flex-shrink:0;">01</span>
+              <span class="serif" style="font-size:17px;">Your Why — values, purpose, direction</span>
+            </div>
+            <div style="padding:16px 24px; border-bottom:1px solid rgba(16,0,0,0.1); display:flex; gap:14px; align-items:baseline;">
+              <span style="font-family:'Inter'; font-size:10px; color:var(--pink); flex-shrink:0;">02</span>
+              <span class="serif" style="font-size:17px;">A Walk in Your Shoes — patterns and story</span>
+            </div>
+            <div style="padding:16px 24px; border-bottom:1px solid rgba(16,0,0,0.1); display:flex; gap:14px; align-items:baseline;">
+              <span style="font-family:'Inter'; font-size:10px; color:var(--pink); flex-shrink:0;">03</span>
+              <span class="serif" style="font-size:17px;">Set Your Sights — desire and direction</span>
+            </div>
+            <div style="padding:16px 24px; border-bottom:1px solid rgba(16,0,0,0.1); display:flex; gap:14px; align-items:baseline;">
+              <span style="font-family:'Inter'; font-size:10px; color:var(--pink); flex-shrink:0;">04</span>
+              <span class="serif" style="font-size:17px;">Edge of Glory — boundaries and energy</span>
+            </div>
+            <div style="padding:16px 24px; border-bottom:1px solid rgba(16,0,0,0.1); display:flex; gap:14px; align-items:baseline;">
+              <span style="font-family:'Inter'; font-size:10px; color:var(--pink); flex-shrink:0;">05</span>
+              <span class="serif" style="font-size:17px;">People as Poetry — relationships and belonging</span>
+            </div>
+            <div style="padding:16px 24px; display:flex; gap:14px; align-items:baseline;">
+              <span style="font-family:'Inter'; font-size:10px; color:var(--pink); flex-shrink:0;">06</span>
+              <span class="serif" style="font-size:17px;">Feedback from the Future — prototype and plan</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- =========================================================
+     SLIDE 30 · THE RESULT
+     ========================================================= -->
+<section class="slide slide-paper2" id="s30">
+  <div class="content">
+    <div class="eyebrow">The result</div>
+
+    <div class="pull-quote">
+      <span class="glyph">"</span>
+      <p class="q" style="font-size:clamp(24px,4.5vw,52px);">You're quietly, unequivocally in love with the flow of your own life.</p>
+    </div>
+
+    <p class="fran body-md" style="max-width:540px; color:var(--charcoal);">
+      Not because everything is perfect — because the choices you're making are aligned with what you actually value.
+    </p>
+
+    <hr class="rule">
+
+    <p class="fran body-sm" style="color:var(--muted);">
+      Ground Swell is flexible enough to use forever. Not a once-and-done workshop — a way of living with more intention as you continue to grow and change.
+    </p>
+  </div>
+</section>
+
+
+<!-- =========================================================
+     SLIDE 31 · OBJECTIONS — I Hear You (SLIDE-LONG)
+     ========================================================= -->
+<section class="slide slide-long slide-plum" id="s31">
+  <div class="content">
+    <div class="eyebrow">I hear you.</div>
+    <span class="sig" style="font-size:clamp(28px,7vw,40px); color:var(--yellow); margin-bottom:4px;">I hear you.</span>
+    <h2 class="serif h3" style="color:var(--paper); max-width:540px; margin-bottom:8px;">
+      Three things I hear every time.
+    </h2>
+
+    <div class="obj-grid">
+      <div class="obj-card">
+        <div class="obj-tag">→ Objection 01</div>
+        <div class="obj-title">"I love my life. I don't need to change everything."</div>
+        <p class="obj-body">Ground Swell is not about uprooting your life. It's about finding what's missing — and gently building that in, without the drama.</p>
+      </div>
+      <div class="obj-card">
+        <div class="obj-tag">→ Objection 02</div>
+        <div class="obj-title">"I have no idea what I want."</div>
+        <p class="obj-body">That's exactly the right starting point. Not knowing is data. The work is getting curious about what you'd want if you let yourself have an opinion about your own life.</p>
+      </div>
+      <div class="obj-card">
+        <div class="obj-tag">→ Objection 03</div>
+        <div class="obj-title">"I literally don't have the time."</div>
+        <p class="obj-body">You can't make more time. But you can make choices. You can let the washing be folded the wrong way once a week. It still gets done — imperfectly. That's fine.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- =========================================================
+     SLIDE 32 · CLOSING QUESTION
+     ========================================================= -->
+<section class="slide slide-paper" id="s32">
+  <div class="content">
+    <div class="eyebrow">The question</div>
+
+    <div class="pull-quote" style="max-width:860px;">
+      <span class="glyph">"</span>
+      <p class="q">What possibilities could use a bit of gentle design right now — in small and easy ways?</p>
+    </div>
+
+    <p class="fran body-md" style="max-width:560px; color:var(--charcoal);">
+      Not everything. Not the whole life. Just one place — where a softer, clearer eye might make the next step <em>easier.</em>
+    </p>
+  </div>
+</section>
+
+
+<!-- Floating presenter bubble -->
+<div class="presenter-bubble" id="presenterBubble">
+  <button class="bubble-toggle" id="bubbleToggle" onclick="toggleBubble()" aria-label="Watch Jacinta present">
+    <div class="bubble-avatar">
+      <span class="bubble-play">▶</span>
+      <span class="bubble-close-icon">×</span>
+    </div>
+    <span class="bubble-name">Jacinta</span>
+  </button>
+  <div class="bubble-panel" id="bubblePanel" hidden>
+    <div class="bubble-video-wrap">
+      <!-- PASTE YOUR VIDEO EMBED URL BELOW (Loom, Vimeo, or YouTube) -->
+      <iframe id="bubbleIframe"
+        src="about:blank"
+        data-src="YOUR_LOOM_OR_VIMEO_EMBED_URL_HERE"
+        allow="autoplay; fullscreen"
+        allowfullscreen
+        title="Jacinta presents">
+      </iframe>
+    </div>
+  </div>
+</div>
+
+
+<!-- Progress dots + section label observer + keyboard nav -->
+<script>
+// ---- Section label map ----
+const sectionLabels = {
+  s1: 'Ground Swell', s2: 'Ground Swell', s3: 'Ground Swell', s4: 'Ground Swell',
+  s5: '§ Your Why',   s6: '§ Your Why',   s7: '§ Your Why',   s8: '§ Your Why',
+  s9: '§ Your Story', s10: '§ Your Story', s11: '§ Your Story', s12: '§ Your Story', s13: '§ Your Story',
+  s14: '§ Set Your Sights', s15: '§ Set Your Sights', s16: '§ Set Your Sights', s17: '§ Set Your Sights',
+  s18: '§ Edge of Glory', s19: '§ Edge of Glory', s20: '§ Edge of Glory',
+  s21: '§ People as Poetry', s22: '§ People as Poetry', s23: '§ People as Poetry', s24: '§ People as Poetry', s25: '§ People as Poetry',
+  s26: '§ Feedback from Future', s27: '§ Feedback from Future', s28: '§ Feedback from Future',
+  s29: 'Ground Swell', s30: 'Ground Swell', s31: 'Ground Swell', s32: 'Ground Swell'
+};
+
+(function () {
+  const slides  = document.querySelectorAll('.slide');
+  const nav     = document.getElementById('progress');
+  const labelEl = document.getElementById('section-label');
+
+  // Build progress dots
+  slides.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'pdot';
+    d.title = 'Slide ' + (i + 1);
+    d.addEventListener('click', () => slides[i].scrollIntoView({ behavior: 'smooth' }));
+    nav.appendChild(d);
+  });
+
+  const dots = nav.querySelectorAll('.pdot');
+
+  // IntersectionObserver for dots + section label
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const i = [...slides].indexOf(e.target);
+        dots.forEach((d, j) => d.classList.toggle('on', i === j));
+        // Update section label
+        const id = e.target.id;
+        if (labelEl && sectionLabels[id]) {
+          labelEl.textContent = sectionLabels[id];
+        }
+      }
+    });
+  }, { threshold: 0.4 });
+
+  slides.forEach(s => io.observe(s));
+
+  // Keyboard nav (arrow keys)
+  document.addEventListener('keydown', e => {
+    const cur = [...slides].findIndex(s => {
+      const r = s.getBoundingClientRect();
+      return r.top > -80 && r.top < window.innerHeight * 0.5;
+    });
+    if ((e.key === 'ArrowDown' || e.key === 'ArrowRight') && cur < slides.length - 1) {
+      e.preventDefault(); slides[cur + 1].scrollIntoView({ behavior: 'smooth' });
+    }
+    if ((e.key === 'ArrowUp' || e.key === 'ArrowLeft') && cur > 0) {
+      e.preventDefault(); slides[cur - 1].scrollIntoView({ behavior: 'smooth' });
+    }
+  });
+})();
+
+// ---- Floating bubble ----
+function toggleBubble() {
+  const bubble = document.getElementById('presenterBubble');
+  const panel = document.getElementById('bubblePanel');
+  const iframe = document.getElementById('bubbleIframe');
+  const isOpen = !panel.hasAttribute('hidden');
+  if (!isOpen) {
+    panel.removeAttribute('hidden');
+    bubble.classList.add('is-open');
+    if (!iframe.src || iframe.src === location.href || iframe.src === 'about:blank') {
+      iframe.src = iframe.dataset.src || 'about:blank';
+    }
+  } else {
+    panel.setAttribute('hidden', '');
+    bubble.classList.remove('is-open');
+    iframe.src = 'about:blank';
+  }
+}
+</script>
+
+</body>
+</html>
