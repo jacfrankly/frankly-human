@@ -493,9 +493,9 @@
     right: 20px;
     z-index: 200;
     display: flex;
-    flex-direction: column;
+    flex-direction: column-reverse; /* toggle stays at bottom, video floats above */
     align-items: center;
-    gap: 6px;
+    gap: 8px;
   }
   .bubble-toggle {
     display: flex;
@@ -527,10 +527,33 @@
     font-size: 22px;
     margin-left: 4px;
   }
+  .bubble-close-icon {
+    display: none;
+    color: var(--paper);
+    font-size: 22px;
+    line-height: 1;
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+  }
   .bubble-name {
     font-family: 'Patrick Hand', cursive;
     font-size: 13px;
     color: var(--charcoal);
+  }
+  /* Open state: toggle shrinks to a small × */
+  .presenter-bubble.is-open .bubble-avatar {
+    width: 36px;
+    height: 36px;
+    background: var(--charcoal);
+    border-width: 2px;
+  }
+  .presenter-bubble.is-open .bubble-play { display: none; }
+  .presenter-bubble.is-open .bubble-close-icon { display: block; font-size: 16px; }
+  .presenter-bubble.is-open .bubble-name { display: none; }
+  .presenter-bubble.is-open .bubble-toggle:hover .bubble-avatar,
+  .presenter-bubble.is-open .bubble-toggle:focus .bubble-avatar {
+    transform: scale(1.12);
+    background: var(--ink);
   }
   /* Open video panel: larger circle, video crops to fill */
   .bubble-panel {
@@ -1678,6 +1701,7 @@
   <button class="bubble-toggle" id="bubbleToggle" onclick="toggleBubble()" aria-label="Watch Jacinta present">
     <div class="bubble-avatar">
       <span class="bubble-play">▶</span>
+      <span class="bubble-close-icon">×</span>
     </div>
     <span class="bubble-name">Jacinta</span>
   </button>
@@ -1692,7 +1716,6 @@
         title="Jacinta presents">
       </iframe>
     </div>
-    <button class="bubble-close" onclick="closeBubble()" aria-label="Close video">×</button>
   </div>
 </div>
 
@@ -1772,22 +1795,21 @@ const sectionLabels = {
 
 // ---- Floating bubble ----
 function toggleBubble() {
+  const bubble = document.getElementById('presenterBubble');
   const panel = document.getElementById('bubblePanel');
   const iframe = document.getElementById('bubbleIframe');
-  const hidden = panel.hasAttribute('hidden');
-  if (hidden) {
+  const isOpen = !panel.hasAttribute('hidden');
+  if (!isOpen) {
     panel.removeAttribute('hidden');
-    // Lazy-load: move data-src to src on first open
-    if (iframe.src === '' || iframe.src === location.href || iframe.src === 'about:blank') {
+    bubble.classList.add('is-open');
+    if (!iframe.src || iframe.src === location.href || iframe.src === 'about:blank') {
       iframe.src = iframe.dataset.src || 'about:blank';
     }
   } else {
     panel.setAttribute('hidden', '');
-    iframe.src = 'about:blank'; // pause video on close
+    bubble.classList.remove('is-open');
+    iframe.src = 'about:blank';
   }
-}
-function closeBubble() {
-  toggleBubble();
 }
 </script>
 
