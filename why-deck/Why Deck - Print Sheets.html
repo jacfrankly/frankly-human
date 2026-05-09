@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>The Why Deck — Print Sheets (A4)</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400&family=Inter:wght@400;500;600;700&family=Allura&family=Patrick+Hand&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --ink:#100000; --charcoal:#423B3B;
+      --paper:#FBF7EE; --paper2:#F4EFE2; --sand:#E0D2B5;
+      --teal:#47ACA4; --pink:#FF3990; --yellow:#FFBD59; --plum:#7A1F4A;
+      --serif:'DM Serif Display', Georgia, serif;
+      --book:'Fraunces', Georgia, serif;
+      --ui:'Inter', system-ui, sans-serif;
+      --script:'Allura', cursive;
+      --hand:'Patrick Hand', system-ui;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      background: #d6cfc0;
+      font-family: var(--book);
+      color: var(--ink);
+      -webkit-font-smoothing: antialiased;
+      print-color-adjust: exact;
+      -webkit-print-color-adjust: exact;
+    }
+
+    /* ── Screen toolbar ─────────────────────────────────────── */
+    .toolbar {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--ink); color: var(--paper);
+      padding: 14px 24px;
+      display: flex; align-items: center; gap: 24px;
+      font-family: var(--ui); font-size: 13px;
+      box-shadow: 0 2px 18px rgba(0,0,0,.18);
+    }
+    .toolbar h1 {
+      margin: 0; font-family: var(--serif); font-weight: 400;
+      font-size: 22px; text-transform: lowercase; letter-spacing: -0.01em;
+    }
+    .toolbar h1 em { color: var(--pink); font-style: italic; }
+    .toolbar .spacer { flex: 1; }
+    .toolbar .info {
+      opacity: .8; letter-spacing: .04em;
+    }
+    .toolbar button {
+      background: var(--paper); color: var(--ink);
+      border: 0; border-radius: 999px;
+      padding: 9px 18px; font-family: var(--ui); font-weight: 600; font-size: 12px;
+      letter-spacing: .08em; text-transform: uppercase;
+      cursor: pointer;
+    }
+    .toolbar button:hover { background: var(--yellow); }
+    .toolbar select {
+      background: transparent; color: var(--paper);
+      border: 1px solid rgba(251,247,238,.4);
+      border-radius: 999px; padding: 7px 14px;
+      font-family: var(--ui); font-size: 12px;
+      cursor: pointer;
+    }
+    .toolbar select option { color: var(--ink); }
+
+    /* ── Page ────────────────────────────────────────────────── */
+    @page { size: A4; margin: 0; }
+
+    .page {
+      width: 210mm;
+      height: 297mm;
+      background: var(--paper);
+      margin: 16px auto;
+      box-shadow: 0 8px 30px rgba(0,0,0,.12);
+      page-break-after: always;
+      break-after: page;
+      position: relative;
+      overflow: hidden;
+      padding: 14mm 12mm;
+      display: flex;
+      flex-direction: column;
+    }
+    .page:last-child { page-break-after: auto; break-after: auto; }
+
+    .page-header {
+      display: flex; justify-content: space-between; align-items: baseline;
+      font-family: var(--ui); font-size: 7pt; letter-spacing: .14em;
+      text-transform: uppercase; color: var(--charcoal);
+      margin-bottom: 5mm;
+    }
+    .page-header .pg-meta { opacity: .7; }
+    .page-header .pg-side {
+      font-family: var(--serif); font-style: italic; text-transform: lowercase;
+      font-size: 14pt; letter-spacing: 0; color: var(--ink);
+    }
+
+    /* ── Card grid (3 × 3 = 9 per page) ───────────────────────── */
+    .card-grid {
+      flex: 1;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(3, 1fr);
+      gap: 4mm;
+    }
+    .card-grid.is-back { direction: rtl; }       /* mirror horizontally for duplex */
+    .card-grid.is-back > * { direction: ltr; }
+
+    .card {
+      position: relative;
+      border: 1pt solid var(--ink);
+      border-radius: 0;
+      overflow: hidden;
+      background: var(--paper);
+      display: flex; flex-direction: column;
+    }
+    .card.is-back { background: var(--paper2); }
+
+    /* crop registration ticks (faint) */
+    .card::before, .card::after {
+      content: ""; position: absolute;
+      width: 3mm; height: 0; border-top: .5pt dashed rgba(0,0,0,.25);
+    }
+    .card::before { top: -1mm; left: -4mm; }
+    .card::after  { bottom: -1mm; right: -4mm; }
+
+    /* ── Front face (bleed) ──────────────────────────────────── */
+    .c-front-bleed {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+    }
+    .c-art-full { position: absolute; inset: 0; }
+    .c-art-full svg { width: 100%; height: 100%; display: block; }
+    .c-name-band {
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      padding: 3mm 4mm;
+      font-family: var(--serif);
+      font-size: 16pt;
+      line-height: 1;
+      text-transform: lowercase;
+      letter-spacing: -0.01em;
+      z-index: 2;
+    }
+    .c-num-bleed {
+      position: absolute;
+      top: 2.5mm; left: 3mm;
+      font-family: var(--ui); font-size: 6pt; font-weight: 600;
+      letter-spacing: .14em;
+      color: var(--ink);
+      background: rgba(251,247,238,.7);
+      padding: 1mm 2mm;
+      border-radius: 1mm;
+      z-index: 2;
+    }
+
+    /* ── Back face ──────────────────────────────────────────── */
+    .c-back {
+      flex: 1;
+      display: flex; flex-direction: column;
+      padding: 5mm 5mm 4mm;
+      position: relative;
+    }
+    .c-back-num {
+      font-family: var(--ui); font-size: 6pt; font-weight: 600;
+      letter-spacing: .18em; color: var(--charcoal); opacity: .65;
+      margin-bottom: 3mm;
+    }
+    .c-back-name {
+      font-family: var(--serif);
+      font-size: 17pt; line-height: .95;
+      text-transform: lowercase;
+      color: var(--ink);
+      letter-spacing: -0.015em;
+      margin-bottom: 2mm;
+    }
+    .c-rule { width: 8mm; height: 1mm; margin-bottom: 3mm; }
+    .c-blurb {
+      font-family: var(--book);
+      font-style: italic;
+      font-size: 9pt; line-height: 1.35;
+      color: var(--charcoal);
+      margin-bottom: 4mm;
+      text-wrap: pretty;
+    }
+    .c-prompt-label {
+      font-family: var(--ui); font-size: 6pt; font-weight: 600;
+      letter-spacing: .18em; text-transform: uppercase;
+      color: var(--plum);
+      margin-bottom: 1.5mm;
+    }
+    .c-prompt {
+      font-family: var(--hand);
+      font-size: 10.5pt; line-height: 1.3;
+      color: var(--ink);
+      flex: 1;
+      text-wrap: pretty;
+    }
+    .c-mark {
+      position: absolute;
+      bottom: 3mm; right: 4mm;
+      width: 9mm; height: 9mm; opacity: .5;
+    }
+    .c-mark svg { width: 100%; height: 100%; display: block; }
+
+    /* ── Cover & spec sheet ──────────────────────────────────── */
+    .cover {
+      width: 210mm; height: 297mm;
+      padding: 28mm 22mm;
+      background: var(--paper);
+      display: flex; flex-direction: column;
+      position: relative;
+      page-break-after: always;
+      break-after: page;
+      margin: 16px auto;
+      box-shadow: 0 8px 30px rgba(0,0,0,.12);
+    }
+    .cover-eyebrow {
+      font-family: var(--ui); font-size: 9pt; font-weight: 600;
+      letter-spacing: .22em; text-transform: uppercase;
+      color: var(--charcoal);
+    }
+    .cover-title {
+      font-family: var(--serif);
+      font-size: 90pt;
+      line-height: .92;
+      letter-spacing: -0.02em;
+      text-transform: lowercase;
+      margin: 12mm 0 10mm;
+    }
+    .cover-title em { color: var(--plum); font-style: italic; }
+    .cover-sig {
+      font-family: var(--script); font-size: 28pt;
+      color: var(--plum); transform: rotate(-2deg);
+      transform-origin: left;
+      display: inline-block; margin-bottom: -4mm;
+    }
+    .cover-lede {
+      font-family: var(--book);
+      font-size: 14pt; line-height: 1.5;
+      max-width: 130mm; color: var(--charcoal);
+      text-wrap: pretty; margin-top: 8mm;
+    }
+    .cover-spec {
+      margin-top: auto;
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 8mm;
+      padding-top: 12mm;
+      border-top: 1pt solid var(--ink);
+    }
+    .cover-spec dt {
+      font-family: var(--ui); font-size: 8pt; font-weight: 600;
+      letter-spacing: .14em; text-transform: uppercase;
+      color: var(--plum);
+      margin-bottom: 1mm;
+    }
+    .cover-spec dd {
+      font-family: var(--book);
+      font-size: 11pt; line-height: 1.35;
+      margin: 0; color: var(--ink);
+    }
+    .cover-orn {
+      position: absolute;
+      top: 28mm; right: 22mm;
+      width: 38mm; height: 38mm;
+    }
+    .cover-orn svg { width: 100%; height: 100%; }
+
+    /* Print mode — strip everything but pages */
+    @media print {
+      body { background: white; }
+      .toolbar { display: none !important; }
+      .page, .cover { margin: 0; box-shadow: none; }
+    }
+  </style>
+</head>
+<body>
+<style id="_gst">
+  #_gate{position:fixed;inset:0;z-index:9999;background:#FBF7EE;display:flex;align-items:center;justify-content:center;}
+  #_gbox{text-align:center;max-width:340px;padding:52px 36px;border:1.5px solid #100000;}
+  #_gey{font-family:'Inter',sans-serif;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#7A736B;margin-bottom:20px;}
+  #_gtit{font-family:'DM Serif Display',Georgia,serif;font-size:36px;line-height:1;color:#100000;margin:0 0 28px;font-style:italic;}
+  #_gerr{color:#FF3990;font-family:'Inter',sans-serif;font-size:12px;margin:-12px 0 12px;display:none;letter-spacing:.05em;}
+  #_gin{width:100%;border:1.5px solid #100000;padding:13px 16px;font-family:'Inter',sans-serif;font-size:15px;background:#FBF7EE;color:#100000;outline:none;box-sizing:border-box;margin-bottom:12px;}
+  #_gin:focus{outline:2px solid #47ACA4;outline-offset:-2px;}
+  #_gbtn{width:100%;padding:14px;background:#100000;color:#FBF7EE;border:none;font-family:'Inter',sans-serif;font-size:10px;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;transition:background .15s;}
+  #_gbtn:hover{background:#7A1F4A;}
+</style>
+<div id="_gate">
+  <div id="_gbox">
+    <div id="_gey">Frankly Human · Why Deck</div>
+    <div id="_gtit">why deck.</div>
+    <div id="_gerr">Incorrect password — try again.</div>
+    <input id="_gin" type="password" placeholder="Password" autocomplete="off" />
+    <button id="_gbtn">Continue →</button>
+  </div>
+</div>
+<script>
+(function(){
+  var SK='fh_whydeck_v2',PW='frankly';
+  function unlock(){
+    var g=document.getElementById('_gate');if(!g)return;
+    g.style.transition='opacity .3s';g.style.opacity='0';
+    setTimeout(function(){g.remove();var s=document.getElementById('_gst');if(s)s.remove();},320);
+    sessionStorage.setItem(SK,'1');
+  }
+  if(sessionStorage.getItem(SK)==='1'){unlock();return;}
+  document.getElementById('_gbtn').addEventListener('click',function(){
+    if(document.getElementById('_gin').value===PW){unlock();}
+    else{var e=document.getElementById('_gerr');e.style.display='block';document.getElementById('_gin').value='';document.getElementById('_gin').focus();}
+  });
+  document.getElementById('_gin').addEventListener('keydown',function(e){if(e.key==='Enter')document.getElementById('_gbtn').click();});
+})();
+</script>
+
+<div class="toolbar">
+  <h1>the why deck — <em>print sheets</em></h1>
+  <span class="info">A4 · 9 cards/page · double-sided · 165 values · 38 pages + cover</span>
+  <span class="spacer"></span>
+  <label class="info">show:
+    <select id="rangeSel">
+      <option value="all">all 165</option>
+      <option value="cover">cover only</option>
+      <option value="0-30">001–030</option>
+      <option value="30-60">031–060</option>
+      <option value="60-90">061–090</option>
+      <option value="90-120">091–120</option>
+      <option value="120-165">121–165</option>
+    </select>
+  </label>
+  <button onclick="window.print()">Print / Save PDF</button>
+</div>
+
+<div id="sheets"></div>
+
+<script src="values-v2.js"></script>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" src="card-art-v2.jsx"></script>
+<script type="text/babel" src="print-sheets.jsx"></script>
+
+</body>
+</html>
