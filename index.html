@@ -171,6 +171,43 @@
 </style>
 </head>
 <body>
+<style id="_gst">
+  #_gate{position:fixed;inset:0;z-index:9999;background:#FBF7EE;display:flex;align-items:center;justify-content:center;}
+  #_gbox{text-align:center;max-width:340px;padding:52px 36px;border:1.5px solid #100000;}
+  #_gey{font-family:'Inter',sans-serif;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#7A736B;margin-bottom:20px;}
+  #_gtit{font-family:'DM Serif Display',Georgia,serif;font-size:36px;line-height:1;color:#100000;margin:0 0 28px;font-style:italic;}
+  #_gerr{color:#FF3990;font-family:'Inter',sans-serif;font-size:12px;margin:-12px 0 12px;display:none;letter-spacing:.05em;}
+  #_gin{width:100%;border:1.5px solid #100000;padding:13px 16px;font-family:'Inter',sans-serif;font-size:15px;background:#FBF7EE;color:#100000;outline:none;box-sizing:border-box;margin-bottom:12px;}
+  #_gin:focus{outline:2px solid #47ACA4;outline-offset:-2px;}
+  #_gbtn{width:100%;padding:14px;background:#100000;color:#FBF7EE;border:none;font-family:'Inter',sans-serif;font-size:10px;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;transition:background .15s;}
+  #_gbtn:hover{background:#7A1F4A;}
+</style>
+<div id="_gate">
+  <div id="_gbox">
+    <div id="_gey">Frankly Human</div>
+    <div id="_gtit">frankly human.</div>
+    <div id="_gerr">Incorrect password — try again.</div>
+    <input id="_gin" type="password" placeholder="Password" autocomplete="off" />
+    <button id="_gbtn">Continue →</button>
+  </div>
+</div>
+<script>
+(function(){
+  var SK='fh_whydeck_v2',PW='frankly';
+  function unlock(){
+    var g=document.getElementById('_gate');if(!g)return;
+    g.style.transition='opacity .3s';g.style.opacity='0';
+    setTimeout(function(){g.remove();var s=document.getElementById('_gst');if(s)s.remove();},320);
+    sessionStorage.setItem(SK,'1');
+  }
+  if(sessionStorage.getItem(SK)==='1'){unlock();return;}
+  document.getElementById('_gbtn').addEventListener('click',function(){
+    if(document.getElementById('_gin').value===PW){unlock();}
+    else{var e=document.getElementById('_gerr');e.style.display='block';document.getElementById('_gin').value='';document.getElementById('_gin').focus();}
+  });
+  document.getElementById('_gin').addEventListener('keydown',function(e){if(e.key==='Enter')document.getElementById('_gbtn').click();});
+})();
+</script>
 
 <div class="stripe"></div>
 
