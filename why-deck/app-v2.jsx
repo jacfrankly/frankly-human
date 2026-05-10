@@ -31,10 +31,12 @@ function Card({ value, idx, shape, layout, flipped, onFlip, picked, onPick, mini
 
   if (mini) {
     return (
-      <div className="v2-card-mini" style={{ ...sh, background: c.bg, borderColor: PALETTE.ink }}>
-        <svg viewBox={window.ART2_VIEWBOX} style={{ width: "100%", height: "70%" }}>
-          <Art fg={c.fg} bg={c.bg} accent={c.accent} />
-        </svg>
+      <div className="v2-card-mini" style={{ background: c.bg, borderColor: PALETTE.ink }}>
+        <div className="v2-mini-art" style={{ background: c.bg }}>
+          <svg viewBox={window.ART2_VIEWBOX}>
+            <Art fg={c.fg} bg={c.bg} accent={c.accent} />
+          </svg>
+        </div>
         <div className="v2-mini-name">{value.name}</div>
       </div>
     );

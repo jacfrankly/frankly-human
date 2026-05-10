@@ -34,7 +34,7 @@
     }
 
     /* ── App shell ────────────────────────────────────────────── */
-    .v2-app { min-height: 100vh; padding: 56px 160px 80px 96px; max-width: 1480px; margin: 0 auto; position: relative; }
+    .v2-app { min-height: 100vh; padding: 56px 253px 80px 96px; max-width: 1480px; margin: 0 auto; position: relative; }
 
     /* ── Header ───────────────────────────────────────────────── */
     .v2-header { margin-bottom: 56px; max-width: 980px; }
@@ -306,7 +306,7 @@
       display: flex; flex-direction: column; align-items: center; gap: 8px;
       z-index: 35;
       box-shadow: 0 8px 32px rgba(16,0,0,.18);
-      width: 56px;
+      width: 168px;
     }
     .v2-tray-label {
       display: flex; flex-direction: column; align-items: center; gap: 2px;
@@ -319,8 +319,8 @@
     }
     .v2-tray-num .v2-tray-of { font-size: 12px; opacity: .5; font-style: normal; margin-left: 1px; }
     .v2-tray-cap {
-      font-family: var(--ui); font-size: 8px; font-weight: 600;
-      letter-spacing: .1em; text-transform: uppercase;
+      font-family: var(--ui); font-size: 10px; font-weight: 600;
+      letter-spacing: .12em; text-transform: uppercase;
       color: var(--paper); opacity: .8;
       text-align: center; line-height: 1.2;
     }
@@ -331,30 +331,33 @@
     }
     .v2-tray-slots { display: flex; flex-direction: column; gap: 6px; width: 100%; }
     .v2-tray-empty {
-      aspect-ratio: 5/7;
+      height: 52px;
       border: 1.5px dashed rgba(251,247,238,.25);
+      border-radius: 6px;
       display: grid; place-items: center;
-      font-family: var(--serif); font-size: 22px;
+      font-family: var(--serif); font-size: 18px;
       color: rgba(251,247,238,.25);
     }
     .v2-tray-full { position: relative; cursor: pointer; }
     .v2-card-mini {
-      aspect-ratio: 5/7;
+      height: 52px;
       border: 1.5px solid var(--ink);
+      border-radius: 6px;
       overflow: hidden;
-      display: flex; flex-direction: column;
+      display: flex; flex-direction: row;
       transition: transform .15s;
     }
     .v2-tray-full:hover .v2-card-mini { transform: translateY(-2px); }
-    .v2-card-mini svg { display: block; }
+    .v2-mini-art { width: 44px; height: 100%; flex-shrink: 0; overflow: hidden; }
+    .v2-mini-art svg { width: 100%; height: 100%; display: block; }
     .v2-mini-name {
-      flex: 1;
-      font-family: var(--serif); font-size: 11px;
-      text-align: center;
-      padding: 4px 6px;
+      flex: 1; min-width: 0;
+      font-family: var(--serif); font-size: 12px;
+      padding: 4px 8px;
       text-transform: lowercase;
-      display: grid; place-items: center;
+      display: flex; align-items: center;
       color: var(--ink); background: var(--paper);
+      overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
     }
     .v2-tray-x {
       position: absolute; top: -6px; right: -6px;
@@ -432,7 +435,7 @@
     /* Mobile: hide sidebars, restore padding */
     @media (max-width: 768px) {
       .v2-rail, .v2-tray { display: none !important; }
-      .v2-app { padding: 40px 28px 64px; }
+      .v2-app { padding: 40px 28px 64px 28px; }
     }
 
     /* Print: cleaner */
