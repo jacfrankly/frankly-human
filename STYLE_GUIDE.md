@@ -382,6 +382,50 @@ D2M is softer in tone — not weaker in backbone. The backbone shows up in the q
 
 ---
 
+## 10.1 · Design Language for Non-Designer Audiences (D2M)
+
+The D2M audience are not designers. Design language lands beautifully as *metaphor*. It alienates as *jargon*.
+
+**The rule of thumb:**
+
+| If it sounds like… | Then… |
+|---|---|
+| A tool | Simplify it. ("Affinity mapping" → "group the ideas that feel similar.") |
+| A mindset | Keep it. ("Prototype your life.") |
+| A process | Translate it. ("Ideate" → "generate possibilities.") |
+| A designer talking to designers | Drop it. ("Divergent thinking" → no.) |
+| A designer talking to humans | Keep it. ("What's the smallest experiment you could run?") |
+
+### Keep — these land
+
+Prototype · Experiment · Next right move · Constraints · Systems · Friction · Patterns · Leverage points · Future self · Design your life · Make life flow · See → Sense → Shape → Show → Sustain
+
+Questions that work: *"What's the least amount of work we need to learn the next most important thing?" / "What's the smallest experiment you could run?" / "What's the constraint you need to design with, not against?"*
+
+These are sticky. People repeat them. They become part of their vocabulary.
+
+### Soften or translate
+
+| Instead of | Use |
+|---|---|
+| Ideation | "generate possibilities" |
+| Synthesis | "make sense of what you see" |
+| Divergent thinking | "open up the options" |
+| Convergent thinking | "choose what matters" |
+| Affinity mapping | "group the ideas that feel similar" |
+| Problem framing | "name the real problem" |
+| Systems mapping | "map the parts of your life that interact" |
+
+### Avoid entirely (D2M general audiences)
+
+UX terms · product terms · service design terms · anything that sounds like a corporate workshop, design sprint, or Figma tutorial. The audience doesn't need it. The methodology doesn't need it.
+
+**The signature:** Design thinking → translated into human language → delivered with emotional intelligence.
+
+You're not teaching design. You're teaching agency.
+
+---
+
 ## 11 · Scenario Organisations (DESIGN-LED)
 
 All DESIGN-LED content uses de-identified fictional organisations. Canonical — use consistently.
