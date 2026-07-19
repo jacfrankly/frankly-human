@@ -166,6 +166,7 @@ a { color: inherit; }
 .dl-privacy-block p {
   font-family: 'Inter'; font-size: 16px; line-height: 1.55; color: var(--paper); margin: 0;
 }
+.dl-privacy-block p + p { margin-top: 12px; }
 
 .dl-leavewith-label {
   font-family: 'JetBrains Mono'; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
@@ -609,7 +610,8 @@ a { color: inherit; }
 
     <div class="dl-privacy-block">
       <span class="tag">Privacy</span>
-      <p>What you say here stays with you. If this was purchased through a corporate licence, the person who bought your seat sees that a seat was used — never your answers, never your result. No exceptions.</p>
+      <p>What you say here goes to Claude to build your result, in this session — and nowhere else. We don't keep a copy; no one at Frankly Human can see your answers. If this was purchased through a corporate licence, the person who bought your seat sees that a seat was used — never your answers, never your result. No exceptions.</p>
+      <p>One practical note: name the moment specifically, not the person. "My VP" or "the exec sponsor" reads exactly as well as a real name — and it's what we'd recommend either way.</p>
     </div>
 
     <span class="dl-leavewith-label">What you leave with</span>
@@ -723,8 +725,8 @@ a { color: inherit; }
     <div class="dl-bridge dl-bridge--cobalt" id="claude-bridge">
       <span class="dl-bridge-eyebrow">Take this further</span>
       <p class="dl-bridge-text">This didn't end at a sentence. Take your four thread scores, the trap, and the specific moment into a live conversation — script the next talk with your own leadership, or go deeper on a 90-day plan.</p>
-      <a class="dl-bridge-cta" id="btn-continue-claude" href="#" target="_blank" rel="noopener">Continue in Claude <span>→</span></a>
-      <span class="dl-bridge-sub">Pre-filled with everything you just told this diagnostic. Nothing to retype.</span>
+      <button type="button" class="dl-bridge-cta" id="btn-continue-claude">Continue in Claude <span>→</span></button>
+      <span class="dl-bridge-sub">Copies everything you just told this diagnostic — paste it into the new tab. Nothing to retype, nothing sent except to Claude.</span>
     </div>
 
     <div class="dl-bridge" id="dld-bridge">

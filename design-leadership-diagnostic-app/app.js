@@ -756,10 +756,14 @@ function renderReveal(reveal) {
   });
 
   document.getElementById('ec-name').value = STATE.participant.name;
-  buildClaudeContinueLink(reveal);
 }
 
-function buildClaudeContinueLink(reveal) {
+// Builds the full handoff text, including the participant's own typed
+// evidence. This used to go into a claude.ai/new?q= URL — but a URL is the
+// wrong place for that: it lands in browser history, referrer headers, and
+// page source, all more exposed than a clipboard write. Copy-then-open
+// carries the same full context forward without that leak.
+function buildClaudeContinueText(reveal) {
   const lines = [];
   lines.push("I just completed the Design Leadership Diagnostic (Frankly Human). Here's what it surfaced — help me turn this into a script for my next conversation with my own leadership, or a deeper 90-day plan.");
   lines.push('');
@@ -773,9 +777,29 @@ function buildClaudeContinueLink(reveal) {
   });
   if (reveal.why_line) { lines.push(''); lines.push(`Why this, specifically: ${reveal.why_line}`); }
 
-  const url = 'https://claude.ai/new?q=' + encodeURIComponent(lines.join('\n'));
-  const link = document.getElementById('btn-continue-claude');
-  if (link) link.href = url;
+  return lines.join('\n');
+}
+
+async function handleContinueInClaude() {
+  const btn = document.getElementById('btn-continue-claude');
+  if (!btn) return;
+  const text = buildClaudeContinueText(STATE.diagnostic.reveal || {});
+
+  let copied = false;
+  try {
+    await navigator.clipboard.writeText(text);
+    copied = true;
+  } catch (e) {
+    copied = false;
+  }
+
+  window.open('https://claude.ai/new', '_blank', 'noopener');
+
+  const original = btn.innerHTML;
+  btn.innerHTML = copied
+    ? 'Copied — paste in the new tab <span>→</span>'
+    : "Couldn't copy — opened Claude anyway <span>→</span>";
+  setTimeout(() => { btn.innerHTML = original; }, 4000);
 }
 
 // ─── Email capture ───────────────────────────────────────────────────
@@ -1002,6 +1026,7 @@ function restorePhase(phase) {
 
 // ─── Boot ────────────────────────────────────────────────────────────
 
+document.getElementById('btn-continue-claude').addEventListener('click', handleContinueInClaude);
 document.getElementById('btn-subscribe').addEventListener('click', handleSubscribe);
 document.getElementById('btn-skip-subscribe').addEventListener('click', () => {
   document.getElementById('email-capture').style.display = 'none';
