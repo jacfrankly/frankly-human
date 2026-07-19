@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="450" viewBox="0 0 400 450">
+  <defs>
+    <clipPath id="arch-clip">
+      <path d="M 26,425 L 26,200 A 174,174,0,0,1,374,200 L 374,425 Z"/>
+    </clipPath>
+  </defs>
+  <rect width="400" height="450" fill="#FFFFFF"/>
+  <g clip-path="url(#arch-clip)">
+
+    <!-- STARTING PISTOL — upper left, race hasn't started yet -->
+    <!-- Barrel (pointing right) -->
+    <rect x="88" y="162" width="66" height="12" rx="2" fill="#000000"/>
+    <!-- Body below barrel -->
+    <rect x="88" y="172" width="42" height="18" rx="2" fill="#000000"/>
+    <!-- Grip -->
+    <rect x="88" y="188" width="26" height="42" rx="4" fill="#000000"/>
+    <!-- Muzzle opening -->
+    <circle cx="152" cy="168" r="4" fill="#FFFFFF"/>
+    <!-- Sight on top of barrel -->
+    <rect x="140" y="158" width="6" height="6" rx="1" fill="#000000"/>
+    <!-- Trigger -->
+    <rect x="106" y="184" width="6" height="20" rx="2" fill="#000000"/>
+
+    <!-- POSTS holding the tape -->
+    <rect x="58"  y="288" width="8" height="62" rx="2" fill="#000000"/>
+    <rect x="334" y="288" width="8" height="62" rx="2" fill="#000000"/>
+
+    <!-- FINISH LINE TAPE — orange, stretched taut, the pre-committed measure -->
+    <rect x="26" y="326" width="348" height="22" rx="2" fill="#F15A22"/>
+
+    <!-- Post caps (small top pieces) -->
+    <rect x="54"  y="283" width="16" height="8" rx="2" fill="#000000"/>
+    <rect x="330" y="283" width="16" height="8" rx="2" fill="#000000"/>
+
+  </g>
+  <path d="M 20,430 L 20,200 A 180,180,0,0,1,380,200 L 380,430 Z"
+        fill="none" stroke="#000000" stroke-width="3"/>
+  <path d="M 26,425 L 26,200 A 174,174,0,0,1,374,200 L 374,425 Z"
+        fill="none" stroke="#000000" stroke-width="1.5"/>
+</svg>

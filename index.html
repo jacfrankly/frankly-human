@@ -2,10 +2,11 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<title>Frankly Human — Design Studio</title>
+<title>Frankly Human — Design-Led Practice</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..900,0..100;1,9..144,300..900,0..100&family=Inter:wght@400;500;600&family=Allura&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..900,0..100;1,9..144,300..900,0..100&family=Inter:wght@400;500;600&family=Allura&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
     --ink:     #100000;
@@ -16,9 +17,18 @@
     --pink:    #FF3990;
     --yellow:  #FFBD59;
     --plum:    #7A1F4A;
-    --muted:   #7A736B;
+    --muted:   #5E584F;
+    /* Darker variants of the brand accents, for use as text/CTA colour where
+       the bright originals (kept for swatches/dots/decoration) fail WCAG AA. */
+    --teal-text: #1F6E67;
+    --pink-text: #C40060;
+    --orange-text: #B23A22;
+    --plum-text: #6B1B41;
   }
   * { box-sizing: border-box; }
+  @media (prefers-reduced-motion: no-preference) {
+    html { scroll-behavior: smooth; }
+  }
   html, body { margin: 0; padding: 0; }
   body {
     font-family: 'Inter', sans-serif;
@@ -36,49 +46,223 @@
       var(--yellow) 50% 75%, var(--plum) 75% 100%);
   }
 
-  /* Header */
-  header {
-    padding: 72px 64px 56px;
+  /* ============ Top nav ============ */
+  .topnav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(251,247,238,0.94);
+    backdrop-filter: blur(6px);
     border-bottom: 1px solid var(--ink);
-    display: flex; align-items: flex-end; justify-content: space-between;
-    flex-wrap: wrap; gap: 32px;
+  }
+  .topnav-inner {
     max-width: 1320px; margin: 0 auto;
+    padding: 18px 64px;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 24px;
   }
-  .brand {
+  .topnav-logo {
     font-family: 'DM Serif Display', serif;
-    font-size: clamp(52px, 8vw, 96px);
-    line-height: 0.92; letter-spacing: -0.02em;
+    font-size: 20px; text-decoration: none; color: var(--ink);
+    white-space: nowrap;
   }
-  .brand em { font-style: italic; color: var(--plum); }
-  .brand .sig {
-    font-family: 'Allura', cursive;
-    font-size: 0.44em; color: var(--plum);
-    display: block; transform: rotate(-3deg);
-    transform-origin: left; margin-bottom: 0.05em;
-    line-height: 1;
+  .topnav-logo em { font-style: italic; color: var(--plum); }
+  .nav-toggle {
+    display: none;
+    background: none; border: 1.5px solid var(--ink);
+    width: 40px; height: 36px; cursor: pointer;
+    font-family: 'Inter'; font-size: 18px; color: var(--ink);
+    align-items: center; justify-content: center;
   }
-  .header-meta {
-    font-family: 'Inter'; font-size: 11px;
-    letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted);
-    text-align: right; line-height: 1.9;
+  .topnav-menu {
+    display: flex; align-items: center; gap: 8px;
+    list-style: none; margin: 0; padding: 0;
+  }
+  .topnav-item { position: relative; }
+  .topnav-link {
+    font-family: 'Inter'; font-size: 11px; font-weight: 600;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--ink); text-decoration: none;
+    display: flex; align-items: center; gap: 6px;
+    padding: 10px 14px;
+  }
+  .topnav-link .caret { font-size: 9px; opacity: 0.55; transform: translateY(1px); }
+  .topnav-item:hover .topnav-link, .topnav-item.open .topnav-link, .topnav-item:focus-within .topnav-link { color: var(--plum); }
+  .topnav-dropdown {
+    display: none;
+    position: absolute; top: 100%; left: 0; margin-top: 4px;
+    background: var(--paper); border: 1px solid var(--ink);
+    min-width: 230px; padding: 6px 0;
+    box-shadow: 0 10px 28px rgba(16,0,0,0.12);
+  }
+  .topnav-item:hover .topnav-dropdown, .topnav-item.open .topnav-dropdown, .topnav-item:focus-within .topnav-dropdown { display: block; }
+  .topnav-dropdown a {
+    display: block; padding: 11px 20px;
+    font-family: 'Fraunces', serif; font-size: 14.5px;
+    color: var(--ink); text-decoration: none;
+  }
+  .topnav-dropdown a:hover { background: var(--paper-2); color: var(--plum); }
+
+  @media (max-width: 900px) {
+    .nav-toggle { display: flex; }
+    .topnav-menu {
+      display: none;
+      position: absolute; top: 100%; left: 0; right: 0;
+      flex-direction: column; align-items: stretch;
+      background: var(--paper); border-bottom: 1px solid var(--ink);
+      padding: 8px 0 16px;
+    }
+    .topnav-menu.is-open { display: flex; }
+    .topnav-item { width: 100%; }
+    .topnav-link { padding: 14px 28px; justify-content: space-between; }
+    .topnav-dropdown {
+      display: none !important;
+      position: static; border: none; box-shadow: none;
+      padding: 0 0 8px; margin: 0;
+      background: var(--paper-2);
+    }
+    .topnav-item.open .topnav-dropdown { display: block !important; }
+    .topnav-dropdown a { padding: 10px 40px; }
   }
 
-  /* Main grid */
+  /* ============ Hero / landing content ============ */
+  .hero {
+    max-width: 1320px; margin: 0 auto;
+    padding: 72px 64px 56px;
+    border-bottom: 1px solid var(--ink);
+  }
+  .hero-eyebrow {
+    font-family: 'Inter'; font-size: 11px; font-weight: 600;
+    letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted);
+    margin-bottom: 18px;
+  }
+  .hero-brand {
+    font-family: 'DM Serif Display', serif; font-weight: 400;
+    font-size: clamp(48px, 7.5vw, 88px);
+    line-height: 0.94; letter-spacing: -0.02em;
+    margin: 0 0 28px;
+  }
+  .hero-brand em { font-style: italic; color: var(--plum); }
+  .hero-brand .sig {
+    font-family: 'Allura', cursive;
+    font-size: 0.4em; color: var(--plum);
+    display: block; transform: rotate(-3deg);
+    transform-origin: left; margin-bottom: 0.1em;
+    line-height: 1;
+  }
+  .hero-grid {
+    display: grid; grid-template-columns: 1.2fr 1fr; gap: 56px;
+    align-items: start;
+  }
+  .hero-intro {
+    font-family: 'Fraunces', serif;
+    font-variation-settings: "SOFT" 40, "opsz" 144;
+    font-size: clamp(19px, 2vw, 23px); line-height: 1.5;
+    margin: 0 0 20px;
+  }
+  .hero-sub {
+    font-size: 15px; color: var(--muted); max-width: 46ch; margin: 0 0 28px;
+  }
+  .hero-ctas { display: flex; gap: 14px; flex-wrap: wrap; }
+  .hero-cta {
+    font-family: 'Inter'; font-size: 11px; font-weight: 600;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    text-decoration: none; padding: 14px 26px;
+    border: 1.5px solid var(--ink);
+    display: inline-flex; align-items: center; gap: 10px;
+    transition: background 0.15s, color 0.15s;
+  }
+  .hero-cta.primary { background: var(--ink); color: var(--paper); }
+  .hero-cta.primary:hover { background: var(--plum); border-color: var(--plum); }
+  .hero-cta.ghost { color: var(--ink); }
+  .hero-cta.ghost:hover { background: var(--ink); color: var(--paper); }
+
+  .hero-card {
+    border: 1px solid var(--ink); background: var(--paper-2);
+    padding: 28px 30px;
+  }
+  .mono-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted);
+    margin: 0 0 12px;
+  }
+  .hero-question {
+    font-family: 'DM Serif Display', serif; font-style: italic;
+    font-size: clamp(20px, 2.4vw, 25px); line-height: 1.25;
+    color: var(--plum); margin: 0 0 16px;
+  }
+  .hero-card-desc { font-size: 14px; line-height: 1.6; color: var(--muted); margin: 0; }
+  .hero-stamp {
+    margin-top: 20px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+  }
+  .stamp {
+    font-family: 'Allura', cursive; font-size: 26px; color: var(--plum);
+    transform: rotate(-2deg); display: inline-block;
+  }
+  .tag {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--muted); border: 1px solid var(--sand); padding: 4px 10px;
+  }
+
+  @media (max-width: 900px) {
+    .hero-grid { grid-template-columns: 1fr; gap: 32px; }
+  }
+
+  /* ============ Loop strip ============ */
+  .loop-strip {
+    max-width: 1320px; margin: 0 auto;
+    padding: 48px 64px; border-bottom: 1px solid var(--ink);
+  }
+  .loop-strip-label {
+    display: flex; align-items: center; gap: 16px;
+    font-family: 'Inter'; font-size: 11px; font-weight: 600;
+    letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted);
+    margin-bottom: 24px;
+  }
+  .loop-strip-label::before {
+    content: ''; display: inline-block; width: 28px; height: 1px; background: var(--ink);
+  }
+  .loop-row {
+    display: grid; grid-template-columns: repeat(5, 1fr); gap: 20px;
+  }
+  .loop-phase-mini { border-top: 3px solid var(--sand); padding-top: 14px; }
+  .loop-phase-mini.p-see    { border-top-color: var(--teal); }
+  .loop-phase-mini.p-sense  { border-top-color: var(--pink); }
+  .loop-phase-mini.p-shape  { border-top-color: var(--yellow); }
+  .loop-phase-mini.p-show   { border-top-color: var(--plum); }
+  .loop-phase-mini.p-sustain{ border-top-color: #4F5B3C; }
+  .loop-phase-mini-name {
+    font-family: 'DM Serif Display', serif; font-size: 19px; margin: 0 0 6px;
+  }
+  .loop-phase-mini-desc { font-size: 13px; color: var(--muted); margin: 0; line-height: 1.5; }
+  .loop-strip-more {
+    margin-top: 24px; font-family: 'Inter'; font-size: 12px; font-weight: 600;
+    letter-spacing: 0.08em; text-decoration: none; color: var(--plum);
+  }
+
+  @media (max-width: 900px) {
+    .loop-row { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 560px) {
+    .loop-row { grid-template-columns: 1fr; }
+  }
+
+  /* ============ Main grid ============ */
   main {
     max-width: 1320px; margin: 0 auto;
     padding: 64px 64px 96px;
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 48px 64px;
+    scroll-margin-top: 80px;
   }
 
   /* Section label */
   .section-label {
     grid-column: 1 / -1;
     display: flex; align-items: center; gap: 16px;
-    font-family: 'Inter'; font-size: 11px;
+    font-family: 'Inter'; font-size: 11px; font-weight: 400;
     letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted);
     border-top: 1px solid var(--ink); padding-top: 20px; margin-top: 16px;
+    scroll-margin-top: 90px;
   }
   .section-label::before {
     content: ''; display: inline-block;
@@ -110,7 +294,7 @@
   }
   .card-eyebrow .dot { width: 7px; height: 7px; border-radius: 999px; flex-shrink: 0; }
   .card-title {
-    font-family: 'DM Serif Display', serif;
+    font-family: 'DM Serif Display', serif; font-weight: 400;
     font-size: clamp(26px, 3vw, 36px);
     line-height: 1.05; letter-spacing: -0.01em; margin: 0 0 10px;
   }
@@ -148,6 +332,10 @@
   .card:hover .card-full .card-cta,
   .card-full:hover .card-cta { background: var(--ink); color: var(--paper); }
 
+  /* Coming-soon card */
+  .card-soon { opacity: 0.92; }
+  .card-soon .card-cta { color: var(--muted) !important; }
+
   /* Footer */
   footer {
     border-top: 1px solid var(--ink);
@@ -160,93 +348,214 @@
   }
 
   @media (max-width: 768px) {
-    header { padding: 48px 28px 40px; }
-    main { padding: 40px 28px 64px; grid-template-columns: 1fr; gap: 24px; }
+    .topnav-inner { padding: 16px 20px; }
+    .hero { padding: 48px 20px 40px; }
+    .loop-strip { padding: 40px 20px; }
+    main { padding: 40px 20px 64px; grid-template-columns: 1fr; gap: 24px; }
     .card-full { flex-direction: column; }
     .card-full .card-swatch { width: auto; height: 8px; }
     .card-full .card-body { flex-direction: column; gap: 24px; }
-    footer { padding: 28px; flex-direction: column; text-align: center; }
-    .header-meta { text-align: left; }
+    footer { padding: 28px 20px; flex-direction: column; text-align: center; }
   }
 </style>
 </head>
 <body>
-<style id="_gst">
-  #_gate{position:fixed;inset:0;z-index:9999;background:#FBF7EE;display:flex;align-items:center;justify-content:center;}
-  #_gbox{text-align:center;max-width:340px;padding:52px 36px;border:1.5px solid #100000;}
-  #_gey{font-family:'Inter',sans-serif;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#7A736B;margin-bottom:20px;}
-  #_gtit{font-family:'DM Serif Display',Georgia,serif;font-size:36px;line-height:1;color:#100000;margin:0 0 28px;font-style:italic;}
-  #_gerr{color:#FF3990;font-family:'Inter',sans-serif;font-size:12px;margin:-12px 0 12px;display:none;letter-spacing:.05em;}
-  #_gin{width:100%;border:1.5px solid #100000;padding:13px 16px;font-family:'Inter',sans-serif;font-size:15px;background:#FBF7EE;color:#100000;outline:none;box-sizing:border-box;margin-bottom:12px;}
-  #_gin:focus{outline:2px solid #47ACA4;outline-offset:-2px;}
-  #_gbtn{width:100%;padding:14px;background:#100000;color:#FBF7EE;border:none;font-family:'Inter',sans-serif;font-size:10px;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;transition:background .15s;}
-  #_gbtn:hover{background:#7A1F4A;}
-</style>
-<div id="_gate">
-  <div id="_gbox">
-    <div id="_gey">Frankly Human</div>
-    <div id="_gtit">frankly human.</div>
-    <div id="_gerr">Incorrect password — try again.</div>
-    <input id="_gin" type="password" placeholder="Password" autocomplete="off" />
-    <button id="_gbtn">Continue →</button>
-  </div>
-</div>
-<script>
-(function(){
-  var SK='fh_whydeck_v2',PW='frankly';
-  function unlock(){
-    var g=document.getElementById('_gate');if(!g)return;
-    g.style.transition='opacity .3s';g.style.opacity='0';
-    setTimeout(function(){g.remove();var s=document.getElementById('_gst');if(s)s.remove();},320);
-    sessionStorage.setItem(SK,'1');
-  }
-  if(sessionStorage.getItem(SK)==='1'){unlock();return;}
-  document.getElementById('_gbtn').addEventListener('click',function(){
-    if(document.getElementById('_gin').value===PW){unlock();}
-    else{var e=document.getElementById('_gerr');e.style.display='block';document.getElementById('_gin').value='';document.getElementById('_gin').focus();}
-  });
-  document.getElementById('_gin').addEventListener('keydown',function(e){if(e.key==='Enter')document.getElementById('_gbtn').click();});
-})();
-</script>
-
 <div class="stripe"></div>
 
-<header>
-  <div>
-    <div class="brand">
-      <span class="sig">a design-led practice by</span>
-      <em>frankly</em> human.
+<nav class="topnav">
+  <div class="topnav-inner">
+    <a class="topnav-logo" href="#top"><em>frankly</em> human.</a>
+    <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">☰</button>
+    <ul class="topnav-menu">
+      <li class="topnav-item">
+        <a class="topnav-link" href="#programs" aria-haspopup="true" aria-expanded="false">Programs <span class="caret">▾</span></a>
+        <div class="topnav-dropdown">
+          <a href="curriculum/workbooks/d2m/sales-page.html">Design to Me</a>
+          <a href="curriculum/workbooks/d2m/index.html">D2M — Full Curriculum</a>
+          <a href="curriculum/workbooks/design-led-practitioner/index.html">Design-Led: Practitioner</a>
+          <a href="curriculum/workbooks/design-led-leader/index.html">Design-Led: Leader</a>
+        </div>
+      </li>
+      <li class="topnav-item">
+        <a class="topnav-link" href="#workshops" aria-haspopup="true" aria-expanded="false">Workshops <span class="caret">▾</span></a>
+        <div class="topnav-dropdown">
+          <a href="Why%20Workshop%20Masterclass/2023-why-workshop-masterclass-v2.html">Why Workshop</a>
+        </div>
+      </li>
+      <li class="topnav-item">
+        <a class="topnav-link" href="#tools" aria-haspopup="true" aria-expanded="false">Tools <span class="caret">▾</span></a>
+        <div class="topnav-dropdown">
+          <a href="why-deck/Why%20Deck%20v2.html">The Why Deck</a>
+          <a href="why-workshop-app-v2/index.html">The Why Workbook</a>
+          <a href="Methods%20Poster.html">Methods &amp; Tools</a>
+        </div>
+      </li>
+      <li class="topnav-item">
+        <a class="topnav-link" href="consulting.html">Consulting</a>
+      </li>
+      <li class="topnav-item">
+        <a class="topnav-link" href="#about" aria-haspopup="true" aria-expanded="false">About <span class="caret">▾</span></a>
+        <div class="topnav-dropdown">
+          <a href="Content%20%26%20Voice%20Guide.html">Content &amp; Voice</a>
+          <a href="Visual%20Style%20Guide.html">Visual Identity</a>
+        </div>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<section class="hero" id="top">
+  <br>
+  <h1 class="hero-brand">
+    <span class="sig">a design-led practice by Jacinta McMahon</span>
+    <em>frankly</em> human.
+  </h1>
+  <br> 
+  <div class="hero-grid">
+    <div>
+      <p class="hero-intro">I solve problems with people for people — using empathy and evidence to create real solutions that make a difference to life and the world.</p>
+      <p class="hero-sub">I'm a creative confidence coach. I help women create wholehearted growth — the courage and action to live a life in full colour — by bringing the rigour of human-centred design to the hardest design challenge there is: you.</p>
+      <div class="hero-ctas">
+        <a class="hero-cta primary" href="#programs">Explore the programs <span>→</span></a>
+        <a class="hero-cta ghost" href="#about">About Jacinta <span>→</span></a>
+      </div>
+    </div>
+
+    <div class="hero-card">
+      <p class="mono-label">The question I start from</p>
+      <p class="hero-question">What does my world need that I am uniquely qualified to offer?</p>
+      <p class="hero-card-desc">I help you discover how to bring that to life — with authenticity and imperfect creative action.</p>
+      <div class="hero-stamp">
+        <span class="stamp">More life by design</span>
+        <span class="tag">#prototype-life</span>
+      </div>
     </div>
   </div>
-  <div class="header-meta">
-    Design studio · Jacinta McMahon<br/>
-    Workshops · Coaching · Curriculum<br/>
-    franklyhuman.com
+</section>
+
+<section class="loop-strip">
+  <div class="loop-strip-label">How I work — the Frankly Human Loop</div>
+  <div class="loop-row">
+    <div class="loop-phase-mini p-see">
+      <div class="loop-phase-mini-name">See</div>
+      <p class="loop-phase-mini-desc">Discover what's really going on — surface the patterns, stories, and truths you've been living around.</p>
+    </div>
+    <div class="loop-phase-mini p-sense">
+      <div class="loop-phase-mini-name">Sense</div>
+      <p class="loop-phase-mini-desc">Make meaning from what you see. Reframe the problem. Get clear on what matters and why.</p>
+    </div>
+    <div class="loop-phase-mini p-shape">
+      <div class="loop-phase-mini-name">Shape</div>
+      <p class="loop-phase-mini-desc">Design possibilities. Generate options, explore future selves, choose the next right move.</p>
+    </div>
+    <div class="loop-phase-mini p-show">
+      <div class="loop-phase-mini-name">Show</div>
+      <p class="loop-phase-mini-desc">Prototype, test, and learn. Run small experiments, gather real data, iterate the story.</p>
+    </div>
+    <div class="loop-phase-mini p-sustain">
+      <div class="loop-phase-mini-name">Sustain</div>
+      <p class="loop-phase-mini-desc">Build the systems that hold — rituals, rhythms, boundaries, and non-negotiables.</p>
+    </div>
   </div>
-</header>
+  <a class="loop-strip-more" href="curriculum/workbooks/d2m/index.html">See the full methodology in D2M →</a>
+</section>
 
 <main>
 
-  <!-- Style Guides -->
-  <div class="section-label">Visual &amp; content system</div>
+  <!-- Programs -->
+  <h2 class="section-label" id="programs">Programs</h2>
 
-  <a class="card" href="Content%20%26%20Voice%20Guide.html">
-    <div class="card-swatch swatch-olive-clay"></div>
+  <a class="card card-full" href="curriculum/workbooks/d2m/sales-page.html">
+    <div class="card-swatch swatch-plum-yellow"></div>
     <div class="card-body">
-      <div class="card-eyebrow"><div class="dot" style="background:#C97B5B;"></div>Content &amp; Voice · Updated</div>
-      <div class="card-title">Frankly Human — <em>Editorial</em></div>
-      <p class="card-desc">The editorial &amp; earthy register. Archivo display type, JetBrains Mono labels, earthy palette. Voice patterns, writing rules, format guides. For DESIGN-LED workshops and service blueprinting.</p>
-      <div class="card-cta" style="color:#4F5B3C;">View guide <span class="arrow">→</span></div>
+      <div>
+        <div class="card-eyebrow"><div class="dot" style="background:var(--plum);"></div>Design to Me · 12 modules · ~27.5 hrs</div>
+        <h3 class="card-title">Design to Me <em>— Come home to yourself</em></h3>
+        <p class="card-desc">A life-design curriculum for people who've lost the thread of their own life. The Frankly Human Loop · three program layers · 12 modules from Origin Story to Life OS.</p>
+      </div>
+      <div class="card-cta" style="color:var(--plum);">Explore the program <span class="arrow">→</span></div>
     </div>
   </a>
 
-  <a class="card" href="Visual%20Style%20Guide.html">
-    <div class="card-swatch swatch-teal-pink"></div>
+  <a class="card card-full" href="curriculum/workbooks/d2m/index.html">
+    <div class="card-swatch swatch-sand-teal"></div>
     <div class="card-body">
-      <div class="card-eyebrow"><div class="dot" style="background:var(--pink);"></div>Visual Identity · Updated</div>
-      <div class="card-title">Frankly Human — <em>Coaching</em></div>
-      <p class="card-desc">The warm coaching register. DM Serif Display, Fraunces body, Allura script, painted blob shapes. Full IDEO 51-method icon library — Learn · Look · Ask · Try. For D2M and personal coaching surfaces.</p>
-      <div class="card-cta" style="color:var(--pink);">View style guide <span class="arrow">→</span></div>
+      <div>
+        <div class="card-eyebrow"><div class="dot" style="background:#C97B5B;"></div>Syllabus · dual-mode pages</div>
+        <h3 class="card-title">D2M — Full Curriculum <em>Overview</em></h3>
+        <p class="card-desc">All 12 modules from Origin Story to Life OS. Each module is a dual-mode page: present live or share as an interactive workbook.</p>
+      </div>
+      <div class="card-cta" style="color:#4F5B3C;">View curriculum <span class="arrow">→</span></div>
+    </div>
+  </a>
+
+  <a class="card card-full" href="curriculum/workbooks/design-led-practitioner/index.html">
+    <div class="card-swatch" style="background:linear-gradient(90deg,var(--pink) 50%,var(--ink) 50%);"></div>
+    <div class="card-body">
+      <div>
+        <div class="card-eyebrow"><div class="dot" style="background:var(--pink);"></div>Design-Led: Practitioner · 13 modules</div>
+        <h3 class="card-title">Design-Led: Practitioner <em>— Stop being the executor</em></h3>
+        <p class="card-desc">A 13-module curriculum for mid-weight designers ready to build real product-management capability. Research, analysis, strategy, product thinking, service design, AI-era interaction — the disciplines underneath good design decisions.</p>
+      </div>
+      <div class="card-cta" style="color:var(--pink-text);">Explore the program <span class="arrow">→</span></div>
+    </div>
+  </a>
+
+  <a class="card card-full" href="curriculum/workbooks/design-led-leader/index.html">
+    <div class="card-swatch" style="background:linear-gradient(90deg,var(--plum) 50%,var(--ink) 50%);"></div>
+    <div class="card-body">
+      <div>
+        <div class="card-eyebrow"><div class="dot" style="background:var(--plum);"></div>Design-Led: Leader · 13 modules · companion to Practitioner</div>
+        <h3 class="card-title">Design-Led: Leader <em>— Stop being the service department</em></h3>
+        <p class="card-desc">A 13-module curriculum for Heads of Design and senior design leaders. The four threads of organisational influence, the three traps that keep leaders sidelined, and the business case for design's seat at the table.</p>
+      </div>
+      <div class="card-cta" style="color:var(--plum-text);">Explore the program <span class="arrow">→</span></div>
+    </div>
+  </a>
+
+  <!-- Workshops -->
+  <h2 class="section-label" id="workshops">Workshops</h2>
+
+  <a class="card card-full" href="Why%20Workshop%20Masterclass/2023-why-workshop-masterclass-v2.html">
+    <div class="card-swatch swatch-plum-yellow"></div>
+    <div class="card-body">
+      <div>
+        <div class="card-eyebrow"><div class="dot" style="background:var(--plum);"></div>Masterclass · 34 slides</div>
+        <h3 class="card-title">The Why <em>Workshop</em></h3>
+        <p class="card-desc">Coaching register. DM Serif Display, Fraunces body, Allura script, painted blob shapes, pink/teal/yellow/plum palette. A 34-slide arc covering values, purpose, the why framework, and the D2M pitch.</p>
+      </div>
+      <div class="card-cta" style="color:var(--plum);">Open deck <span class="arrow">→</span></div>
+    </div>
+  </a>
+
+  <p style="grid-column:1/-1; margin:-16px 0 0; font-family:'Inter'; font-size:12px; color:var(--muted);">
+    Looking for the original 2023 edit? <a href="Why%20Workshop%20Masterclass/2023-why-workshop-masterclass.html" style="color:var(--muted); text-decoration:underline;">Open the archived v1 deck →</a>
+  </p>
+
+  <!-- Tools -->
+  <h2 class="section-label" id="tools">Tools</h2>
+
+  <a class="card card-full" href="why-deck/Why%20Deck%20v2.html">
+    <div class="card-swatch" style="background:linear-gradient(180deg,var(--plum) 25%,#FF3990 50%,#47ACA4 75%,#FFBD59 100%);"></div>
+    <div class="card-body">
+      <div>
+        <div class="card-eyebrow"><div class="dot" style="background:var(--plum);"></div>174 values · SVG art · printable</div>
+        <h3 class="card-title">The Why <em>Deck</em></h3>
+        <p class="card-desc">A set of 174 illustrated values cards. Each card pairs a bold metaphor image with a short blurb and a question to sit with. Browse interactively or print double-sided on A4 card stock and cut to size.</p>
+      </div>
+      <div class="card-cta" style="color:var(--plum);">Open the deck <span class="arrow">→</span></div>
+    </div>
+  </a>
+
+  <a class="card card-full" href="why-workshop-app-v2/index.html">
+    <div class="card-swatch" style="background:linear-gradient(90deg,var(--teal) 50%,var(--plum) 50%);"></div>
+    <div class="card-body">
+      <div>
+        <div class="card-eyebrow"><div class="dot" style="background:var(--teal);"></div>Self-paced · AI-coached · 45 min</div>
+        <h3 class="card-title">The Why <em>Workbook</em></h3>
+        <p class="card-desc">An interactive coaching workbook guided by an AI coach. Four phases: Reframe → Values → Moments of Truth → Why Statement. You leave with your top values, three aligned actions, and a working purpose statement.</p>
+      </div>
+      <div class="card-cta" style="color:var(--teal-text);">Open the workbook <span class="arrow">→</span></div>
     </div>
   </a>
 
@@ -255,87 +564,92 @@
     <div class="card-body">
       <div>
         <div class="card-eyebrow"><div class="dot" style="background:#E8503A;"></div>A3 Poster · Methods &amp; Tools</div>
-        <div class="card-title">Methods &amp; Tools by <em>Competency</em></div>
+        <h3 class="card-title">Methods &amp; Tools by <em>Competency</em></h3>
         <p class="card-desc">A3 print-ready poster mapping the full HCD toolkit by competency — Learn · Look · Ask · Try. 51 IDEO method cards organised for workshop walls, blueprinting, and learning design.</p>
       </div>
-      <div class="card-cta" style="color:#E8503A;">Open poster <span class="arrow">→</span></div>
+      <div class="card-cta" style="color:var(--orange-text);">Open poster <span class="arrow">→</span></div>
     </div>
   </a>
 
-  <!-- D2M Modules -->
-  <div class="section-label">Design to Me — Course modules</div>
+  <!-- Consulting -->
+  <h2 class="section-label" id="consulting">Consulting</h2>
 
-  <a class="card card-full" href="courses/index.html">
-    <div class="card-swatch swatch-plum-yellow"></div>
+  <a class="card card-full card-soon" href="consulting.html">
+    <div class="card-swatch swatch-teal-pink"></div>
     <div class="card-body">
       <div>
-        <div class="card-eyebrow"><div class="dot" style="background:var(--plum);"></div>Design to Me · 13 modules · ~28 hrs</div>
-        <div class="card-title">D2M — Full Curriculum <em>Overview</em></div>
-        <p class="card-desc">The Frankly Human Loop · Four program layers · All 13 modules from Origin Story to Life OS. Each module is a dual-mode page: present live or share as an interactive workbook.</p>
+        <div class="card-eyebrow"><div class="dot" style="background:var(--teal);"></div>By inquiry · Page coming soon</div>
+        <h3 class="card-title">Consulting <em>&amp;</em> Advisory</h3>
+        <p class="card-desc">1:1 and team consulting — design leadership, service design, and applying the Frankly Human Loop inside organisations. Full details coming soon; reach out in the meantime.</p>
       </div>
-      <div class="card-cta" style="color:var(--plum);">View curriculum <span class="arrow">→</span></div>
+      <div class="card-cta">Learn more <span class="arrow">→</span></div>
     </div>
   </a>
 
-  <!-- Why Deck -->
-  <div class="section-label">Why Deck — Values card set</div>
+  <!-- About -->
+  <h2 class="section-label" id="about">About</h2>
 
-  <a class="card card-full" href="why-deck/Why%20Deck%20v2.html">
-    <div class="card-swatch" style="background:linear-gradient(180deg,var(--plum) 25%,#FF3990 50%,#47ACA4 75%,#FFBD59 100%);"></div>
+  <a class="card" href="Content%20%26%20Voice%20Guide.html">
+    <div class="card-swatch swatch-olive-clay"></div>
     <div class="card-body">
-      <div>
-        <div class="card-eyebrow"><div class="dot" style="background:var(--plum);"></div>174 values · SVG art · printable</div>
-        <div class="card-title">The Why <em>Deck</em></div>
-        <p class="card-desc">A set of 174 illustrated values cards. Each card pairs a bold metaphor image with a short blurb and a question to sit with. Browse interactively or print double-sided on A4 card stock and cut to size.</p>
-      </div>
-      <div class="card-cta" style="color:var(--plum);">Open the deck <span class="arrow">→</span></div>
+      <div class="card-eyebrow"><div class="dot" style="background:#C97B5B;"></div>Content &amp; Voice · Updated</div>
+      <h3 class="card-title">Content <em>&amp; Voice</em></h3>
+      <p class="card-desc">The editorial &amp; earthy register. Archivo display type, JetBrains Mono labels, earthy palette. Voice patterns, writing rules, format guides. For design-led workshops and service blueprinting.</p>
+      <div class="card-cta" style="color:#4F5B3C;">View guide <span class="arrow">→</span></div>
     </div>
   </a>
 
-  <!-- Why Workbook AI App -->
-  <div class="section-label">Why Workbook — AI-Coached</div>
-
-  <a class="card card-full" href="why-workshop-app/index.html">
-    <div class="card-swatch" style="background:linear-gradient(90deg,var(--teal) 50%,var(--plum) 50%);"></div>
+  <a class="card" href="Visual%20Style%20Guide.html">
+    <div class="card-swatch swatch-teal-pink"></div>
     <div class="card-body">
-      <div>
-        <div class="card-eyebrow"><div class="dot" style="background:var(--teal);"></div>Self-paced · AI-coached · 45 min</div>
-        <div class="card-title">The Why <em>Workbook</em></div>
-        <p class="card-desc">An interactive coaching workbook guided by an AI coach. Four phases: Reframe → Values → Moments of Truth → Why Statement. You leave with your top values, three aligned actions, and a working purpose statement.</p>
-      </div>
-      <div class="card-cta" style="color:var(--teal);">Open the workbook <span class="arrow">→</span></div>
-    </div>
-  </a>
-
-  <!-- Why Workshop Masterclass slides -->
-  <div class="section-label">2023 Why Workshop — Masterclass slides</div>
-
-  <a class="card" href="Why%20Workshop%20Masterclass/2023-why-workshop-masterclass.html">
-    <div class="card-swatch swatch-sand-teal"></div>
-    <div class="card-body">
-      <div class="card-eyebrow"><div class="dot" style="background:#C97B5B;"></div>Masterclass · Style Guide 1</div>
-      <div class="card-title">The Why Workshop <em>—</em> v1</div>
-      <p class="card-desc">Editorial register. Archivo display, earthy palette, monospace labels, scroll-snap deck with 34 slides covering values, purpose, the why framework, and the D2M pitch.</p>
-      <div class="card-cta" style="color:#4F5B3C;">Open deck <span class="arrow">→</span></div>
-    </div>
-  </a>
-
-  <a class="card" href="Why%20Workshop%20Masterclass/2023-why-workshop-masterclass-v2.html">
-    <div class="card-swatch swatch-plum-yellow"></div>
-    <div class="card-body">
-      <div class="card-eyebrow"><div class="dot" style="background:var(--plum);"></div>Masterclass · Style Guide 2</div>
-      <div class="card-title">The Why Workshop <em>—</em> v2</div>
-      <p class="card-desc">Coaching register. DM Serif Display, Fraunces body, Allura script, painted blob shapes, pink/teal/yellow/plum palette. Same 34-slide arc, fully restyled.</p>
-      <div class="card-cta" style="color:var(--plum);">Open deck <span class="arrow">→</span></div>
+      <div class="card-eyebrow"><div class="dot" style="background:var(--pink);"></div>Visual Identity · Updated</div>
+      <h3 class="card-title">Visual <em>Identity</em></h3>
+      <p class="card-desc">The warm coaching register. DM Serif Display, Fraunces body, Allura script, painted blob shapes. Full IDEO 51-method icon library — Learn · Look · Ask · Try. For D2M and personal coaching surfaces.</p>
+      <div class="card-cta" style="color:var(--pink-text);">View style guide <span class="arrow">→</span></div>
     </div>
   </a>
 
 </main>
 
 <footer>
-  <span>Frankly Human · Design Studio</span>
+  <span>Frankly Human · Design-Led Practice</span>
   <span>franklyhuman.com · @franklyhumanux</span>
 </footer>
+
+<script>
+  var navToggle = document.querySelector('.nav-toggle');
+  var topnavMenu = document.querySelector('.topnav-menu');
+  navToggle.addEventListener('click', function () {
+    var isOpen = topnavMenu.classList.toggle('is-open');
+    navToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  });
+
+  document.querySelectorAll('.topnav-item').forEach(function (item) {
+    var link = item.querySelector('.topnav-link');
+    var dropdown = item.querySelector('.topnav-dropdown');
+    if (!dropdown) return;
+    link.addEventListener('click', function (e) {
+      if (window.matchMedia('(max-width: 900px)').matches) {
+        e.preventDefault();
+        var isOpen = item.classList.toggle('open');
+        link.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      }
+    });
+    // Desktop: the dropdown is revealed by :hover/:focus-within in CSS —
+    // keep aria-expanded in sync for screen readers, which don't infer
+    // state from CSS visibility alone.
+    item.addEventListener('focusin', function () {
+      link.setAttribute('aria-expanded', 'true');
+    });
+    item.addEventListener('focusout', function (e) {
+      if (!item.contains(e.relatedTarget)) link.setAttribute('aria-expanded', 'false');
+    });
+    item.addEventListener('mouseenter', function () { link.setAttribute('aria-expanded', 'true'); });
+    item.addEventListener('mouseleave', function () {
+      if (!item.matches(':focus-within')) link.setAttribute('aria-expanded', 'false');
+    });
+  });
+</script>
 
 </body>
 </html>

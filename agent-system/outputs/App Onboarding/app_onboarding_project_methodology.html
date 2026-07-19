@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>App Onboarding — Project Methodology</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f4f0;color:#1a1a18;font-size:14px;line-height:1.7;padding:32px 24px 64px}
+@media(prefers-color-scheme:dark){body{background:#1c1c1a;color:#e8e6dc}}
+.wrap{max-width:860px;margin:0 auto}
+.doc-title{font-size:18px;font-weight:500;color:#1a1a18;margin-bottom:4px}
+@media(prefers-color-scheme:dark){.doc-title{color:#e8e6dc}}
+.doc-sub{font-size:13px;color:#5a5a56;margin-bottom:1.5rem}
+@media(prefers-color-scheme:dark){.doc-sub{color:#a8a79f}}
+.status-bar{background:#f5f4f0;border:0.5px solid #dddcd6;border-radius:12px;padding:1rem 1.25rem;margin-bottom:1.5rem;display:flex;align-items:flex-start;gap:16px}
+@media(prefers-color-scheme:dark){.status-bar{background:#242422;border-color:#3a3a36}}
+.status-marker{width:10px;height:10px;border-radius:50%;background:#EF9F27;margin-top:4px;flex-shrink:0}
+.status-text{font-size:13px;color:#5a5a56;line-height:1.6}
+@media(prefers-color-scheme:dark){.status-text{color:#a8a79f}}
+.status-text strong{color:#1a1a18;font-weight:500}
+@media(prefers-color-scheme:dark){.status-text strong{color:#e8e6dc}}
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1.5rem}
+.badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:500;padding:3px 8px;border-radius:4px;letter-spacing:.01em}
+.b-agent{background:#FAEEDA;color:#633806}
+.b-designer{background:#EEEDFE;color:#3C3489}
+.b-stakeholder{background:#EAF3DE;color:#27500A}
+.b-gate{background:#FCEBEB;color:#791F1F}
+.b-done{background:#E1F5EE;color:#085041}
+.b-next{background:#FAEEDA;color:#633806;border:1px solid #EF9F27}
+.b-pending{background:#f1efe8;color:#6a6a64}
+.b-pm{background:#E6F1FB;color:#0C447C}
+.b-svc{background:#E1F5EE;color:#085041}
+.b-des{background:#EEEDFE;color:#3C3489}
+@media(prefers-color-scheme:dark){
+.b-agent{background:#633806;color:#FAC775}
+.b-designer{background:#3C3489;color:#CECBF6}
+.b-stakeholder{background:#27500A;color:#C0DD97}
+.b-gate{background:#791F1F;color:#F7C1C1}
+.b-done{background:#085041;color:#9FE1CB}
+.b-next{background:#633806;color:#FAC775;border-color:#EF9F27}
+.b-pending{background:#2c2c28;color:#6a6a64}
+.b-pm{background:#0C447C;color:#B5D4F4}
+.b-svc{background:#085041;color:#9FE1CB}
+.b-des{background:#3C3489;color:#CECBF6}
+}
+.phase{margin-bottom:1.25rem;border:0.5px solid #dddcd6;border-radius:12px;overflow:hidden;background:#ffffff}
+@media(prefers-color-scheme:dark){.phase{border-color:#3a3a36;background:#1c1c1a}}
+.phase-header{padding:.75rem 1.25rem;display:flex;align-items:center;gap:12px;border-bottom:0.5px solid #dddcd6;background:#f5f4f0}
+@media(prefers-color-scheme:dark){.phase-header{border-color:#3a3a36;background:#242422}}
+.phase-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.dot-pm{background:#378ADD}
+.dot-svc{background:#1D9E75}
+.dot-des{background:#7F77DD}
+.dot-launch{background:#639922}
+.dot-pre{background:#888780}
+.phase-title{font-size:14px;font-weight:500;color:#1a1a18;flex:1}
+@media(prefers-color-scheme:dark){.phase-title{color:#e8e6dc}}
+.phase-meta{font-size:12px;color:#5a5a56}
+.stage{padding:.75rem 1.25rem;border-bottom:0.5px solid #dddcd6;display:grid;grid-template-columns:auto 1fr;gap:8px 12px;align-items:start}
+@media(prefers-color-scheme:dark){.stage{border-color:#3a3a36}}
+.stage:last-child{border-bottom:none}
+.stage-num{font-size:11px;font-weight:500;color:#8a8a85;padding-top:2px;min-width:22px;font-family:'Courier New',monospace}
+.stage-body{display:flex;flex-direction:column;gap:5px}
+.stage-name{font-size:13px;font-weight:500;color:#1a1a18}
+@media(prefers-color-scheme:dark){.stage-name{color:#e8e6dc}}
+.stage-output{font-size:12px;color:#5a5a56;line-height:1.5}
+@media(prefers-color-scheme:dark){.stage-output{color:#a8a79f}}
+.stage-badges{display:flex;flex-wrap:wrap;gap:4px;margin-top:2px}
+.gate{padding:.6rem 1.25rem;border-bottom:0.5px solid #dddcd6;display:flex;align-items:center;gap:10px;background:#f5f4f0}
+@media(prefers-color-scheme:dark){.gate{border-color:#3a3a36;background:#242422}}
+.gate:last-child{border-bottom:none}
+.gate-body{flex:1}
+.gate-name{font-size:12px;font-weight:500;color:#1a1a18}
+@media(prefers-color-scheme:dark){.gate-name{color:#e8e6dc}}
+.gate-desc{font-size:11px;color:#5a5a56;margin-top:2px}
+@media(prefers-color-scheme:dark){.gate-desc{color:#a8a79f}}
+.gate-badges{display:flex;gap:4px;flex-shrink:0}
+.input-row{padding:.5rem 1.25rem;border-bottom:0.5px solid #dddcd6;display:flex;align-items:flex-start;gap:10px;background:#ffffff}
+@media(prefers-color-scheme:dark){.input-row{border-color:#3a3a36;background:#1c1c1a}}
+.input-row:last-child{border-bottom:none}
+.input-icon{width:16px;height:16px;border-radius:3px;background:#EAF3DE;border:0.5px solid #3B6D11;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+@media(prefers-color-scheme:dark){.input-icon{background:#27500A;border-color:#3B6D11}}
+.input-text{font-size:12px;color:#5a5a56;line-height:1.5}
+@media(prefers-color-scheme:dark){.input-text{color:#a8a79f}}
+.input-text strong{color:#27500A;font-weight:500}
+@media(prefers-color-scheme:dark){.input-text strong{color:#C0DD97}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<p class="doc-title">App Onboarding Redesign — Full Project Methodology</p>
+<p class="doc-sub">Enterprise onboarding portal · All stages, agents, review gates, and stakeholder input points</p>
+
+<div class="status-bar">
+  <div class="status-marker"></div>
+  <div class="status-text">
+    <strong>Current position:</strong> PM Strategy, Discovery, and Delivery (through Requirements Writer) are complete. Service blueprint, journey maps, strategy, and risk assessment are all produced. Five touchpoint briefs (TD-01 to TD-05) are ready. Before design begins, three PM stages remain: <strong>Experiment Designer, Metrics Definer, and Product Critic</strong>. Seven programme pre-conditions must also be resolved by the stakeholder before pilot launch.
+  </div>
+</div>
+
+<div class="legend">
+  <span class="badge b-agent">Agent activity</span>
+  <span class="badge b-designer">Designer review</span>
+  <span class="badge b-stakeholder">Stakeholder input</span>
+  <span class="badge b-gate">Gate — must pass before continuing</span>
+  <span class="badge b-done">Done ✓</span>
+  <span class="badge b-next">Next step</span>
+  <span class="badge b-pending">Pending</span>
+</div>
+
+<!-- PHASE 0 -->
+<div class="phase">
+  <div class="phase-header">
+    <div class="phase-dot dot-pre"></div>
+    <span class="phase-title">Phase 0 — Programme Initiation</span>
+    <span class="phase-meta badge b-stakeholder">Stakeholder-led</span>
+  </div>
+  <div class="input-row">
+    <div class="input-icon"><svg viewBox="0 0 10 10" fill="none" width="10" height="10"><rect x="1" y="1" width="8" height="8" rx="1" stroke="#27500A" stroke-width="1"/><path d="M3 5h4M5 3v4" stroke="#27500A" stroke-width="1"/></svg></div>
+    <div class="input-text"><strong>Stakeholder resolves before any agent runs:</strong> (1) Named service owner appointed at Director level with authority over all six teams. (2) 24-month Jira data pulled — validate 150–300 req/year assumption. (3) Written channel decommission sign-off from all six team leads. (4) Six brief questions answered: what is this service, what is broken, who are the users, what does success look like, constraints, and what is out of scope.</div>
+  </div>
+  <div class="stage">
+    <span class="stage-num">P0</span>
+    <div class="stage-body">
+      <span class="stage-name">Brief intake</span>
+      <span class="stage-output">CD fills in Brief Template from stakeholder inputs. All six questions answered. Gaps flagged as research questions.</span>
+      <div class="stage-badges"><span class="badge b-designer">CD activity</span><span class="badge b-done">Done ✓</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- PHASE 1 -->
+<div class="phase">
+  <div class="phase-header">
+    <div class="phase-dot dot-pm"></div>
+    <span class="phase-title">Phase 1 — PM Strategy Layer</span>
+    <span class="phase-meta badge b-pm">ProductPowers</span>
+  </div>
+  <div class="stage">
+    <span class="stage-num">S01</span>
+    <div class="stage-body">
+      <span class="stage-name">Market Researcher</span>
+      <span class="stage-output">Market landscape, competitive set, market sizing. Labels all estimates as estimates.</span>
+      <div class="stage-badges"><span class="badge b-agent">Agent</span><span class="badge b-done">Done ✓</span></div>
+    </div>
+  </div>
+  <div class="stage">
+    <span class="stage-num">S02</span>
+    <div class="stage-body">
+      <span class="stage-name">User Researcher</span>
+      <span class="stage-output">JTBD analysis (3 segments), opportunity landscape, assumption inventory. Findings labelled [RESEARCHED], [INFERRED], or [ASSUMED].</span>
+      <div class="stage-badges"><span class="badge b-agent">Agent</span><span class="badge b-done">Done ✓</span></div>
+    </div>
+  </div>
+  <div class="stage">
+    <span class="stage-num">S03</span>
+    <div class="stage-body">
+      <span class="stage-name">Business Analyst</span>
+      <span class="stage-output">Business case, ROI model (~£90k–£160k/yr savings, ~25-month payback), strategic alignment map.</span>
+      <div class="stage-badges"><span class="badge b-agent">Agent</span><span class="badge b-done">Done ✓</span></div>
+    </div>
+  </div>
+  <div class="stage">
+    <span class="stage-num">S04</span>
+    <div class="stage-body">
+      <span class="stage-name">Strategy Architect</span>
+      <span class="stage-output">Service vision, North Star metric, 5 input metrics, OKR alignment, 6 service principles, strategic tensions.</span>
+      <div class="stage-badges"><span class="badge b-agent">Agent</span><span class="badge b-done">Done ✓</span></div>
+    </div>
+  </div>
+  <div class="gate">
+    <div class="gate-body">
+      <div class="gate-name">★ Strategy Gate — PO review required</div>
+      <div class="gate-desc">Is the North Star about user value? Do principles rule things out? Are tensions named? Would the PO use this to argue against a bad proposal?</div>
+    </div>
+    <div class="gate-badges"><span class="badge b-gate">Gate</span><span class="badge b-stakeholder">PO reviews</span></div>
+  </div>
+  <div class="input-row">
+    <div class="input-icon"><svg viewBox="0 0 10 10" fill="none" width="10" height="10"><rect x="1" y="1" width="8" height="8" rx="1" stroke="#27500A" stroke-width="1"/><path d="M3 5h4M5 3v4" stroke="#27500A" stroke-width="1"/></svg></div>
+    <div class="input-text"><strong>Stakeholder input needed:</strong> Confirm or correct OKRs (none were provided — strategy uses hypothetical alignment). Validate strategic tensions. Confirm North Star metric is measurable with current data access.</div>
+  </div>
+</div>
+
+<!-- PHASE 2 -->
+<div class="phase">
+  <div class="phase-header">
+    <div class="phase-dot dot-pm"></div>
+    <span class="phase-title">Phase 2 — PM Discovery Layer</span>
+    <span class="phase-meta badge b-pm">ProductPowers — loops until validated</span>
+  </div>
+  <div class="stage">
+    <span class="stage-num">S05</span>
+    <div class="stage-body">
+      <span class="stage-name">Opportunity Mapper</span>
+      <span class="stage-output">Opportunity Solution Tree. Prioritised opportunity backlog. Assumption inventory. Maps opportunities only — no solutions yet.</span>
+      <div class="stage-badges"><span class="badge b-agent">Agent</span><span class="badge b-done">Done ✓</span></div>
+    </div>
+  </div>
+  <div class="stage">
+    <span class="stage-num">S06</span>
+    <div class="stage-body">
+      <span class="stage-name">Risk Assessor</span>
+      <span class="stage-output">Risk register (25 risks × 5 categories), 5 critical assumptions (CA-01 to CA-05), go/no-go recommendation per workstream.</span>
+      <div class="stage-badges"><span class="badge b-agent">Agent</span><span class="badge b-done">Done ✓</span></div>
+    </div>
+  </div>
+  <div class="stage">
+    <span class="stage-num">S07</span>
+    <div class="stage-body">
+      <span class="stage-name">Experiment Designer</span>
+      <span class="stage-output">Minimum experiment to test critical assumptions. H1–H4 hypotheses formalised with specific pass/fail criteria. Prototype is the experiment — agent structures and stress-tests the brief.</span>
+      <div class="stage-badges"><span class="badge b-agent">Agent</span><span class="badge b-next">Next step</span></div>
+    </div>
+  </div>
+  <div class="gate">
+    <div class="gate-body">
+      <div class="gate-name">★ Validation Gate — PO review required</div>
+      <div class="gate-desc">Is the hypothesis specific enough to pass or fail clearly? Is this the minimum test? Are pass/fail thresholds specific enough? Is the riskiest assumption (H4 triage self-declaration) being tested?</div>
+    </div>
+    <div class="gate-badges"><span class="badge b-gate">Gate</span><span class="badge b-stakeholder">PO reviews</span></div>
+  </div>
+  <div class="input-row">
+    <div class="input-icon"><svg viewBox="0 0 10 10" fill="none" width="10" height="10"><rect x="1" y="1" width="8" height="8" rx="1" stroke="#27500A" stroke-width="1"/><path d="M3 5h4M5 3v4" stroke="#27500A" stroke-width="1"/></svg></div>
+    <div class="input-text"><strong>Stakeholder input needed:</strong> Approve experiment design. Confirm feasibility (access to users, systems, timeline). Draft hypotheses H1–H4 from prototype brief available as starting input for agent.</div>
+  </div>
+</div>
+
+<!-- PHASE 3 -->
+<div class="phase">
+  <div class="phase-header">
+    <div class="phase-dot dot-pm"></div>
+    <span class="phase-title">Phase 3 — PM Delivery Layer</span>
+    <span class="phase-meta badge b-pm">ProductPowers — per feature/release</span>
+  </div>
+  <div class="stage">
+    <span class="stage-num">S08</span>
+    <div class="stage-body">
+      <span class="stage-name">Prioritisation Lead</span>
+      <span class="stage-output">RICE scores with explicit assumptions, MoSCoW analysis, trade-off analysis. Run after prototype user testing — findings will change priorities.</span>
+      <div class="stage-badges"><span class="badge b-agent">Agent</span><span class="badge b-pending">After testing</span></div>
+    </div>
+  </div>
+  <div class="stage">
+    <span class="stage-num">S09</span>
+    <div class="stage-body">
+      <span class="stage-name">Roadmap Architect</span>
+      <span class="stage-output">Product roadmap (Now/Next/Later), release plan, dependency map. Run after prioritisation and testing evidence is available.</span>
+      <div class="stage-badges"><span class="badge b-agent">Agent</span><span class="badge b-pending">After testing</span></div>
+    </div>
+  </div>
+  <div class="gate">
+    <div class="gate-body">
+      <div class="gate-name">★ Roadmap Gate — PO review required</div>
+      <div class="gate-desc">Is the sequencing logic explicit and challengeable? Are dependencies that could block multiple downstream items visible?</div>
+    </div>
+    <div class="gate-badges"><span class="badge b-gate">Gate</span><span class="badge b-stakeholder">PO reviews</span></div>
+  </div>
+  <div class="input-row">
+    <div class="input-icon"><svg viewBox="0 0 10 10" fill="none" width="10" height="10"><rect x="1" y="1" width="8" height="8" rx="1" stroke="#27500A" stroke-width="1"/><path d="M3 5h4M5 3v4" stroke="#27500A" stroke-width="1"/></svg></div>
+    <div class="input-text"><strong>Stakeholder input needed:</strong> Technical constraints (JSM confirmed). Pilot scope — all six teams or subset? Open questions OQ-01 through OQ-09 from Design Spec (SLA model, decision authority, notification channels, data retention, out-of-scope app types).</div>
+  </div>
+  <div class="stage">
+    <span class="stage-num">S10</span>
+    <div class="stage-body">
+      <span class="stage-name">Requirements Writer</span>
+      <span class="stage-output">Service blueprint (8 stages × 6 layers), 7 user stories, full PRD, 5 touchpoint briefs (TD-01 to TD-05), edge case inventory, dependency table (D-01–D-06), open questions (OQ-01–OQ-09).</span>
+      <div class="stage-badges"><span class="badge b-agent">Agent</span><span class="badge b-done">Done ✓</span></div>
+    </div>
+  </div>
+  <div class="stage">
+    <span class="stage-num">S11</span>
+    <div class="stage-body">
+      <span class="stage-name">Metrics Definer</span>
+      <span class="stage-output">Success metrics, leading indicators, guardrail metrics, JSM instrumentation requirements. Pass/fail thresholds for H1–H4. Must run before user testing begins.</span>
+      <div class="stage-badges"><span class="badge b-agent">Agent</span><span class="badge b-next">Next step</span></div>
+    </div>
+  </div>
+  <div class="stage">
+    <span class="stage-num">S12</span>
+    <div class="stage-body">
+      <span class="stage-name">Product Critic</span>
+      <span class="stage-output">Verdict on requirements: rethink / revise / proceed with note / proceed. Each requirement traced to a real user need. Run before TD-03 to TD-05 design begins.</span>
+      <div class="stage-badges"><span class="badge b-agent">Agent</span><span class="badge b-next">Next step</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- PHASE 4 -->
+<div class="phase">
+  <div class="phase-header">
+    <div class="phase-dot dot-svc"></div>
+    <span class="phase-title">Phase 4 — Service Design Layer</span>
+    <span class="phase-meta badge b-svc">Designpowers — service agents</span>
+  </div>
+  <div class="stage">
+    <span class="stage-num">SD1</span>
+    <div class="stage-body">
+      <span class="stage-name">Service Researcher</span>
+      <span class="stage-output">Ecosystem map, research gap analysis, backstage landscape. No unexplained inferences.</span>
+      <div class="stage-badges"><span class="badge b-agent">Agent</span><span class="badge b-done">Done ✓</span></div>
+    </div>
+  </div>
+  <div class="stage">
+    <span class="stage-num">SD2</span>
+    <div class="stage-body">
+      <span class="stage-name">Journey Architect</span>
+      <span class="stage-output">AS-IS + TO-BE journey maps (3 user segments), touchpoint inventory, channel matrix.</span>
+      <div class="stage-badges"><span class="badge b-agent">Agent</span><span class="badge b-done">Done ✓</span></div>
+    </div>
+  </div>
+  <div class="gate">
+    <div class="gate-body">
+      <div class="gate-name">CD Gate 2 — Journey review</div>
+      <div class="gate-desc">Does the future-state journey reflect stakeholder intent? Is the touchpoint inventory complete? Are channel transitions realistic? Most important review in the service design layer.</div>
+    </div>
+    <div class="gate-badges"><span class="badge b-gate">Gate</span><span class="badge b-designer">CD reviews</span></div>
+  </div>
+  <div class="input-row">
+    <div class="input-icon"><svg viewBox="0 0 10 10" fill="none" width="10" height="10"><rect x="1" y="1" width="8" height="8" rx="1" stroke="#27500A" stroke-width="1"/><path d="M3 5h4M5 3v4" stroke="#27500A" stroke-width="1"/></svg></div>
+    <div class="input-text"><strong>Stakeholder input needed:</strong> Blueprint Studio walkthrough session. Walk through map stage by stage. Edit steps live as stakeholders correct or add information. Toggle fail points, moments of truth, and touchpoints as identified.</div>
+  </div>
+  <div class="stage">
+    <span class="stage-num">SD3</span>
+    <div class="stage-body">
+      <span class="stage-name">Service Blueprinter</span>
+      <span class="stage-output">Full service blueprint (frontstage / backstage / support), system dependency map, one touchpoint brief per digital surface.</span>
+      <div class="stage-badges"><span class="badge b-agent">Agent</span><span class="badge b-done">Done ✓</span></div>
+    </div>
+  </div>
+  <div class="gate">
+    <div class="gate-body">
+      <div class="gate-name">CD Gate 3 — Blueprint review</div>
+      <div class="gate-desc">Does each touchpoint brief have enough backstage context? Are backstage dependencies flagged? Do the briefs form a coherent service — not isolated design tasks?</div>
+    </div>
+    <div class="gate-badges"><span class="badge b-gate">Gate</span><span class="badge b-designer">CD reviews</span></div>
+  </div>
+  <div class="stage">
+    <span class="stage-num">SD4</span>
+    <div class="stage-body">
+      <span class="stage-name">Policy Reviewer</span>
+      <span class="stage-output">Promise-delivery gap analysis, policy conflict flags, backstage remediation recommendations. Verdicts: design fix / backstage fix / re-blueprint.</span>
+      <div class="stage-badges"><span class="badge b-agent">Agent</span><span class="badge b-next">Next — when Cyber/Legal input available</span></div>
+    </div>
+  </div>
+  <div class="gate">
+    <div class="gate-body">
+      <div class="gate-name">CD Gate 4 — Policy &amp; deliverability review</div>
+      <div class="gate-desc">Any re-blueprint items must be resolved before design starts. Backstage fix items raised with stakeholder. Seven programme pre-conditions tracked.</div>
+    </div>
+    <div class="gate-badges"><span class="badge b-gate">Gate</span><span class="badge b-designer">CD reviews</span><span class="badge b-stakeholder">Stakeholder tracks</span></div>
+  </div>
+</div>
+
+<!-- PHASE 5 -->
+<div class="phase">
+  <div class="phase-header">
+    <div class="phase-dot dot-des"></div>
+    <span class="phase-title">Phase 5 — Touchpoint Design Layer</span>
+    <span class="phase-meta badge b-des">Designpowers — runs per touchpoint (5 total)</span>
+  </div>
+  <div class="input-row">
+    <div class="input-icon"><svg viewBox="0 0 10 10" fill="none" width="10" height="10"><rect x="1" y="1" width="8" height="8" rx="1" stroke="#27500A" stroke-width="1"/><path d="M3 5h4M5 3v4" stroke="#27500A" stroke-width="1"/></svg></div>
+    <div class="input-text"><strong>Runs for each of 5 touchpoints:</strong> TD-01 App Discovery · TD-02 Intake Submission · TD-03 Status Tracking · TD-04 Decision Communications · TD-05 Outcome &amp; Onboarding. All five touchpoint briefs are ready. Multiple designers can run pipelines in parallel. JSM prototype build is the vehicle for TD-01 and TD-02 (full build); TD-03 to TD-05 lighter builds.</div>
+  </div>
+  <div class="stage">
+    <span class="stage-num">TD1</span>
+    <div class="stage-body">
+      <span class="stage-name">Design Scout</span>
+      <span class="stage-output">Competitive audit, pattern library, benchmark analysis for the touchpoint.</span>
+      <div class="stage-badges"><span class="badge b-agent">Agent</span><span class="badge b-pending">Pending</span></div>
+    </div>
+  </div>
+  <div class="stage">
+    <span class="stage-num">TD2</span>
+    <div class="stage-body">
+      <span class="stage-name">Design Strategist</span>
+      <span class="stage-output">Design strategy, user model, design principles for the touchpoint.</span>
+      <div class="stage-badges"><span class="badge b-agent">Agent</span><span class="badge b-pending">Pending</span></div>
+    </div>
+  </div>
+  <div class="stage">
+    <span class="stage-num">TD3</span>
+    <div class="stage-body">
+      <span class="stage-name">Inspiration Scout</span>
+      <span class="stage-output">Aesthetic references, interaction patterns, visual precedents.</span>
+      <div class="stage-badges"><span class="badge b-agent">Agent</span><span class="badge b-pending">Pending</span></div>
+    </div>
+  </div>
+  <div class="gate">
+    <div class="gate-body">
+      <div class="gate-name">★ Taste Gate — Aesthetic direction set by CD</div>
+      <div class="gate-desc">CD captures aesthetic instincts and loads taste profile. Stakeholder or designer reviews taste direction. Have visual references ready. CD-owned — not a committee decision.</div>
+    </div>
+    <div class="gate-badges"><span class="badge b-gate">Gate</span><span class="badge b-designer">CD sets taste</span><span class="badge b-stakeholder">Optional stakeholder review</span></div>
+  </div>
+  <div class="input-row">
+    <div class="input-icon"><svg viewBox="0 0 10 10" fill="none" width="10" height="10"><rect x="1" y="1" width="8" height="8" rx="1" stroke="#27500A" stroke-width="1"/><path d="M3 5h4M5 3v4" stroke="#27500A" stroke-width="1"/></svg></div>
+    <div class="input-text"><strong>Stakeholder input at Taste Gate:</strong> Share visual references, brand guidelines, accessibility standards, and organisational aesthetic constraints. Best point to provide preference signals — after this gate changes are more costly.</div>
+  </div>
+  <div class="stage">
+    <span class="stage-num">TD4</span>
+    <div class="stage-body">
+      <span class="stage-name">Design Lead</span>
+      <span class="stage-output">IA, interaction design, visual design system, component decisions.</span>
+      <div class="stage-badges"><span class="badge b-agent">Agent</span><span class="badge b-pending">Pending</span></div>
+    </div>
+  </div>
+  <div class="stage">
+    <span class="stage-num">TD5</span>
+    <div class="stage-body">
+      <span class="stage-name">Motion Designer</span>
+      <span class="stage-output">Micro-interactions, transitions, animation patterns.</span>
+      <div class="stage-badges"><span class="badge b-agent">Agent</span><span class="badge b-pending">Pending</span></div>
+    </div>
+  </div>
+  <div class="stage">
+    <span class="stage-num">TD6</span>
+    <div class="stage-body">
+      <span class="stage-name">Content Writer</span>
+      <span class="stage-output">UX copy, labels, error states, empty states, help text, notification language.</span>
+      <div class="stage-badges"><span class="badge b-agent">Agent</span><span class="badge b-pending">Pending</span></div>
+    </div>
+  </div>
+  <div class="gate">
+    <div class="gate-body">
+      <div class="gate-name">★ Taste Check Gate — CD mid-build review</div>
+      <div class="gate-desc">CD reviews intermediate output before builder runs. Last low-cost moment to correct aesthetic direction. Mismatches caught here — not in the review phase.</div>
+    </div>
+    <div class="gate-badges"><span class="badge b-gate">Gate</span><span class="badge b-designer">CD reviews</span></div>
+  </div>
+  <div class="stage">
+    <span class="stage-num">TD7</span>
+    <div class="stage-body">
+      <span class="stage-name">Design Builder</span>
+      <span class="stage-output">Built design output — screens, components, prototypes executed to spec.</span>
+      <div class="stage-badges"><span class="badge b-agent">Agent</span><span class="badge b-pending">Pending</span></div>
+    </div>
+  </div>
+  <div class="stage">
+    <span class="stage-num">TD8</span>
+    <div class="stage-body">
+      <span class="stage-name">Accessibility Reviewer</span>
+      <span class="stage-output">WCAG audit, colour contrast, keyboard navigation, screen reader compatibility, focus management.</span>
+      <div class="stage-badges"><span class="badge b-agent">Agent</span><span class="badge b-pending">Pending</span></div>
+    </div>
+  </div>
+  <div class="stage">
+    <span class="stage-num">TD9</span>
+    <div class="stage-body">
+      <span class="stage-name">Design Critic</span>
+      <span class="stage-output">Critique against brief, strategy, and user need. If critic and accessibility reviewer conflict — CD resolves, not agents.</span>
+      <div class="stage-badges"><span class="badge b-agent">Agent</span><span class="badge b-designer">CD resolves conflicts</span><span class="badge b-pending">Pending</span></div>
+    </div>
+  </div>
+  <div class="stage">
+    <span class="stage-num">TD10</span>
+    <div class="stage-body">
+      <span class="stage-name">Heuristic Evaluator</span>
+      <span class="stage-output">Usability heuristic review, learnability, error prevention, consistency checks with severity ratings.</span>
+      <div class="stage-badges"><span class="badge b-agent">Agent</span><span class="badge b-pending">Pending</span></div>
+    </div>
+  </div>
+  <div class="stage">
+    <span class="stage-num">TDR</span>
+    <div class="stage-body">
+      <span class="stage-name">Fix Round</span>
+      <span class="stage-output">Agent team resolves findings from accessibility, design critic, and heuristic evaluator. All P1 and P2 issues closed before ship gate.</span>
+      <div class="stage-badges"><span class="badge b-agent">Agent</span><span class="badge b-pending">Pending</span></div>
+    </div>
+  </div>
+  <div class="gate">
+    <div class="gate-body">
+      <div class="gate-name">★ Ship Gate — CD final approval. Nothing ships without this.</div>
+      <div class="gate-desc">CD reviews final output. All review findings resolved or noted with rationale. Accessibility P1 issues closed. Brief honoured. CD sign-off — not the agent's self-assessment.</div>
+    </div>
+    <div class="gate-badges"><span class="badge b-gate">Gate</span><span class="badge b-designer">CD final approval</span></div>
+  </div>
+  <div class="input-row">
+    <div class="input-icon"><svg viewBox="0 0 10 10" fill="none" width="10" height="10"><rect x="1" y="1" width="8" height="8" rx="1" stroke="#27500A" stroke-width="1"/><path d="M3 5h4M5 3v4" stroke="#27500A" stroke-width="1"/></svg></div>
+    <div class="input-text"><strong>Escalation paths:</strong> If Design Critic finds the brief is wrong → Product Critic reviews → Requirements Writer revises. If Policy Reviewer finds a systemic backstage gap → Roadmap Architect amends the plan. Design findings can send work back up the PM chain — this is by design, not failure.</div>
+  </div>
+</div>
+
+<!-- PHASE 6 -->
+<div class="phase">
+  <div class="phase-header">
+    <div class="phase-dot dot-launch"></div>
+    <span class="phase-title">Phase 6 — Launch &amp; Post-Launch</span>
+    <span class="phase-meta badge b-pm">ProductPowers — delivery close</span>
+  </div>
+  <div class="stage">
+    <span class="stage-num">L13</span>
+    <div class="stage-body">
+      <span class="stage-name">Launch Planner</span>
+      <span class="stage-output">GTM plan, staged rollout (pilot → expand → scale), adoption metrics, communication plan, change management brief, rollback criteria.</span>
+      <div class="stage-badges"><span class="badge b-agent">Agent</span><span class="badge b-pending">Pending</span></div>
+    </div>
+  </div>
+  <div class="gate">
+    <div class="gate-body">
+      <div class="gate-name">★ Launch Gate — PO approves rollout</div>
+      <div class="gate-desc">PO confirms internal readiness. All 7 programme pre-conditions resolved. Fast-track requires 4 additional pre-conditions. Rollback criteria defined.</div>
+    </div>
+    <div class="gate-badges"><span class="badge b-gate">Gate</span><span class="badge b-stakeholder">PO + stakeholder sign-off</span></div>
+  </div>
+  <div class="input-row">
+    <div class="input-icon"><svg viewBox="0 0 10 10" fill="none" width="10" height="10"><rect x="1" y="1" width="8" height="8" rx="1" stroke="#27500A" stroke-width="1"/><path d="M3 5h4M5 3v4" stroke="#27500A" stroke-width="1"/></svg></div>
+    <div class="input-text"><strong>Critical pre-conditions at launch:</strong> Service owner appointed. Volume validated. Channel decommission commitments in writing from all six teams. Fast-track additionally: internal risk approval + Cyber/Legal criteria defined + no self-declaration in triage + audit mechanism designed.</div>
+  </div>
+  <div class="stage">
+    <span class="stage-num">L14</span>
+    <div class="stage-body">
+      <span class="stage-name">Retrospective Lead</span>
+      <span class="stage-output">Actual vs expected metrics. Updated opportunity map. Next cycle brief. Feeds back to User Researcher to begin the next discovery cycle.</span>
+      <div class="stage-badges"><span class="badge b-agent">Agent</span><span class="badge b-pending">Post-launch</span></div>
+    </div>
+  </div>
+  <div class="gate">
+    <div class="gate-body">
+      <div class="gate-name">★ Learning Gate — strategy revision or confirm</div>
+      <div class="gate-desc">PO and CD review whether strategy needs revision. North Star baseline should now exist. Retrospective brief feeds the next discovery loop.</div>
+    </div>
+    <div class="gate-badges"><span class="badge b-gate">Gate</span><span class="badge b-stakeholder">PO + CD review</span></div>
+  </div>
+</div>
+
+<div style="margin-top:32px;padding-top:16px;border-top:1px solid #dddcd6;font-family:'Courier New',monospace;font-size:11px;color:#8a8a85;display:flex;justify-content:space-between;">
+  <span>App Onboarding Redesign — Project Methodology</span>
+  <span>Generated: 8 April 2026</span>
+</div>
+
+</div>
+</body>
+</html>

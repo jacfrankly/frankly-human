@@ -1,0 +1,734 @@
+<!doctype html>
+<html lang="en" data-mode="participant">
+<head>
+<meta charset="utf-8" />
+<title>Design-Led · Module 02 · Research — Practitioner</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..900,0..100;1,9..144,300..900,0..100&family=Inter:wght@400;500;600&family=Allura&family=Patrick+Hand&display=swap" rel="stylesheet">
+<style>
+/* =====================================================================
+   Design-Led: Practitioner · Module 02 · Research
+   Dual mode: Presenter (scroll-snap) + Workbook (interactive)
+   Same architecture as Module 01 — Palette: Ink · Paper · Teal · Pink · Yellow · Plum
+   ===================================================================== */
+
+:root {
+  --ink:      #100000;
+  --charcoal: #423B3B;
+  --paper:    #FBF7EE;
+  --paper-2:  #F4EFE2;
+  --sand:     #E0D2B5;
+  --teal:     #47ACA4;
+  --pink:     #FF3990;
+  --yellow:   #FFBD59;
+  --plum:     #7A1F4A;
+  --muted:    #5E584F;
+  --teal-text: #1F6E67;
+  --pink-text: #C40060;
+  --bar-h:    56px;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: 'Inter', sans-serif;
+  font-size: 16px; line-height: 1.55;
+  background: var(--paper); color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* TOPBAR */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0;
+  height: var(--bar-h);
+  background: var(--paper);
+  border-bottom: 1px solid rgba(16,0,0,0.12);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 32px;
+  z-index: 200;
+  gap: 16px;
+}
+.topbar-left { display: flex; align-items: center; gap: 18px; flex-shrink: 0; }
+.topbar-brand {
+  font-family: 'DM Serif Display', serif;
+  font-size: 18px; letter-spacing: -0.01em;
+  color: var(--ink); text-decoration: none;
+  white-space: nowrap;
+}
+.topbar-brand em { font-style: italic; color: var(--pink-text); }
+.topbar-divider { width: 1px; height: 18px; background: var(--sand); flex-shrink: 0; }
+.topbar-module {
+  font-family: 'Inter'; font-size: 10px;
+  letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted);
+  white-space: nowrap;
+}
+.topbar-center {
+  font-family: 'Inter'; font-size: 10px;
+  letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted);
+  flex: 1; text-align: center;
+}
+.topbar-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.mode-toggle { display: flex; align-items: stretch; border: 1px solid var(--ink); overflow: hidden; height: 30px; }
+.mode-btn {
+  padding: 0 14px;
+  font-family: 'Inter'; font-size: 10px;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--muted); background: none; border: none;
+  cursor: pointer; transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+.mode-sep { width: 1px; background: var(--ink); flex-shrink: 0; }
+html[data-mode="presenter"] .mode-btn.btn-presenter,
+html[data-mode="participant"] .mode-btn.btn-participant {
+  background: var(--ink); color: var(--paper);
+}
+.topbar-btn {
+  height: 30px; padding: 0 14px;
+  font-family: 'Inter'; font-size: 10px;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--muted); background: none;
+  border: 1px solid var(--ink); cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+.topbar-btn:hover { background: var(--ink); color: var(--paper); }
+.topbar-nav { display: flex; align-items: center; gap: 2px; }
+.nav-btn {
+  height: 30px; padding: 0 10px;
+  font-family: 'Inter'; font-size: 11px;
+  color: var(--muted); background: none; border: none;
+  cursor: pointer; transition: color 0.15s;
+  text-decoration: none; display: flex; align-items: center;
+}
+.nav-btn:hover { color: var(--ink); }
+.nav-btn.disabled { opacity: 0.3; cursor: default; }
+
+/* PROGRESS BAR */
+.progress-wrap {
+  position: fixed; top: var(--bar-h); left: 0; right: 0;
+  height: 3px; background: var(--sand); z-index: 199;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.25s;
+}
+html[data-mode="participant"] .progress-wrap { opacity: 1; pointer-events: auto; }
+.progress-fill { height: 100%; width: 0%; background: var(--pink-text); transition: width 0.5s ease; }
+
+/* SLIDES CONTAINER */
+html[data-mode="presenter"] body { overflow: hidden; }
+html[data-mode="presenter"] .slides-wrap {
+  position: fixed; top: var(--bar-h); left: 0; right: 0; bottom: 0;
+  overflow-y: scroll; overscroll-behavior: contain;
+}
+@media (prefers-reduced-motion: no-preference) {
+  html[data-mode="presenter"] .slides-wrap { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+}
+html[data-mode="participant"] body { overflow-y: auto; padding-top: calc(var(--bar-h) + 3px); }
+
+/* SLIDE base */
+.slide { position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: center; padding: 80px 72px 64px; }
+html[data-mode="presenter"] .slide { min-height: calc(100vh - var(--bar-h)); scroll-snap-align: start; }
+html[data-mode="participant"] .slide { min-height: unset; padding: 56px 72px; scroll-snap-align: unset; justify-content: flex-start; }
+
+.slide-paper  { background: var(--paper); }
+.slide-paper2 { background: var(--paper-2); }
+.slide-ink    { background: var(--ink); color: var(--paper); }
+.slide-teal   { background: var(--teal); }
+.slide-pink   { background: var(--pink); color: var(--paper); }
+.slide-plum   { background: var(--plum); color: var(--paper); }
+.slide-yellow { background: var(--yellow); }
+.slide-sand   { background: var(--sand); }
+
+.content { position: relative; z-index: 1; }
+
+/* WORKBOOK overrides */
+html[data-mode="participant"] .slide[data-type="title"] { min-height: 280px; padding: 56px 72px; justify-content: center; }
+html[data-mode="participant"] .slide[data-type="context"] { padding: 0; border-bottom: 1px solid rgba(16,0,0,0.1); min-height: unset; justify-content: flex-start; }
+html[data-mode="participant"] .slide[data-type="quick-hit"] { padding: 36px 72px; }
+html[data-mode="participant"] .slide[data-type="activity"] { padding: 56px 72px; border-top: 3px solid var(--ink); border-bottom: 3px solid var(--ink); margin: 20px 0; }
+html[data-mode="participant"] .slide[data-type="debrief"] { padding: 40px 72px; border-bottom: 1px solid rgba(16,0,0,0.1); }
+html[data-mode="participant"] .slide[data-type="break"] { display: none; }
+html[data-mode="participant"] .slide[data-type="close"] { min-height: unset; padding: 56px 72px; }
+
+/* CONTEXT ACCORDION */
+.ctx-header {
+  display: none; align-items: center; justify-content: space-between;
+  padding: 18px 72px; cursor: pointer; user-select: none;
+  border-bottom: 1px solid rgba(16,0,0,0.08); transition: background 0.15s; gap: 16px;
+  background: none; border-left: none; border-right: none; border-top: none;
+  width: 100%; font: inherit; text-align: left; color: inherit;
+}
+.ctx-header:hover { background: rgba(16,0,0,0.025); }
+html[data-mode="participant"] .slide[data-type="context"] .ctx-header { display: flex; }
+.ctx-header-left { display: flex; align-items: baseline; gap: 20px; }
+.ctx-eyebrow { font-family: 'Inter'; font-size: 9px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--muted); flex-shrink: 0; }
+.ctx-title { font-family: 'DM Serif Display', serif; font-size: 19px; letter-spacing: -0.01em; color: var(--charcoal); }
+.ctx-icon { font-family: 'Inter'; font-size: 20px; line-height: 1; color: var(--muted); flex-shrink: 0; transition: transform 0.25s; }
+[aria-expanded="true"] .ctx-icon { transform: rotate(45deg); }
+.slide-teaching {}
+html[data-mode="presenter"] .slide-teaching { flex: 1; display: flex; flex-direction: column; justify-content: center; max-height: none !important; overflow: visible !important; padding: 0 !important; }
+html[data-mode="participant"] .slide[data-type="context"] .slide-teaching { overflow: hidden; max-height: 0; padding: 0 72px; transition: max-height 0.4s ease, padding 0.4s ease; }
+html[data-mode="participant"] .slide[data-type="context"].is-open .slide-teaching { max-height: 1600px; padding: 40px 72px 52px; }
+html[data-mode="presenter"] .ctx-header { display: none !important; }
+
+/* FACILITATOR NOTES */
+.fac-note {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  background: rgba(16,0,0,0.88); color: rgba(251,247,238,0.82);
+  padding: 13px 72px; font-family: 'Inter'; font-size: 11.5px; line-height: 1.6; z-index: 10;
+}
+.fac-note strong { color: var(--yellow); font-weight: 600; }
+.fac-note em { font-style: italic; color: rgba(251,247,238,0.65); }
+html[data-mode="participant"] .fac-note { display: none; }
+
+/* PARTICIPANT INPUTS */
+html[data-mode="presenter"] .p-input { pointer-events: none; opacity: 0.18; }
+html[data-mode="participant"] .p-input { pointer-events: auto; opacity: 1; }
+.field-group { margin-bottom: 24px; }
+.field-label { display: block; margin-bottom: 8px; font-family: 'Patrick Hand', cursive; font-size: 14px; color: var(--charcoal); }
+.field-num { font-family: 'Inter'; font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-right: 8px; }
+.field-ta {
+  width: 100%; min-height: 80px; padding: 14px 16px;
+  font-family: 'Fraunces', serif; font-size: 15px; line-height: 1.6;
+  font-variation-settings: "SOFT" 50, "opsz" 144;
+  color: var(--ink); background: var(--paper);
+  border: 1px solid rgba(16,0,0,0.12); border-bottom: 2px solid var(--charcoal);
+  outline: none; resize: vertical; transition: border-color 0.15s;
+}
+.field-ta:focus { border-color: var(--pink-text); border-bottom-color: var(--pink-text); }
+.field-ta::placeholder { color: rgba(16,0,0,0.48); font-style: italic; }
+.field-ta-light { background: rgba(251,247,238,0.07); border-color: rgba(251,247,238,0.15); border-bottom-color: rgba(251,247,238,0.4); color: var(--paper); }
+.field-ta-light::placeholder { color: rgba(251,247,238,0.3); }
+.field-ta-light:focus { border-bottom-color: var(--yellow); }
+.field-label-light { color: rgba(251,247,238,0.65); }
+.field-label-light .field-num { color: rgba(251,247,238,0.35); }
+
+.save-toast {
+  position: fixed; bottom: 28px; right: 32px;
+  background: var(--ink); color: var(--paper);
+  font-family: 'Inter'; font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase;
+  padding: 8px 18px; z-index: 300; opacity: 0; pointer-events: none; transition: opacity 0.3s;
+}
+html[data-mode="participant"] .save-toast.visible { opacity: 1; }
+
+/* TYPOGRAPHY */
+.eyebrow {
+  font-family: 'Inter'; font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--charcoal);
+  display: inline-flex; align-items: center; gap: 14px; margin-bottom: 22px;
+}
+.eyebrow::before { content: ''; width: 28px; height: 1px; background: currentColor; opacity: 0.35; flex-shrink: 0; }
+.slide-plum .eyebrow, .slide-ink .eyebrow { color: rgba(251,247,238,0.6); }
+.slide-pink .eyebrow, .slide-teal .eyebrow, .slide-yellow .eyebrow { color: rgba(16,0,0,0.8); }
+
+.serif { font-family: 'DM Serif Display', serif; font-weight: 400; letter-spacing: -0.015em; line-height: 0.95; }
+.serif em { font-style: italic; color: var(--pink-text); }
+.slide-plum .serif em, .slide-ink .serif em { color: var(--yellow); }
+.slide-pink .serif em { color: var(--yellow); }
+.slide-teal .serif em, .slide-yellow .serif em { color: var(--plum); }
+
+.h1 { font-size: clamp(64px, 11vw, 152px); margin: 0 0 24px; }
+.h2 { font-size: clamp(40px, 6vw, 80px); margin: 0 0 22px; max-width: 900px; }
+.h3 { font-size: clamp(28px, 4vw, 52px); margin: 0 0 18px; max-width: 760px; }
+
+.fran { font-family: 'Fraunces', serif; font-weight: 400; line-height: 1.55; font-variation-settings: "SOFT" 50, "opsz" 144; }
+.fran em { font-style: italic; color: var(--pink-text); }
+.slide-plum .fran, .slide-ink .fran { color: rgba(251,247,238,0.85); }
+.slide-plum .fran em, .slide-ink .fran em { color: var(--yellow); }
+.slide-pink .fran { color: rgba(251,247,238,0.85); }
+
+.body-lg { font-size: clamp(17px, 2.2vw, 24px); max-width: 660px; margin: 0 0 18px; }
+.body-md { font-size: clamp(15px, 1.8vw, 20px); max-width: 640px; margin: 0 0 14px; }
+.body-sm { font-size: 14px; max-width: 580px; margin: 0 0 10px; color: var(--muted); }
+
+.sig { font-family: 'Allura', cursive; color: var(--pink-text); line-height: 1; display: block; transform: rotate(-3deg); transform-origin: left; }
+.slide-plum .sig, .slide-ink .sig { color: var(--yellow); }
+
+/* DECORATIVE */
+.stripe-bar-deco {
+  position: absolute; top: 0; left: 0; right: 0; height: 5px;
+  background: linear-gradient(90deg, var(--teal) 0 25%, var(--pink) 25% 50%, var(--yellow) 50% 75%, var(--plum) 75% 100%);
+}
+.bg-num {
+  position: absolute; bottom: -24px; right: 52px;
+  font-family: 'DM Serif Display', serif; font-size: clamp(140px, 22vw, 280px);
+  line-height: 0.85; letter-spacing: -0.04em;
+  pointer-events: none; user-select: none; opacity: 0.05; font-style: italic; color: inherit; z-index: 0;
+}
+html[data-mode="participant"] .slide[data-type="context"] .bg-num { display: none; }
+
+.mark-hi { background: linear-gradient(180deg, transparent 50%, rgba(255,189,89,0.55) 50%, rgba(255,189,89,0.55) 92%, transparent 92%); padding: 0 3px; }
+
+/* LISTS */
+.clean-list { list-style: none; padding: 0; margin: 12px 0 0; }
+.clean-list li {
+  display: flex; gap: 14px; align-items: baseline; padding: 9px 0; border-bottom: 1px solid rgba(16,0,0,0.07);
+  font-family: 'Fraunces', serif; font-size: clamp(14px, 1.7vw, 18px); line-height: 1.45;
+  font-variation-settings: "SOFT" 50, "opsz" 144; color: var(--charcoal);
+}
+.clean-list li:last-child { border-bottom: none; }
+.clean-list li::before { content: '—'; font-family: 'Inter'; font-size: 11px; color: var(--pink-text); flex-shrink: 0; }
+.slide-plum .clean-list li, .slide-ink .clean-list li { color: rgba(251,247,238,0.82); border-bottom-color: rgba(255,255,255,0.1); }
+.slide-plum .clean-list li::before, .slide-ink .clean-list li::before { color: var(--yellow); }
+
+/* ACTIVITY BLOCK */
+.act-block { border: 1px solid var(--ink); max-width: 900px; overflow: hidden; margin: 20px 0 28px; }
+.act-head { display: flex; align-items: center; justify-content: space-between; padding: 11px 22px; background: var(--ink); color: var(--paper); }
+.act-label { font-family: 'Inter'; font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; opacity: 0.55; }
+.act-time { font-family: 'Inter'; font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; background: var(--yellow); color: var(--ink); padding: 3px 10px; font-weight: 600; }
+.act-body { padding: 26px 26px 22px; background: var(--paper-2); }
+.act-instruction { font-family: 'DM Serif Display', serif; font-size: clamp(18px, 2.6vw, 26px); line-height: 1.18; letter-spacing: -0.01em; margin: 0 0 18px; }
+.act-instruction em { font-style: italic; color: var(--pink-text); }
+.act-rules { list-style: none; padding: 0; margin: 0; counter-reset: rules; }
+.act-rules li {
+  counter-increment: rules; display: flex; gap: 14px; align-items: baseline; padding: 9px 0; border-top: 1px solid rgba(16,0,0,0.08);
+  font-family: 'Fraunces', serif; font-size: 14px; line-height: 1.45; font-variation-settings: "SOFT" 50, "opsz" 144; color: var(--charcoal);
+}
+.act-rules li::before { content: counter(rules, decimal-leading-zero); font-family: 'Inter'; font-size: 9px; letter-spacing: 0.12em; color: var(--pink-text); flex-shrink: 0; padding-top: 1px; }
+
+/* DEBRIEF */
+.debrief-qs { margin: 16px 0 0; }
+.debrief-q {
+  font-family: 'DM Serif Display', serif; font-style: italic; font-size: clamp(19px, 2.5vw, 28px);
+  line-height: 1.2; color: var(--charcoal); padding: 15px 0; border-bottom: 1px solid rgba(16,0,0,0.1);
+}
+.debrief-q:last-child { border-bottom: none; }
+html[data-mode="presenter"] .reflection-field { display: none; }
+html[data-mode="participant"] .reflection-field { display: block; margin-top: 16px; }
+
+/* PULL QUOTE */
+.pull-quote { position: relative; padding: 0 0 0 6px; max-width: 820px; margin: 20px 0; }
+.pull-glyph { font-family: 'DM Serif Display', serif; font-size: 110px; line-height: 0.6; color: var(--pink-text); opacity: 0.85; display: block; margin-bottom: -18px; user-select: none; font-style: normal; }
+.slide-plum .pull-glyph, .slide-ink .pull-glyph { color: var(--yellow); opacity: 0.45; }
+.pull-q { font-family: 'DM Serif Display', serif; font-style: italic; font-size: clamp(20px, 3.2vw, 36px); line-height: 1.15; color: var(--ink); position: relative; z-index: 1; }
+.slide-plum .pull-q, .slide-ink .pull-q { color: var(--paper); }
+
+/* MODULE CTA */
+.module-cta {
+  display: inline-flex; align-items: center; gap: 16px; margin-top: 32px; text-decoration: none;
+  border: 1.5px solid rgba(251,247,238,0.4); padding: 13px 26px;
+  font-family: 'Inter'; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: rgba(251,247,238,0.75); transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+.module-cta:hover { background: rgba(251,247,238,0.1); border-color: rgba(251,247,238,0.7); color: var(--paper); }
+
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: start; max-width: 1100px; }
+
+html[data-mode="participant"] .section-divider {
+  display: flex; align-items: center; gap: 16px; padding: 28px 72px 0;
+  font-family: 'Inter'; font-size: 9px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--muted);
+}
+html[data-mode="presenter"] .section-divider { display: none; }
+.section-divider::before, .section-divider::after { content: ''; flex: 1; height: 1px; background: var(--sand); }
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .slide { padding: 80px 36px 64px; }
+  html[data-mode="participant"] .slide { padding: 40px 28px; }
+  html[data-mode="participant"] .slide[data-type="context"] .ctx-header { padding: 16px 28px; }
+  html[data-mode="participant"] .slide[data-type="context"] .slide-teaching { padding: 0 28px; }
+  html[data-mode="participant"] .slide[data-type="context"].is-open .slide-teaching { padding: 32px 28px 40px; }
+  html[data-mode="participant"] .section-divider { padding: 20px 28px 0; }
+  .fac-note { padding: 12px 36px; }
+  .two-col { grid-template-columns: 1fr; gap: 32px; }
+  .topbar { padding: 0 16px; gap: 8px; }
+  .topbar-center, .topbar-module { display: none; }
+}
+
+/* PRINT */
+@media print {
+  @page { size: A4 portrait; margin: 18mm 16mm; }
+  html[data-mode="presenter"] * { display: none !important; }
+  html[data-mode="participant"] body { padding-top: 0; }
+  .topbar, .progress-wrap, .ctx-icon, .fac-note, .mode-toggle, .topbar-btn, .topbar-nav, .section-divider, .save-toast { display: none !important; }
+  .slides-wrap { display: block; }
+  .slide { break-inside: avoid; padding: 24px 0 20px; }
+  html[data-mode="participant"] .slide[data-type="break"] { display: none !important; }
+  html[data-mode="participant"] .slide[data-type="title"] { min-height: 100px; padding: 20px 0; }
+  .slide-plum, .slide-ink { background: #100000 !important; -webkit-print-color-adjust: exact; color-adjust: exact; }
+  .slide-yellow { background: #FFBD59 !important; -webkit-print-color-adjust: exact; color-adjust: exact; }
+  .slide-sand { background: #E0D2B5 !important; -webkit-print-color-adjust: exact; color-adjust: exact; }
+  html[data-mode="participant"] .slide[data-type="context"] .ctx-header { display: flex !important; border: none; cursor: default; }
+  html[data-mode="participant"] .slide[data-type="context"] .slide-teaching { max-height: none !important; padding: 16px 0 24px !important; overflow: visible !important; }
+  .field-ta { border: none; border-bottom: 1px solid rgba(16,0,0,0.2); resize: none; min-height: 56px; background: transparent; }
+  .act-block { border: 1px solid rgba(16,0,0,0.3); }
+  .act-head { background: #100000 !important; -webkit-print-color-adjust: exact; color-adjust: exact; }
+  .reflection-field { display: block !important; }
+  html[data-mode="participant"] .p-input { opacity: 1 !important; pointer-events: auto !important; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-left">
+    <a href="../../../index.html" class="topbar-brand">design‑led: <em>practitioner</em></a>
+    <div class="topbar-divider"></div>
+    <span class="topbar-module">Module 02 · Research</span>
+  </div>
+  <div class="topbar-center">Half day · one break</div>
+  <div class="topbar-right">
+    <div class="topbar-nav">
+      <a href="01-foundations.html" class="nav-btn">← Prev</a>
+      <a href="03-analysis.html" class="nav-btn">Next →</a>
+    </div>
+    <div class="mode-toggle">
+      <button class="mode-btn btn-presenter" onclick="setMode('presenter')">Present</button>
+      <div class="mode-sep"></div>
+      <button class="mode-btn btn-participant" onclick="setMode('participant')">Workbook</button>
+    </div>
+    <a href="02-research-canvas.html" class="topbar-btn" target="_blank">A3 Canvas</a>
+    <button class="topbar-btn" onclick="window.print()">Print</button>
+  </div>
+</div>
+
+<div class="progress-wrap"><div class="progress-fill" id="progressFill"></div></div>
+<div class="save-toast" id="saveToast">Saved</div>
+
+<div class="slides-wrap" id="slidesWrap">
+
+  <!-- SLIDE 01 · TITLE -->
+  <section class="slide slide-ink" data-type="title" data-slide="1">
+    <div class="stripe-bar-deco"></div>
+    <div class="content">
+      <span class="sig" style="font-size:26px;margin-bottom:14px;">Design-Led · Module 02</span>
+      <h1 class="serif h1">Rese<em>arch</em></h1>
+      <p class="fran body-lg">The most expensive thing you can build<br>is the wrong thing.</p>
+    </div>
+    <div class="fac-note">
+      <strong>Before you start:</strong> Half-day, room-based. Have the Luma Health story ready to read aloud — commercially fluent tone, not soft. | <em>Open:</em> "Tell me about a time you were sure you knew what a user wanted — and you were wrong." Take 2–3 answers, keep it moving.
+    </div>
+  </section>
+
+  <!-- SLIDE 02 · OVERVIEW -->
+  <section class="slide slide-paper2" data-type="context" data-slide="2">
+    <button type="button" class="ctx-header" onclick="toggleContext(this)" aria-expanded="false">
+      <div class="ctx-header-left"><span class="ctx-eyebrow">Overview</span><span class="ctx-title">What this module is about</span></div>
+      <span class="ctx-icon">+</span>
+    </button>
+    <div class="slide-teaching">
+      <div class="content" style="max-width:860px;">
+        <div class="eyebrow">This module</div>
+        <h2 class="serif h2">What we're doing<br><em>today</em></h2>
+        <ul class="clean-list">
+          <li>Why research fails — not the doing, the way</li>
+          <li>Research theatre vs research paralysis</li>
+          <li>Qual vs quant — what each is actually for</li>
+          <li>Interviewing 101 — the craft of listening</li>
+          <li>Seven biases that corrupt what you hear</li>
+        </ul>
+        <div class="bg-num">02</div>
+      </div>
+    </div>
+    <div class="fac-note"><strong>Overview (5 min):</strong> Move fast — this sets up the rest of the day.</div>
+  </section>
+
+  <!-- SLIDE 03 · OPENING STORY -->
+  <section class="slide slide-paper" data-type="context" data-slide="3">
+    <button type="button" class="ctx-header" onclick="toggleContext(this)" aria-expanded="false">
+      <div class="ctx-header-left"><span class="ctx-eyebrow">Story</span><span class="ctx-title">Luma Health</span></div>
+      <span class="ctx-icon">+</span>
+    </button>
+    <div class="slide-teaching">
+      <div class="content" style="max-width:860px;">
+        <div class="eyebrow">Opening story</div>
+        <h2 class="serif h2">Luma Health built a medication<br>reminder app for <em>patients.</em></h2>
+        <ul class="clean-list">
+          <li>Built on assumptions about what patients needed</li>
+          <li>Thoughtful notifications, clean UI</li>
+          <li>Nobody had interviewed a patient who'd actually missed a dose</li>
+          <li>It launched</li>
+          <li>It flopped</li>
+        </ul>
+        <p class="fran body-md" style="margin-top:20px;font-style:italic;">This is what happens when you build for imagined users, not real ones.</p>
+        <div class="bg-num">03</div>
+      </div>
+    </div>
+    <div class="fac-note"><strong>Story (5 min):</strong> Read it flat, let the last line land. Don't editorialise yet — the reframe comes next.</div>
+  </section>
+
+  <!-- SLIDE 04 · CONCEPT: TWO RESEARCH TRAPS -->
+  <section class="slide slide-paper2" data-type="context" data-slide="4">
+    <button type="button" class="ctx-header" onclick="toggleContext(this)" aria-expanded="false">
+      <div class="ctx-header-left"><span class="ctx-eyebrow">Concept</span><span class="ctx-title">The two research traps</span></div>
+      <span class="ctx-icon">+</span>
+    </button>
+    <div class="slide-teaching">
+      <div class="content" style="max-width:1080px;">
+        <div class="eyebrow">The two research traps</div>
+        <div class="two-col">
+          <div>
+            <h3 class="serif h3">Research theatre:</h3>
+            <ul class="clean-list">
+              <li>Interviews that confirm what you already believe</li>
+              <li>Leading questions dressed as curiosity</li>
+              <li>A deck nobody reads</li>
+              <li>Insights that arrive after the decision's made</li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="serif h3">Research paralysis:</h3>
+            <ul class="clean-list">
+              <li>"One more round" before we can decide</li>
+              <li>Endless discovery, no synthesis</li>
+              <li>Confidence mistaken for more data</li>
+              <li>A team too afraid to commit</li>
+            </ul>
+          </div>
+        </div>
+        <p class="fran body-md" style="margin-top:20px;font-style:italic;">Both are avoidance. Just dressed differently.</p>
+        <div class="bg-num">04</div>
+      </div>
+    </div>
+    <div class="fac-note"><strong>Concept (8 min):</strong> Ask the room which trap they recognise in themselves — most people have a default. Naming it is the point, not fixing it yet.</div>
+  </section>
+
+  <!-- SLIDE 05 · CONCEPT: QUAL VS QUANT -->
+  <section class="slide slide-paper" data-type="context" data-slide="5">
+    <button type="button" class="ctx-header" onclick="toggleContext(this)" aria-expanded="false">
+      <div class="ctx-header-left"><span class="ctx-eyebrow">Concept</span><span class="ctx-title">Qual vs quant</span></div>
+      <span class="ctx-icon">+</span>
+    </button>
+    <div class="slide-teaching">
+      <div class="content" style="max-width:860px;">
+        <div class="eyebrow">Qual vs quant</div>
+        <h2 class="serif h2">Two different questions.<br>Not <em>competing</em> tools.</h2>
+        <ul class="clean-list">
+          <li>Qual tells you <strong>why</strong> — the story behind the number</li>
+          <li>Quant tells you <strong>how many</strong> — the scale of the pattern</li>
+          <li>Qual without quant: a compelling anecdote you can't size</li>
+          <li>Quant without qual: a number you can't explain</li>
+          <li>Most real decisions need both, in sequence</li>
+        </ul>
+        <p class="fran body-md" style="margin-top:20px;font-style:italic;">Quant tells you where to look. Qual tells you what you're looking at.</p>
+        <div class="bg-num">05</div>
+      </div>
+    </div>
+    <div class="fac-note"><strong>Concept (8 min):</strong> Land hard on the closing line — it's the one participants tend to write down verbatim.</div>
+  </section>
+
+  <!-- SLIDE 06 · CONCEPT: INTERVIEWING 101 -->
+  <section class="slide slide-paper2" data-type="context" data-slide="6">
+    <button type="button" class="ctx-header" onclick="toggleContext(this)" aria-expanded="false">
+      <div class="ctx-header-left"><span class="ctx-eyebrow">Concept</span><span class="ctx-title">Interviewing 101</span></div>
+      <span class="ctx-icon">+</span>
+    </button>
+    <div class="slide-teaching">
+      <div class="content" style="max-width:860px;">
+        <div class="eyebrow">Interviewing 101</div>
+        <h2 class="serif h2">The craft is <em>listening</em>,<br>not asking.</h2>
+        <ul class="clean-list">
+          <li><strong>Open questions</strong> — "tell me about the last time…," not "would you use a feature that…?"</li>
+          <li><strong>Follow the energy</strong> — where they lean in, dig there</li>
+          <li><strong>Silence is a tool</strong> — let the pause do the work</li>
+          <li><strong>Don't lead the witness</strong> — your job is to hear their reality, not confirm yours</li>
+        </ul>
+        <div class="bg-num">06</div>
+      </div>
+    </div>
+    <div class="fac-note"><strong>Concept (8 min):</strong> Demonstrate one bad question live ("Wouldn't it be great if the app reminded you?") and ask the room to fix it on the spot before moving to Activity 01.</div>
+  </section>
+
+  <!-- SLIDE 07 · ACTIVITY 01 -->
+  <section class="slide slide-paper" data-type="activity" data-slide="7">
+    <div class="content" style="max-width:940px;">
+      <div class="eyebrow">Activity 01 · 15 min</div>
+      <h2 class="serif h2">Write 5 <em>Questions</em></h2>
+      <div class="act-block p-input">
+        <div class="act-head"><span class="act-label">Activity 01</span><span class="act-time">15 min</span></div>
+        <div class="act-body">
+          <p class="act-instruction">Pick a real project you're working on. Write 5 interview questions you'd actually ask a user.</p>
+          <ol class="act-rules">
+            <li>Individual — write 5 open questions, no leading</li>
+            <li>Aim for questions about behaviour, not opinion</li>
+            <li>Keep them in front of you — Activity 02 comes back to these</li>
+          </ol>
+        </div>
+      </div>
+      <div class="p-input" style="margin-top:8px;">
+        <div class="field-group"><label class="field-label"><span class="field-num">01</span>The project</label><textarea class="field-ta" data-field="dlp_m02_project" rows="2" placeholder="A real project you're working on…"></textarea></div>
+        <div class="field-group"><label class="field-label"><span class="field-num">02</span>Your 5 questions</label><textarea class="field-ta" data-field="dlp_m02_questions" rows="6" placeholder="1.&#10;2.&#10;3.&#10;4.&#10;5."></textarea></div>
+      </div>
+    </div>
+    <div class="fac-note"><strong>Activity 01 (15 min):</strong> Watch for closed questions ("would you use…?") and questions with the answer baked in. Don't fix them yet — that's Activity 02.</div>
+  </section>
+
+  <!-- SLIDE 08 · CONCEPT: SEVEN BIASES -->
+  <section class="slide slide-paper2" data-type="context" data-slide="8">
+    <button type="button" class="ctx-header" onclick="toggleContext(this)" aria-expanded="false">
+      <div class="ctx-header-left"><span class="ctx-eyebrow">Concept</span><span class="ctx-title">Seven biases that corrupt research</span></div>
+      <span class="ctx-icon">+</span>
+    </button>
+    <div class="slide-teaching">
+      <div class="content" style="max-width:860px;">
+        <div class="eyebrow">Seven biases that corrupt research</div>
+        <ul class="clean-list">
+          <li><strong>Confirmation bias</strong> — hearing what you already believe</li>
+          <li><strong>Leading questions</strong> — the answer is baked into the ask</li>
+          <li><strong>Social desirability bias</strong> — people tell you what sounds good</li>
+          <li><strong>Recency bias</strong> — the last thing you heard weighs the most</li>
+          <li><strong>Sunk cost</strong> — too invested in the plan to hear it's wrong</li>
+          <li><strong>Groupthink</strong> — the room converges before anyone's tested it</li>
+          <li><strong>Curse of knowledge</strong> — you can't imagine not knowing what you know</li>
+        </ul>
+        <div class="bg-num">08</div>
+      </div>
+    </div>
+    <div class="fac-note"><strong>Concept (8 min):</strong> This is the spine of the Quick Hit and Activity 02 that follow — don't rush it, but don't lecture either. One line per bias is enough.</div>
+  </section>
+
+  <!-- SLIDE 09 · QUICK HIT -->
+  <section class="slide slide-yellow" data-type="quick-hit" data-slide="9">
+    <div class="content" style="max-width:860px;">
+      <div class="eyebrow">Quick hit · 5 min</div>
+      <div class="pull-quote" style="margin-bottom:4px;">
+        <span class="pull-glyph" style="color:var(--plum);opacity:0.4;">"</span>
+        <p class="pull-q" style="color:var(--ink);">Which of these seven biases have<br>you fallen into recently — and<br>how do you know?</p>
+      </div>
+      <p class="fran body-md" style="margin-top:20px;">Naming it is the first move — most researchers can't spot it in themselves in the moment.</p>
+      <div class="p-input field-group" style="margin-top:24px;max-width:580px;">
+        <textarea class="field-ta" data-field="dlp_m02_quick_hit_bias" rows="3" placeholder="The bias I've fallen into…"></textarea>
+      </div>
+    </div>
+    <div class="fac-note"><strong>Quick Hit (5 min):</strong> Take 3–4 answers from the room. Watch for people naming someone else's bias, not their own — press gently: "and you, specifically?"</div>
+  </section>
+
+  <!-- SLIDE 10 · ACTIVITY 02 -->
+  <section class="slide slide-paper" data-type="activity" data-slide="10">
+    <div class="content" style="max-width:940px;">
+      <div class="eyebrow">Activity 02 · 15 min</div>
+      <h2 class="serif h2">Fix the <em>Questions</em></h2>
+      <div class="act-block p-input">
+        <div class="act-head"><span class="act-label">Activity 02</span><span class="act-time">15 min</span></div>
+        <div class="act-body">
+          <p class="act-instruction">Return to your 5 questions from Activity 01. Rewrite any that are leading, closed, or biased.</p>
+          <ol class="act-rules">
+            <li>Mark each question: open or closed, leading or clean</li>
+            <li>Rewrite the ones that fail</li>
+            <li>Pairs — trade and pressure-test each other's rewrite — 5 minutes</li>
+          </ol>
+        </div>
+      </div>
+      <div class="p-input" style="margin-top:8px;">
+        <div class="field-group"><label class="field-label"><span class="field-num">01</span>Which questions needed fixing, and why</label><textarea class="field-ta" data-field="dlp_m02_fix_notes" rows="3" placeholder="Question 2 was leading because…"></textarea></div>
+        <div class="field-group"><label class="field-label"><span class="field-num">02</span>Your rewritten questions</label><textarea class="field-ta" data-field="dlp_m02_fix_questions" rows="5" placeholder="Rewritten version…"></textarea></div>
+      </div>
+    </div>
+    <div class="fac-note"><strong>Activity 02 (15 min) — Watch for:</strong> rewrites that just soften the wording but keep the lead ("Don't you think…" → "What do you think…" is not a fix if the frame is still yours). Push for structurally open.</div>
+  </section>
+
+  <!-- SLIDE 11 · DEBRIEF: THE REAL WORK OF RESEARCH -->
+  <section class="slide slide-sand" data-type="debrief" data-slide="11">
+    <div class="content" style="max-width:820px;">
+      <div class="eyebrow">Synthesis · 10 min</div>
+      <h3 class="serif h3">The real work of research.</h3>
+      <div class="debrief-qs">
+        <div class="debrief-q">It's not the interview. It's the listening.</div>
+        <div class="debrief-q">Bias doesn't announce itself — you have to go looking for it.</div>
+        <div class="debrief-q">The wrong thing, built well, is still the wrong thing.</div>
+      </div>
+      <div class="reflection-field p-input">
+        <textarea class="field-ta" data-field="dlp_m02_synthesis" rows="3" style="background:var(--paper);" placeholder="What I noticed…"></textarea>
+      </div>
+    </div>
+    <div class="fac-note"><strong>Synthesis (10 min):</strong> This is the bridge into Module 03 — research generates the raw material, analysis is how you make sense of it.</div>
+  </section>
+
+  <!-- SLIDE 12 · CLOSE -->
+  <section class="slide slide-ink" data-type="close" data-slide="12">
+    <div class="stripe-bar-deco"></div>
+    <div class="content" style="max-width:880px;">
+      <div class="eyebrow">Close · 10 min</div>
+      <h2 class="serif h2">One takeaway.<br>One question <em>still open.</em></h2>
+      <div class="p-input" style="margin-top:32px;max-width:600px;">
+        <label class="field-label field-label-light"><span class="field-num">Takeaway</span>What landed for you</label>
+        <textarea class="field-ta field-ta-light" data-field="dlp_m02_takeaway" rows="2" placeholder="What landed…"></textarea>
+      </div>
+      <div class="p-input" style="margin-top:20px;max-width:600px;">
+        <label class="field-label field-label-light"><span class="field-num">Open</span>What's still unclear</label>
+        <textarea class="field-ta field-ta-light" data-field="dlp_m02_open_question" rows="2" placeholder="What's still unclear…"></textarea>
+      </div>
+      <div style="margin-top:44px;padding-top:36px;border-top:1px solid rgba(251,247,238,0.18);">
+        <p class="fran body-sm" style="color:rgba(251,247,238,0.55);margin-bottom:6px;">Next module</p>
+        <p class="fran body-lg" style="margin:0 0 4px;">ANALYSIS</p>
+        <p class="fran body-md" style="margin:0;"><em>Data doesn't speak for itself. Someone has to make sense of it.</em></p>
+        <a href="03-analysis.html" class="module-cta">Module 03 → Analysis</a>
+      </div>
+    </div>
+    <div class="fac-note">
+      <strong>Close (10 min):</strong> One takeaway, one open question — don't resolve it, just capture it. | <strong>Further reading (facilitator):</strong> <em>Interviewing Users</em> — Steve Portigal · <em>Continuous Discovery Habits</em> — Teresa Torres · <em>Just Enough Research</em> — Erika Hall · <em>The Mom Test</em> — Rob Fitzpatrick · Dollars to Donuts podcast — Steve Portigal / Priya Parker's work on gathering.
+    </div>
+  </section>
+
+</div>
+
+<script>
+(function () {
+  'use strict';
+  var ROOT = document.documentElement;
+  var STORAGE_PREFIX = 'dlp_m02_';
+  var saveTimer;
+
+  function setMode(mode) {
+    ROOT.dataset.mode = mode;
+    localStorage.setItem('dlp_mode_global', mode);
+    if (mode === 'participant') { window.scrollTo(0, 0); }
+    else { var wrap = document.getElementById('slidesWrap'); if (wrap) wrap.scrollTo(0, 0); }
+  }
+  window.setMode = setMode;
+
+  function toggleContext(header) {
+    var expanded = header.getAttribute('aria-expanded') === 'true';
+    header.setAttribute('aria-expanded', String(!expanded));
+    var section = header.closest('section');
+    if (section) section.classList.toggle('is-open', !expanded);
+    var icon = header.querySelector('.ctx-icon');
+    if (icon) icon.textContent = !expanded ? '−' : '+';
+  }
+  window.toggleContext = toggleContext;
+
+  function initFields() {
+    document.querySelectorAll('[data-field]').forEach(function (el) {
+      var key = el.dataset.field.indexOf(STORAGE_PREFIX) === 0 ? el.dataset.field : STORAGE_PREFIX + el.dataset.field;
+      var saved = localStorage.getItem(key);
+      if (saved) el.value = saved;
+      el.addEventListener('input', function () {
+        localStorage.setItem(key, el.value);
+        updateProgress();
+        triggerSaveToast();
+      });
+    });
+    updateProgress();
+  }
+
+  function updateProgress() {
+    var fields = document.querySelectorAll('[data-field]');
+    var filled = 0;
+    fields.forEach(function (f) { if (f.value.trim().length > 8) filled++; });
+    var pct = fields.length ? (filled / fields.length) * 100 : 0;
+    var fill = document.getElementById('progressFill');
+    if (fill) fill.style.width = pct.toFixed(1) + '%';
+  }
+
+  function triggerSaveToast() {
+    var toast = document.getElementById('saveToast');
+    if (!toast) return;
+    toast.classList.add('visible');
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(function () { toast.classList.remove('visible'); }, 1800);
+  }
+
+  function init() {
+    var params = new URLSearchParams(window.location.search);
+    var urlMode = params.get('mode');
+    var savedMode = localStorage.getItem('dlp_mode_global');
+    var mode = urlMode || savedMode || 'participant';
+    ROOT.dataset.mode = mode;
+    initFields();
+  }
+
+  if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', init); } else { init(); }
+})();
+</script>
+</body>
+</html>

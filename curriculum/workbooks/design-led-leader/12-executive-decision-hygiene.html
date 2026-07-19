@@ -1,0 +1,737 @@
+<!doctype html>
+<html lang="en" data-mode="participant">
+<head>
+<meta charset="utf-8" />
+<title>Design-Led · Module 12 · Executive Decision Hygiene — Leader</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..900,0..100;1,9..144,300..900,0..100&family=Inter:wght@400;500;600&family=Allura&family=Patrick+Hand&display=swap" rel="stylesheet">
+<style>
+/* =====================================================================
+   Design-Led: Leader · Module 12 · Executive Decision Hygiene
+   Dual mode: Presenter (scroll-snap) + Workbook (interactive)
+   Same architecture as D2M / Practitioner — Palette: Ink · Paper · Teal · Pink · Yellow · Plum
+   Track accent: Plum (--plum-text) · Title/close background: Plum
+   DRAFT NARRATIVE CONTENT — see fac-note on slide 1 and companion spec for detail.
+   ===================================================================== */
+
+:root {
+  --ink:      #100000;
+  --charcoal: #423B3B;
+  --paper:    #FBF7EE;
+  --paper-2:  #F4EFE2;
+  --sand:     #E0D2B5;
+  --teal:     #47ACA4;
+  --pink:     #FF3990;
+  --yellow:   #FFBD59;
+  --plum:     #7A1F4A;
+  --muted:    #5E584F;
+  --plum-text: #6B1B41;
+  --bar-h:    56px;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: 'Inter', sans-serif;
+  font-size: 16px; line-height: 1.55;
+  background: var(--paper); color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* TOPBAR */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0;
+  height: var(--bar-h);
+  background: var(--paper);
+  border-bottom: 1px solid rgba(16,0,0,0.12);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 32px;
+  z-index: 200;
+  gap: 16px;
+}
+.topbar-left { display: flex; align-items: center; gap: 18px; flex-shrink: 0; }
+.topbar-brand {
+  font-family: 'DM Serif Display', serif;
+  font-size: 18px; letter-spacing: -0.01em;
+  color: var(--ink); text-decoration: none;
+  white-space: nowrap;
+}
+.topbar-brand em { font-style: italic; color: var(--plum-text); }
+.topbar-divider { width: 1px; height: 18px; background: var(--sand); flex-shrink: 0; }
+.topbar-module {
+  font-family: 'Inter'; font-size: 10px;
+  letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted);
+  white-space: nowrap;
+}
+.topbar-center {
+  font-family: 'Inter'; font-size: 10px;
+  letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted);
+  flex: 1; text-align: center;
+}
+.topbar-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.mode-toggle { display: flex; align-items: stretch; border: 1px solid var(--ink); overflow: hidden; height: 30px; }
+.mode-btn {
+  padding: 0 14px;
+  font-family: 'Inter'; font-size: 10px;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--muted); background: none; border: none;
+  cursor: pointer; transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+.mode-sep { width: 1px; background: var(--ink); flex-shrink: 0; }
+html[data-mode="presenter"] .mode-btn.btn-presenter,
+html[data-mode="participant"] .mode-btn.btn-participant {
+  background: var(--ink); color: var(--paper);
+}
+.topbar-btn {
+  height: 30px; padding: 0 14px;
+  font-family: 'Inter'; font-size: 10px;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--muted); background: none;
+  border: 1px solid var(--ink); cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+.topbar-btn:hover { background: var(--ink); color: var(--paper); }
+.topbar-nav { display: flex; align-items: center; gap: 2px; }
+.nav-btn {
+  height: 30px; padding: 0 10px;
+  font-family: 'Inter'; font-size: 11px;
+  color: var(--muted); background: none; border: none;
+  cursor: pointer; transition: color 0.15s;
+  text-decoration: none; display: flex; align-items: center;
+}
+.nav-btn:hover { color: var(--ink); }
+.nav-btn.disabled { opacity: 0.3; cursor: default; }
+
+/* PROGRESS BAR */
+.progress-wrap {
+  position: fixed; top: var(--bar-h); left: 0; right: 0;
+  height: 3px; background: var(--sand); z-index: 199;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.25s;
+}
+html[data-mode="participant"] .progress-wrap { opacity: 1; pointer-events: auto; }
+.progress-fill { height: 100%; width: 0%; background: var(--plum-text); transition: width 0.5s ease; }
+
+/* SLIDES CONTAINER */
+html[data-mode="presenter"] body { overflow: hidden; }
+html[data-mode="presenter"] .slides-wrap {
+  position: fixed; top: var(--bar-h); left: 0; right: 0; bottom: 0;
+  overflow-y: scroll; overscroll-behavior: contain;
+}
+@media (prefers-reduced-motion: no-preference) {
+  html[data-mode="presenter"] .slides-wrap { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+}
+html[data-mode="participant"] body { overflow-y: auto; padding-top: calc(var(--bar-h) + 3px); }
+
+/* SLIDE base */
+.slide { position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: center; padding: 80px 72px 64px; }
+html[data-mode="presenter"] .slide { min-height: calc(100vh - var(--bar-h)); scroll-snap-align: start; }
+html[data-mode="participant"] .slide { min-height: unset; padding: 56px 72px; scroll-snap-align: unset; justify-content: flex-start; }
+
+.slide-paper  { background: var(--paper); }
+.slide-paper2 { background: var(--paper-2); }
+.slide-ink    { background: var(--ink); color: var(--paper); }
+.slide-teal   { background: var(--teal); }
+.slide-pink   { background: var(--pink); color: var(--paper); }
+.slide-plum   { background: var(--plum); color: var(--paper); }
+.slide-yellow { background: var(--yellow); }
+.slide-sand   { background: var(--sand); }
+
+.content { position: relative; z-index: 1; }
+
+/* WORKBOOK overrides */
+html[data-mode="participant"] .slide[data-type="title"] { min-height: 280px; padding: 56px 72px; justify-content: center; }
+html[data-mode="participant"] .slide[data-type="context"] { padding: 0; border-bottom: 1px solid rgba(16,0,0,0.1); min-height: unset; justify-content: flex-start; }
+html[data-mode="participant"] .slide[data-type="quick-hit"] { padding: 36px 72px; }
+html[data-mode="participant"] .slide[data-type="activity"] { padding: 56px 72px; border-top: 3px solid var(--ink); border-bottom: 3px solid var(--ink); margin: 20px 0; }
+html[data-mode="participant"] .slide[data-type="debrief"] { padding: 40px 72px; border-bottom: 1px solid rgba(16,0,0,0.1); }
+html[data-mode="participant"] .slide[data-type="break"] { display: none; }
+html[data-mode="participant"] .slide[data-type="close"] { min-height: unset; padding: 56px 72px; }
+
+/* CONTEXT ACCORDION */
+.ctx-header {
+  display: none; align-items: center; justify-content: space-between;
+  padding: 18px 72px; cursor: pointer; user-select: none;
+  border-bottom: 1px solid rgba(16,0,0,0.08); transition: background 0.15s; gap: 16px;
+  background: none; border-left: none; border-right: none; border-top: none;
+  width: 100%; font: inherit; text-align: left; color: inherit;
+}
+.ctx-header:hover { background: rgba(16,0,0,0.025); }
+html[data-mode="participant"] .slide[data-type="context"] .ctx-header { display: flex; }
+.ctx-header-left { display: flex; align-items: baseline; gap: 20px; }
+.ctx-eyebrow { font-family: 'Inter'; font-size: 9px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--muted); flex-shrink: 0; }
+.ctx-title { font-family: 'DM Serif Display', serif; font-size: 19px; letter-spacing: -0.01em; color: var(--charcoal); }
+.ctx-icon { font-family: 'Inter'; font-size: 20px; line-height: 1; color: var(--muted); flex-shrink: 0; transition: transform 0.25s; }
+[aria-expanded="true"] .ctx-icon { transform: rotate(45deg); }
+.slide-teaching {}
+html[data-mode="presenter"] .slide-teaching { flex: 1; display: flex; flex-direction: column; justify-content: center; max-height: none !important; overflow: visible !important; padding: 0 !important; }
+html[data-mode="participant"] .slide[data-type="context"] .slide-teaching { overflow: hidden; max-height: 0; padding: 0 72px; transition: max-height 0.4s ease, padding 0.4s ease; }
+html[data-mode="participant"] .slide[data-type="context"].is-open .slide-teaching { max-height: 1600px; padding: 40px 72px 52px; }
+html[data-mode="presenter"] .ctx-header { display: none !important; }
+
+/* FACILITATOR NOTES */
+.fac-note {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  background: rgba(16,0,0,0.88); color: rgba(251,247,238,0.82);
+  padding: 13px 72px; font-family: 'Inter'; font-size: 11.5px; line-height: 1.6; z-index: 10;
+}
+.fac-note strong { color: var(--yellow); font-weight: 600; }
+.fac-note em { font-style: italic; color: rgba(251,247,238,0.65); }
+html[data-mode="participant"] .fac-note { display: none; }
+
+/* PARTICIPANT INPUTS */
+html[data-mode="presenter"] .p-input { pointer-events: none; opacity: 0.18; }
+html[data-mode="participant"] .p-input { pointer-events: auto; opacity: 1; }
+.field-group { margin-bottom: 24px; }
+.field-label { display: block; margin-bottom: 8px; font-family: 'Patrick Hand', cursive; font-size: 14px; color: var(--charcoal); }
+.field-num { font-family: 'Inter'; font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-right: 8px; }
+.field-ta {
+  width: 100%; min-height: 80px; padding: 14px 16px;
+  font-family: 'Fraunces', serif; font-size: 15px; line-height: 1.6;
+  font-variation-settings: "SOFT" 50, "opsz" 144;
+  color: var(--ink); background: var(--paper);
+  border: 1px solid rgba(16,0,0,0.12); border-bottom: 2px solid var(--charcoal);
+  outline: none; resize: vertical; transition: border-color 0.15s;
+}
+.field-ta:focus { border-color: var(--plum-text); border-bottom-color: var(--plum-text); }
+.field-ta::placeholder { color: rgba(16,0,0,0.48); font-style: italic; }
+.field-ta-light { background: rgba(251,247,238,0.07); border-color: rgba(251,247,238,0.15); border-bottom-color: rgba(251,247,238,0.4); color: var(--paper); }
+.field-ta-light::placeholder { color: rgba(251,247,238,0.3); }
+.field-ta-light:focus { border-bottom-color: var(--yellow); }
+.field-label-light { color: rgba(251,247,238,0.65); }
+.field-label-light .field-num { color: rgba(251,247,238,0.35); }
+
+.save-toast {
+  position: fixed; bottom: 28px; right: 32px;
+  background: var(--ink); color: var(--paper);
+  font-family: 'Inter'; font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase;
+  padding: 8px 18px; z-index: 300; opacity: 0; pointer-events: none; transition: opacity 0.3s;
+}
+html[data-mode="participant"] .save-toast.visible { opacity: 1; }
+
+/* TYPOGRAPHY */
+.eyebrow {
+  font-family: 'Inter'; font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--charcoal);
+  display: inline-flex; align-items: center; gap: 14px; margin-bottom: 22px;
+}
+.eyebrow::before { content: ''; width: 28px; height: 1px; background: currentColor; opacity: 0.35; flex-shrink: 0; }
+.slide-plum .eyebrow, .slide-ink .eyebrow { color: rgba(251,247,238,0.6); }
+.slide-pink .eyebrow, .slide-teal .eyebrow, .slide-yellow .eyebrow { color: rgba(16,0,0,0.8); }
+
+.serif { font-family: 'DM Serif Display', serif; font-weight: 400; letter-spacing: -0.015em; line-height: 0.95; }
+.serif em { font-style: italic; color: var(--plum-text); }
+.slide-plum .serif em, .slide-ink .serif em { color: var(--yellow); }
+.slide-pink .serif em { color: var(--yellow); }
+.slide-teal .serif em, .slide-yellow .serif em { color: var(--plum); }
+
+.h1 { font-size: clamp(64px, 11vw, 152px); margin: 0 0 24px; }
+.h2 { font-size: clamp(40px, 6vw, 80px); margin: 0 0 22px; max-width: 900px; }
+.h3 { font-size: clamp(28px, 4vw, 52px); margin: 0 0 18px; max-width: 760px; }
+
+.fran { font-family: 'Fraunces', serif; font-weight: 400; line-height: 1.55; font-variation-settings: "SOFT" 50, "opsz" 144; }
+.fran em { font-style: italic; color: var(--plum-text); }
+.slide-plum .fran, .slide-ink .fran { color: rgba(251,247,238,0.85); }
+.slide-plum .fran em, .slide-ink .fran em { color: var(--yellow); }
+.slide-pink .fran { color: rgba(251,247,238,0.85); }
+
+.body-lg { font-size: clamp(17px, 2.2vw, 24px); max-width: 660px; margin: 0 0 18px; }
+.body-md { font-size: clamp(15px, 1.8vw, 20px); max-width: 640px; margin: 0 0 14px; }
+.body-sm { font-size: 14px; max-width: 580px; margin: 0 0 10px; color: var(--muted); }
+
+.sig { font-family: 'Allura', cursive; color: var(--plum-text); line-height: 1; display: block; transform: rotate(-3deg); transform-origin: left; }
+.slide-plum .sig, .slide-ink .sig { color: var(--yellow); }
+
+/* DECORATIVE */
+.stripe-bar-deco {
+  position: absolute; top: 0; left: 0; right: 0; height: 5px;
+  background: linear-gradient(90deg, var(--teal) 0 25%, var(--pink) 25% 50%, var(--yellow) 50% 75%, var(--plum) 75% 100%);
+}
+.bg-num {
+  position: absolute; bottom: -24px; right: 52px;
+  font-family: 'DM Serif Display', serif; font-size: clamp(140px, 22vw, 280px);
+  line-height: 0.85; letter-spacing: -0.04em;
+  pointer-events: none; user-select: none; opacity: 0.05; font-style: italic; color: inherit; z-index: 0;
+}
+html[data-mode="participant"] .slide[data-type="context"] .bg-num { display: none; }
+
+.mark-hi { background: linear-gradient(180deg, transparent 50%, rgba(255,189,89,0.55) 50%, rgba(255,189,89,0.55) 92%, transparent 92%); padding: 0 3px; }
+
+/* LISTS */
+.clean-list { list-style: none; padding: 0; margin: 12px 0 0; }
+.clean-list li {
+  display: flex; gap: 14px; align-items: baseline; padding: 9px 0; border-bottom: 1px solid rgba(16,0,0,0.07);
+  font-family: 'Fraunces', serif; font-size: clamp(14px, 1.7vw, 18px); line-height: 1.45;
+  font-variation-settings: "SOFT" 50, "opsz" 144; color: var(--charcoal);
+}
+.clean-list li:last-child { border-bottom: none; }
+.clean-list li::before { content: '—'; font-family: 'Inter'; font-size: 11px; color: var(--plum-text); flex-shrink: 0; }
+.slide-plum .clean-list li, .slide-ink .clean-list li { color: rgba(251,247,238,0.82); border-bottom-color: rgba(255,255,255,0.1); }
+.slide-plum .clean-list li::before, .slide-ink .clean-list li::before { color: var(--yellow); }
+
+/* ACTIVITY BLOCK */
+.act-block { border: 1px solid var(--ink); max-width: 900px; overflow: hidden; margin: 20px 0 28px; }
+.act-head { display: flex; align-items: center; justify-content: space-between; padding: 11px 22px; background: var(--ink); color: var(--paper); }
+.act-label { font-family: 'Inter'; font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; opacity: 0.55; }
+.act-time { font-family: 'Inter'; font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; background: var(--yellow); color: var(--ink); padding: 3px 10px; font-weight: 600; }
+.act-body { padding: 26px 26px 22px; background: var(--paper-2); }
+.act-instruction { font-family: 'DM Serif Display', serif; font-size: clamp(18px, 2.6vw, 26px); line-height: 1.18; letter-spacing: -0.01em; margin: 0 0 18px; }
+.act-instruction em { font-style: italic; color: var(--plum-text); }
+.act-rules { list-style: none; padding: 0; margin: 0; counter-reset: rules; }
+.act-rules li {
+  counter-increment: rules; display: flex; gap: 14px; align-items: baseline; padding: 9px 0; border-top: 1px solid rgba(16,0,0,0.08);
+  font-family: 'Fraunces', serif; font-size: 14px; line-height: 1.45; font-variation-settings: "SOFT" 50, "opsz" 144; color: var(--charcoal);
+}
+.act-rules li::before { content: counter(rules, decimal-leading-zero); font-family: 'Inter'; font-size: 9px; letter-spacing: 0.12em; color: var(--plum-text); flex-shrink: 0; padding-top: 1px; }
+
+/* DEBRIEF */
+.debrief-qs { margin: 16px 0 0; }
+.debrief-q {
+  font-family: 'DM Serif Display', serif; font-style: italic; font-size: clamp(19px, 2.5vw, 28px);
+  line-height: 1.2; color: var(--charcoal); padding: 15px 0; border-bottom: 1px solid rgba(16,0,0,0.1);
+}
+.debrief-q:last-child { border-bottom: none; }
+html[data-mode="presenter"] .reflection-field { display: none; }
+html[data-mode="participant"] .reflection-field { display: block; margin-top: 16px; }
+
+/* PULL QUOTE */
+.pull-quote { position: relative; padding: 0 0 0 6px; max-width: 820px; margin: 20px 0; }
+.pull-glyph { font-family: 'DM Serif Display', serif; font-size: 110px; line-height: 0.6; color: var(--plum-text); opacity: 0.85; display: block; margin-bottom: -18px; user-select: none; font-style: normal; }
+.slide-plum .pull-glyph, .slide-ink .pull-glyph { color: var(--yellow); opacity: 0.45; }
+.pull-q { font-family: 'DM Serif Display', serif; font-style: italic; font-size: clamp(20px, 3.2vw, 36px); line-height: 1.15; color: var(--ink); position: relative; z-index: 1; }
+.slide-plum .pull-q, .slide-ink .pull-q { color: var(--paper); }
+
+/* MODULE CTA */
+.module-cta {
+  display: inline-flex; align-items: center; gap: 16px; margin-top: 32px; text-decoration: none;
+  border: 1.5px solid rgba(251,247,238,0.4); padding: 13px 26px;
+  font-family: 'Inter'; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: rgba(251,247,238,0.75); transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+.module-cta:hover { background: rgba(251,247,238,0.1); border-color: rgba(251,247,238,0.7); color: var(--paper); }
+
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: start; max-width: 1100px; }
+
+html[data-mode="participant"] .section-divider {
+  display: flex; align-items: center; gap: 16px; padding: 28px 72px 0;
+  font-family: 'Inter'; font-size: 9px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--muted);
+}
+html[data-mode="presenter"] .section-divider { display: none; }
+.section-divider::before, .section-divider::after { content: ''; flex: 1; height: 1px; background: var(--sand); }
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .slide { padding: 80px 36px 64px; }
+  html[data-mode="participant"] .slide { padding: 40px 28px; }
+  html[data-mode="participant"] .slide[data-type="context"] .ctx-header { padding: 16px 28px; }
+  html[data-mode="participant"] .slide[data-type="context"] .slide-teaching { padding: 0 28px; }
+  html[data-mode="participant"] .slide[data-type="context"].is-open .slide-teaching { padding: 32px 28px 40px; }
+  html[data-mode="participant"] .section-divider { padding: 20px 28px 0; }
+  .fac-note { padding: 12px 36px; }
+  .two-col { grid-template-columns: 1fr; gap: 32px; }
+  .topbar { padding: 0 16px; gap: 8px; }
+  .topbar-center, .topbar-module { display: none; }
+}
+
+/* PRINT */
+@media print {
+  @page { size: A4 portrait; margin: 18mm 16mm; }
+  html[data-mode="presenter"] * { display: none !important; }
+  html[data-mode="participant"] body { padding-top: 0; }
+  .topbar, .progress-wrap, .ctx-icon, .fac-note, .mode-toggle, .topbar-btn, .topbar-nav, .section-divider, .save-toast { display: none !important; }
+  .slides-wrap { display: block; }
+  .slide { break-inside: avoid; padding: 24px 0 20px; }
+  html[data-mode="participant"] .slide[data-type="break"] { display: none !important; }
+  html[data-mode="participant"] .slide[data-type="title"] { min-height: 100px; padding: 20px 0; }
+  .slide-plum, .slide-ink { background: #100000 !important; -webkit-print-color-adjust: exact; color-adjust: exact; }
+  .slide-yellow { background: #FFBD59 !important; -webkit-print-color-adjust: exact; color-adjust: exact; }
+  .slide-sand { background: #E0D2B5 !important; -webkit-print-color-adjust: exact; color-adjust: exact; }
+  html[data-mode="participant"] .slide[data-type="context"] .ctx-header { display: flex !important; border: none; cursor: default; }
+  html[data-mode="participant"] .slide[data-type="context"] .slide-teaching { max-height: none !important; padding: 16px 0 24px !important; overflow: visible !important; }
+  .field-ta { border: none; border-bottom: 1px solid rgba(16,0,0,0.2); resize: none; min-height: 56px; background: transparent; }
+  .act-block { border: 1px solid rgba(16,0,0,0.3); }
+  .act-head { background: #100000 !important; -webkit-print-color-adjust: exact; color-adjust: exact; }
+  .reflection-field { display: block !important; }
+  html[data-mode="participant"] .p-input { opacity: 1 !important; pointer-events: auto !important; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-left">
+    <a href="../../../index.html" class="topbar-brand">design‑led: <em>leader</em></a>
+    <div class="topbar-divider"></div>
+    <span class="topbar-module">Module 12 · Executive Decision Hygiene</span>
+  </div>
+  <div class="topbar-center">Half day · one break</div>
+  <div class="topbar-right">
+    <div class="topbar-nav">
+      <a href="11-metrics-that-win-the-room.html" class="nav-btn">← Prev</a>
+      <a href="13-operating-system-for-design-leadership.html" class="nav-btn">Next →</a>
+    </div>
+    <div class="mode-toggle">
+      <button class="mode-btn btn-presenter" onclick="setMode('presenter')">Present</button>
+      <div class="mode-sep"></div>
+      <button class="mode-btn btn-participant" onclick="setMode('participant')">Workbook</button>
+    </div>
+    <a href="12-executive-decision-hygiene-canvas.html" class="topbar-btn" target="_blank">A3 Canvas</a>
+    <button class="topbar-btn" onclick="window.print()">Print</button>
+  </div>
+</div>
+
+<div class="progress-wrap"><div class="progress-fill" id="progressFill"></div></div>
+<div class="save-toast" id="saveToast">Saved</div>
+
+<div class="slides-wrap" id="slidesWrap">
+
+  <!-- SLIDE 01 · TITLE -->
+  <section class="slide slide-plum" data-type="title" data-slide="1">
+    <div class="stripe-bar-deco"></div>
+    <div class="content">
+      <span class="sig" style="font-size:26px;margin-bottom:14px;">Design-Led: Leader · Module 12</span>
+      <h1 class="serif h1">Executive Decision <em>Hygiene</em></h1>
+      <p class="fran body-lg">The same decision hygiene that improves a product call improves a board call —<br>but it doesn't guarantee it wins.</p>
+    </div>
+    <div class="fac-note">
+      <strong>Before you start — DRAFT CONTENT:</strong> The opening story (the rigorous decision that still lost), both activities, quick hits, and further reading in this module are invented placeholder narrative, written to match the tone of the docx source, and are pending Jacinta's review before delivery. The core claim (decision hygiene at the executive table, the honest gap between process and politics, when to invest in process vs. relationship) and the four "leaders leave able to" outcomes are sourced directly from <em>Design_Led_Leader_Curriculum.docx</em> and are not placeholder. | <em>Open:</em> "Tell me about a decision your team got completely right on the merits — and still lost." Take 2–3 answers, let the room feel the gap between rigor and outcome.
+    </div>
+  </section>
+
+  <!-- SLIDE 02 · OVERVIEW -->
+  <section class="slide slide-paper2" data-type="context" data-slide="2">
+    <button type="button" class="ctx-header" onclick="toggleContext(this)" aria-expanded="false">
+      <div class="ctx-header-left"><span class="ctx-eyebrow">Overview</span><span class="ctx-title">What this module is about</span></div>
+      <span class="ctx-icon">+</span>
+    </button>
+    <div class="slide-teaching">
+      <div class="content" style="max-width:860px;">
+        <div class="eyebrow">This module</div>
+        <h2 class="serif h2">What we're doing<br><em>today</em></h2>
+        <ul class="clean-list">
+          <li>Why decision hygiene belongs at the executive table, not just the project table</li>
+          <li>Named criteria, pre-mortems, and decoupling a call from who's most senior in the room</li>
+          <li>The honest gap: process improves the call, it doesn't guarantee the win</li>
+          <li>Separating a good decision from a good outcome, after the fact</li>
+          <li>When to invest in process — and when to invest in the relationship instead</li>
+        </ul>
+        <div class="bg-num">02</div>
+      </div>
+    </div>
+    <div class="fac-note"><strong>Overview (5 min):</strong> Move fast — this sets up the pairing with Relationship Capital that closes the module.</div>
+  </section>
+
+  <!-- SLIDE 03 · OPENING STORY -->
+  <section class="slide slide-paper" data-type="context" data-slide="3">
+    <button type="button" class="ctx-header" onclick="toggleContext(this)" aria-expanded="false">
+      <div class="ctx-header-left"><span class="ctx-eyebrow">Story · Draft</span><span class="ctx-title">The room that did everything right</span></div>
+      <span class="ctx-icon">+</span>
+    </button>
+    <div class="slide-teaching">
+      <div class="content" style="max-width:860px;">
+        <div class="eyebrow">Opening story · draft</div>
+        <h2 class="serif h2">Named criteria. A pre-mortem.<br>Clean analysis. <em>They still lost.</em></h2>
+        <ul class="clean-list">
+          <li>A leadership team facing a genuine build-vs-partner call, evaluated against five weighted criteria agreed in advance</li>
+          <li>A pre-mortem surfaced the two ways it could fail — both were priced into the recommendation</li>
+          <li>The analysis was clean, defensible, and unanimous among the people who ran the process</li>
+          <li>The CEO's preferred option — backed by the newest, most senior exec in the room — won anyway</li>
+        </ul>
+        <p class="fran body-md" style="margin-top:20px;font-style:italic;">Good process doesn't guarantee the win. It changes what you can do about the loss — and whether you saw it coming.</p>
+        <div class="bg-num">03</div>
+      </div>
+    </div>
+    <div class="fac-note"><strong>Story (5 min) — DRAFT:</strong> This is a placeholder composite, not a named real client. If Jacinta has a real, anonymisable case with this shape, swap it in — it will land harder than an invented one.</div>
+  </section>
+
+  <!-- SLIDE 04 · CONCEPT: DECISION HYGIENE AT ANY ALTITUDE -->
+  <section class="slide slide-paper2" data-type="context" data-slide="4">
+    <button type="button" class="ctx-header" onclick="toggleContext(this)" aria-expanded="false">
+      <div class="ctx-header-left"><span class="ctx-eyebrow">Concept</span><span class="ctx-title">Decision hygiene, at any altitude</span></div>
+      <span class="ctx-icon">+</span>
+    </button>
+    <div class="slide-teaching">
+      <div class="content" style="max-width:900px;">
+        <div class="eyebrow">The same hygiene, a higher-stakes table</div>
+        <h2 class="serif h2">The tools don't change.<br>The <em>stakes</em> do.</h2>
+        <ul class="clean-list">
+          <li>Named criteria, agreed before anyone knows which option they'll favour</li>
+          <li>A pre-mortem — naming how this fails before it ships, not after</li>
+          <li>Decoupling the decision from who's most senior in the room</li>
+          <li>None of this is exotic. Most functioning product teams already do it at project level</li>
+        </ul>
+        <p class="fran body-md" style="margin-top:20px;font-style:italic;">Good judgment at board level follows the same hygiene as good judgment at project level — named criteria, pre-mortems, decoupling the decision from who's most senior in the room.</p>
+        <div class="bg-num">04</div>
+      </div>
+    </div>
+    <div class="fac-note"><strong>Concept (8 min):</strong> Land on "the tools don't change, the politics do" — it sets up the honest gap on the next slide. Source: <em>Design_Led_Leader_Curriculum.docx</em>.</div>
+  </section>
+
+  <!-- SLIDE 05 · CONCEPT: THE HONEST GAP -->
+  <section class="slide slide-paper" data-type="context" data-slide="5">
+    <button type="button" class="ctx-header" onclick="toggleContext(this)" aria-expanded="false">
+      <div class="ctx-header-left"><span class="ctx-eyebrow">Concept</span><span class="ctx-title">The honest gap</span></div>
+      <span class="ctx-icon">+</span>
+    </button>
+    <div class="slide-teaching">
+      <div class="content" style="max-width:860px;">
+        <div class="eyebrow">The honest gap</div>
+        <h2 class="serif h2">Hygiene improves the call.<br>It doesn't <em>guarantee</em> the win.</h2>
+        <ul class="clean-list">
+          <li>In a rational room, the best-supported option wins</li>
+          <li>In a political room — most rooms — sponsorship, history, and seniority also vote</li>
+          <li>Decision hygiene doesn't make a room rational. It makes the call defensible regardless of what the room does</li>
+          <li>This module doesn't pretend that gap away. It teaches you to see it before the room votes</li>
+        </ul>
+        <p class="fran body-md" style="margin-top:20px;font-style:italic;">In a political organisation, decision hygiene improves the quality of the call without guaranteeing it wins. That gap is exactly where this module — and Relationship Capital — meet.</p>
+        <div class="bg-num">05</div>
+      </div>
+    </div>
+    <div class="fac-note"><strong>Concept (8 min):</strong> This is the thesis the whole module builds on — say it plainly, don't soften it. Source: <em>Design_Led_Leader_Curriculum.docx</em>.</div>
+  </section>
+
+  <!-- SLIDE 06 · QUICK HIT 01 -->
+  <section class="slide slide-yellow" data-type="quick-hit" data-slide="6">
+    <div class="content" style="max-width:860px;">
+      <div class="eyebrow">Quick hit · 5 min</div>
+      <div class="pull-quote" style="margin-bottom:4px;">
+        <span class="pull-glyph" style="color:var(--plum);opacity:0.4;">"</span>
+        <p class="pull-q" style="color:var(--ink);">Name a good decision you made<br>that led to a bad outcome.</p>
+      </div>
+      <p class="fran body-md" style="margin-top:20px;">How do you know the difference — and did you know it at the time?</p>
+      <div class="p-input field-group" style="margin-top:24px;max-width:580px;">
+        <textarea class="field-ta" data-field="dll_m12_quick_hit_1" rows="3" placeholder="The good decision, the bad outcome…"></textarea>
+      </div>
+    </div>
+    <div class="fac-note"><strong>Quick Hit 01 (5 min):</strong> Collect 3–4 answers from the room. Watch for people who can't separate the two yet — that's exactly what the next concept slide addresses.</div>
+  </section>
+
+  <!-- SLIDE 07 · CONCEPT: DECISION QUALITY VS OUTCOME QUALITY -->
+  <section class="slide slide-paper2" data-type="context" data-slide="7">
+    <button type="button" class="ctx-header" onclick="toggleContext(this)" aria-expanded="false">
+      <div class="ctx-header-left"><span class="ctx-eyebrow">Concept</span><span class="ctx-title">Decision quality vs. outcome quality</span></div>
+      <span class="ctx-icon">+</span>
+    </button>
+    <div class="slide-teaching">
+      <div class="content" style="max-width:860px;">
+        <div class="eyebrow">Two different judgments</div>
+        <h2 class="serif h2">A good decision can lose.<br>A bad decision can <em>win.</em></h2>
+        <ul class="clean-list">
+          <li>A good decision is judged by the process and the information available at the time it was made</li>
+          <li>A good outcome is judged by what happened afterward — often shaped by luck, timing, or forces outside the room</li>
+          <li>Conflating the two teaches leaders the wrong lesson from both wins and losses</li>
+          <li>Separate them on purpose, especially in the debrief after a call goes badly</li>
+        </ul>
+        <p class="fran body-md" style="margin-top:20px;font-style:italic;">If you can only defend a decision when it works out, you didn't actually have a decision process. You had a guess with good PR.</p>
+        <div class="bg-num">07</div>
+      </div>
+    </div>
+    <div class="fac-note"><strong>Concept (7 min) — DRAFT framing, sourced principle:</strong> The distinction itself (separate a good decision from a good outcome) is a named "leaders leave able to" outcome from the docx; the framing and examples here are invented.</div>
+  </section>
+
+  <!-- SLIDE 08 · ACTIVITY 01 -->
+  <section class="slide slide-paper" data-type="activity" data-slide="8">
+    <div class="content" style="max-width:940px;">
+      <div class="eyebrow">Activity 01 · 15 min · Draft</div>
+      <h2 class="serif h2">Build the <em>Decision Matrix</em></h2>
+      <div class="act-block p-input">
+        <div class="act-head"><span class="act-label">Activity 01</span><span class="act-time">15 min</span></div>
+        <div class="act-body">
+          <p class="act-instruction">Apply a simple weighted-criteria decision matrix to one real, current leadership-level choice you're facing.</p>
+          <ol class="act-rules">
+            <li>Individual — name the decision and 3–5 criteria that actually matter, not the ones that sound good in a deck</li>
+            <li>Weight each criterion out of 10, then score each option against every criterion</li>
+            <li>Pairs — trade matrices and stress-test each other's weighting — 5 minutes</li>
+          </ol>
+        </div>
+      </div>
+      <div class="p-input" style="margin-top:8px;">
+        <div class="field-group"><label class="field-label"><span class="field-num">01</span>The decision</label><textarea class="field-ta" data-field="dll_m12_decision_name" rows="2" placeholder="The real, current leadership-level choice…"></textarea></div>
+        <div class="field-group"><label class="field-label"><span class="field-num">02</span>Criteria &amp; weights</label><textarea class="field-ta" data-field="dll_m12_matrix_criteria" rows="3" placeholder="Criterion (weight /10): …"></textarea></div>
+        <div class="field-group"><label class="field-label"><span class="field-num">03</span>What the matrix recommends</label><textarea class="field-ta" data-field="dll_m12_matrix_recommendation" rows="2" placeholder="The option that scores highest, and by how much…"></textarea></div>
+      </div>
+    </div>
+    <div class="fac-note"><strong>Activity 01 (15 min) — DRAFT:</strong> Watch for criteria that are really proxies for a favoured option ("speed to market" when they mean "the option I already like"). This activity is invented to fit the framework; not sourced from the docx.</div>
+  </section>
+
+  <!-- SLIDE 09 · CONCEPT: MERITS OR SPONSORSHIP -->
+  <section class="slide slide-paper2" data-type="context" data-slide="9">
+    <button type="button" class="ctx-header" onclick="toggleContext(this)" aria-expanded="false">
+      <div class="ctx-header-left"><span class="ctx-eyebrow">Concept</span><span class="ctx-title">Merits or sponsorship?</span></div>
+      <span class="ctx-icon">+</span>
+    </button>
+    <div class="slide-teaching">
+      <div class="content" style="max-width:860px;">
+        <div class="eyebrow">Two different games</div>
+        <h2 class="serif h2">Two different games.<br><em>Play the right one.</em></h2>
+        <ul class="clean-list">
+          <li>Some decisions are won on the merits — the best-supported option, argued well, carries the room</li>
+          <li>Some are won on sponsorship — whoever has the most senior, most invested backer carries the room instead</li>
+          <li>Misreading which game you're in wastes a rigorous case on a room that was never going to be moved by rigor</li>
+          <li>Reading it early tells you whether to keep refining the analysis or start building the relationship</li>
+        </ul>
+        <p class="fran body-md" style="margin-top:20px;font-style:italic;">The room in the opening story ran a merits process in a sponsorship room. That's the mistake to catch before it costs you the call.</p>
+        <div class="bg-num">09</div>
+      </div>
+    </div>
+    <div class="fac-note"><strong>Concept (7 min):</strong> Recognising which game you're in — and preparing accordingly — is a named "leaders leave able to" outcome. Source: <em>Design_Led_Leader_Curriculum.docx</em>; the framing as "two games" is invented.</div>
+  </section>
+
+  <!-- SLIDE 10 · QUICK HIT 02 -->
+  <section class="slide slide-yellow" data-type="quick-hit" data-slide="10">
+    <div class="content" style="max-width:860px;">
+      <div class="eyebrow">Quick hit · 5 min</div>
+      <div class="pull-quote" style="margin-bottom:4px;">
+        <span class="pull-glyph" style="color:var(--plum);opacity:0.4;">"</span>
+        <p class="pull-q" style="color:var(--ink);">Is your current decision heading for<br>a merits room or a sponsorship room?</p>
+      </div>
+      <p class="fran body-md" style="margin-top:20px;">Notice which answer you're more comfortable admitting.</p>
+      <div class="p-input field-group" style="margin-top:24px;max-width:580px;">
+        <textarea class="field-ta" data-field="dll_m12_quick_hit_2" rows="3" placeholder="Merits, sponsorship, or honestly — I'm not sure…"></textarea>
+      </div>
+    </div>
+    <div class="fac-note"><strong>Quick Hit 02 (5 min):</strong> Take 3–4 answers from the room. The discomfort of admitting "sponsorship" is the point — flag it, don't rescue it.</div>
+  </section>
+
+  <!-- SLIDE 11 · ACTIVITY 02 -->
+  <section class="slide slide-paper" data-type="activity" data-slide="11">
+    <div class="content" style="max-width:940px;">
+      <div class="eyebrow">Activity 02 · 15 min · Draft</div>
+      <h2 class="serif h2">Merits or <em>Sponsorship?</em></h2>
+      <div class="act-block p-input">
+        <div class="act-head"><span class="act-label">Activity 02</span><span class="act-time">15 min</span></div>
+        <div class="act-body">
+          <p class="act-instruction">For the same decision from Activity 01, honestly assess whether it will actually be won on the merits or on sponsorship — and if sponsorship, name whose backing you need and how you'll get it.</p>
+          <ol class="act-rules">
+            <li>Individual — merits or sponsorship, honestly, not the answer that sounds better</li>
+            <li>If sponsorship — name the specific person whose backing actually moves this room</li>
+            <li>Pairs — name one concrete step to build that relationship capital before the decision is made</li>
+          </ol>
+        </div>
+      </div>
+      <div class="p-input" style="margin-top:8px;">
+        <div class="field-group"><label class="field-label"><span class="field-num">01</span>Merits or sponsorship — and why</label><textarea class="field-ta" data-field="dll_m12_merits_or_sponsorship" rows="3" placeholder="This will actually be won on…"></textarea></div>
+        <div class="field-group"><label class="field-label"><span class="field-num">02</span>If sponsorship — whose backing, and how you'll get it</label><textarea class="field-ta" data-field="dll_m12_sponsorship_plan" rows="3" placeholder="The person, and the concrete next step…"></textarea></div>
+      </div>
+    </div>
+    <div class="fac-note"><strong>Activity 02 (15 min) — DRAFT:</strong> Watch for participants who name sponsorship but then propose only more analysis as the "plan" — that's still playing the merits game. Push for a relational step. This activity is invented to fit the framework; not sourced from the docx.</div>
+  </section>
+
+  <!-- SLIDE 12 · DEBRIEF: SYNTHESIS -->
+  <section class="slide slide-sand" data-type="debrief" data-slide="12">
+    <div class="content" style="max-width:820px;">
+      <div class="eyebrow">Synthesis · 10 min</div>
+      <h3 class="serif h3">Decision hygiene earns you a defensible call. It doesn't buy you the room.</h3>
+      <div class="debrief-qs">
+        <div class="debrief-q">Named criteria and a pre-mortem make the call better, whether or not it wins.</div>
+        <div class="debrief-q">A good decision and a good outcome are two different judgments — keep them separate.</div>
+        <div class="debrief-q">When the room runs on sponsorship, the relationship is the process.</div>
+      </div>
+      <div class="reflection-field p-input">
+        <textarea class="field-ta" data-field="dll_m12_synthesis" rows="3" style="background:var(--paper);" placeholder="What I noticed…"></textarea>
+      </div>
+    </div>
+    <div class="fac-note"><strong>Synthesis (10 min):</strong> This is the bridge into Module 13 — decision hygiene and relationship capital aren't competing skills, they're the same leader reading the room correctly.</div>
+  </section>
+
+  <!-- SLIDE 13 · CLOSE -->
+  <section class="slide slide-plum" data-type="close" data-slide="13">
+    <div class="stripe-bar-deco"></div>
+    <div class="content" style="max-width:880px;">
+      <div class="eyebrow">Close · 10 min</div>
+      <h2 class="serif h2">One takeaway.<br>One question <em>still open.</em></h2>
+      <div class="p-input" style="margin-top:32px;max-width:600px;">
+        <label class="field-label field-label-light"><span class="field-num">Takeaway</span>What landed for you</label>
+        <textarea class="field-ta field-ta-light" data-field="dll_m12_takeaway" rows="2" placeholder="What landed…"></textarea>
+      </div>
+      <div class="p-input" style="margin-top:20px;max-width:600px;">
+        <label class="field-label field-label-light"><span class="field-num">Open</span>What's still unclear</label>
+        <textarea class="field-ta field-ta-light" data-field="dll_m12_open_question" rows="2" placeholder="What's still unclear…"></textarea>
+      </div>
+      <div style="margin-top:44px;padding-top:36px;border-top:1px solid rgba(251,247,238,0.18);">
+        <p class="fran body-sm" style="color:rgba(251,247,238,0.55);margin-bottom:6px;">Next module</p>
+        <p class="fran body-lg" style="margin:0 0 4px;">THE OPERATING SYSTEM FOR DESIGN LEADERSHIP</p>
+        <p class="fran body-md" style="margin:0;"><em>Integration is the moment leadership stops being a performance and starts being a practice.</em></p>
+        <a href="13-operating-system-for-design-leadership.html" class="module-cta">Module 13 → The Operating System for Design Leadership</a>
+      </div>
+    </div>
+    <div class="fac-note">
+      <strong>Close (10 min):</strong> One takeaway, one open question — don't resolve it, just capture it. | <strong>Further reading (facilitator) · draft list:</strong> <em>Noise: A Flaw in Human Judgment</em> — Daniel Kahneman, Olivier Sibony &amp; Cass R. Sunstein · <em>Thinking in Bets</em> — Annie Duke · "You're About to Make a Terrible Mistake" — Olivier Sibony · <em>Superforecasting: The Art and Science of Prediction</em> — Philip E. Tetlock &amp; Dan Gardner · <em>Power: Why Some People Have It and Others Don't</em> — Jeffrey Pfeffer.
+    </div>
+  </section>
+
+</div>
+
+<script>
+(function () {
+  'use strict';
+  var ROOT = document.documentElement;
+  var STORAGE_PREFIX = 'dll_m12_';
+  var saveTimer;
+
+  function setMode(mode) {
+    ROOT.dataset.mode = mode;
+    localStorage.setItem('dll_mode_global', mode);
+    if (mode === 'participant') { window.scrollTo(0, 0); }
+    else { var wrap = document.getElementById('slidesWrap'); if (wrap) wrap.scrollTo(0, 0); }
+  }
+  window.setMode = setMode;
+
+  function toggleContext(header) {
+    var expanded = header.getAttribute('aria-expanded') === 'true';
+    header.setAttribute('aria-expanded', String(!expanded));
+    var section = header.closest('section');
+    if (section) section.classList.toggle('is-open', !expanded);
+    var icon = header.querySelector('.ctx-icon');
+    if (icon) icon.textContent = !expanded ? '−' : '+';
+  }
+  window.toggleContext = toggleContext;
+
+  function initFields() {
+    document.querySelectorAll('[data-field]').forEach(function (el) {
+      var key = el.dataset.field.indexOf(STORAGE_PREFIX) === 0 ? el.dataset.field : STORAGE_PREFIX + el.dataset.field;
+      var saved = localStorage.getItem(key);
+      if (saved) el.value = saved;
+      el.addEventListener('input', function () {
+        localStorage.setItem(key, el.value);
+        updateProgress();
+        triggerSaveToast();
+      });
+    });
+    updateProgress();
+  }
+
+  function updateProgress() {
+    var fields = document.querySelectorAll('[data-field]');
+    var filled = 0;
+    fields.forEach(function (f) { if (f.value.trim().length > 8) filled++; });
+    var pct = fields.length ? (filled / fields.length) * 100 : 0;
+    var fill = document.getElementById('progressFill');
+    if (fill) fill.style.width = pct.toFixed(1) + '%';
+  }
+
+  function triggerSaveToast() {
+    var toast = document.getElementById('saveToast');
+    if (!toast) return;
+    toast.classList.add('visible');
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(function () { toast.classList.remove('visible'); }, 1800);
+  }
+
+  function init() {
+    var params = new URLSearchParams(window.location.search);
+    var urlMode = params.get('mode');
+    var savedMode = localStorage.getItem('dll_mode_global');
+    var mode = urlMode || savedMode || 'participant';
+    ROOT.dataset.mode = mode;
+    initFields();
+  }
+
+  if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', init); } else { init(); }
+})();
+</script>
+</body>
+</html>

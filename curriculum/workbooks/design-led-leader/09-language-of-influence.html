@@ -1,0 +1,755 @@
+<!doctype html>
+<html lang="en" data-mode="participant">
+<head>
+<meta charset="utf-8" />
+<title>Design-Led · Module 09 · The Language of Influence — Leader</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..900,0..100;1,9..144,300..900,0..100&family=Inter:wght@400;500;600&family=Allura&family=Patrick+Hand&display=swap" rel="stylesheet">
+<style>
+/* =====================================================================
+   Design-Led: Leader · Module 09 · The Language of Influence
+   Dual mode: Presenter (scroll-snap) + Workbook (interactive)
+   Same architecture as D2M / Practitioner — Palette: Ink · Paper · Teal · Pink · Yellow · Plum
+   Track accent: Plum (--plum-text) · Title/close background: Plum
+   DRAFT NARRATIVE CONTENT — see fac-note on slide 1 and companion spec for detail.
+   ===================================================================== */
+
+:root {
+  --ink:      #100000;
+  --charcoal: #423B3B;
+  --paper:    #FBF7EE;
+  --paper-2:  #F4EFE2;
+  --sand:     #E0D2B5;
+  --teal:     #47ACA4;
+  --pink:     #FF3990;
+  --yellow:   #FFBD59;
+  --plum:     #7A1F4A;
+  --muted:    #5E584F;
+  --plum-text: #6B1B41;
+  --bar-h:    56px;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: 'Inter', sans-serif;
+  font-size: 16px; line-height: 1.55;
+  background: var(--paper); color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* TOPBAR */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0;
+  height: var(--bar-h);
+  background: var(--paper);
+  border-bottom: 1px solid rgba(16,0,0,0.12);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 32px;
+  z-index: 200;
+  gap: 16px;
+}
+.topbar-left { display: flex; align-items: center; gap: 18px; flex-shrink: 0; }
+.topbar-brand {
+  font-family: 'DM Serif Display', serif;
+  font-size: 18px; letter-spacing: -0.01em;
+  color: var(--ink); text-decoration: none;
+  white-space: nowrap;
+}
+.topbar-brand em { font-style: italic; color: var(--plum-text); }
+.topbar-divider { width: 1px; height: 18px; background: var(--sand); flex-shrink: 0; }
+.topbar-module {
+  font-family: 'Inter'; font-size: 10px;
+  letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted);
+  white-space: nowrap;
+}
+.topbar-center {
+  font-family: 'Inter'; font-size: 10px;
+  letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted);
+  flex: 1; text-align: center;
+}
+.topbar-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.mode-toggle { display: flex; align-items: stretch; border: 1px solid var(--ink); overflow: hidden; height: 30px; }
+.mode-btn {
+  padding: 0 14px;
+  font-family: 'Inter'; font-size: 10px;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--muted); background: none; border: none;
+  cursor: pointer; transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+.mode-sep { width: 1px; background: var(--ink); flex-shrink: 0; }
+html[data-mode="presenter"] .mode-btn.btn-presenter,
+html[data-mode="participant"] .mode-btn.btn-participant {
+  background: var(--ink); color: var(--paper);
+}
+.topbar-btn {
+  height: 30px; padding: 0 14px;
+  font-family: 'Inter'; font-size: 10px;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--muted); background: none;
+  border: 1px solid var(--ink); cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+.topbar-btn:hover { background: var(--ink); color: var(--paper); }
+.topbar-nav { display: flex; align-items: center; gap: 2px; }
+.nav-btn {
+  height: 30px; padding: 0 10px;
+  font-family: 'Inter'; font-size: 11px;
+  color: var(--muted); background: none; border: none;
+  cursor: pointer; transition: color 0.15s;
+  text-decoration: none; display: flex; align-items: center;
+}
+.nav-btn:hover { color: var(--ink); }
+.nav-btn.disabled { opacity: 0.3; cursor: default; }
+
+/* PROGRESS BAR */
+.progress-wrap {
+  position: fixed; top: var(--bar-h); left: 0; right: 0;
+  height: 3px; background: var(--sand); z-index: 199;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.25s;
+}
+html[data-mode="participant"] .progress-wrap { opacity: 1; pointer-events: auto; }
+.progress-fill { height: 100%; width: 0%; background: var(--plum-text); transition: width 0.5s ease; }
+
+/* SLIDES CONTAINER */
+html[data-mode="presenter"] body { overflow: hidden; }
+html[data-mode="presenter"] .slides-wrap {
+  position: fixed; top: var(--bar-h); left: 0; right: 0; bottom: 0;
+  overflow-y: scroll; overscroll-behavior: contain;
+}
+@media (prefers-reduced-motion: no-preference) {
+  html[data-mode="presenter"] .slides-wrap { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+}
+html[data-mode="participant"] body { overflow-y: auto; padding-top: calc(var(--bar-h) + 3px); }
+
+/* SLIDE base */
+.slide { position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: center; padding: 80px 72px 64px; }
+html[data-mode="presenter"] .slide { min-height: calc(100vh - var(--bar-h)); scroll-snap-align: start; }
+html[data-mode="participant"] .slide { min-height: unset; padding: 56px 72px; scroll-snap-align: unset; justify-content: flex-start; }
+
+.slide-paper  { background: var(--paper); }
+.slide-paper2 { background: var(--paper-2); }
+.slide-ink    { background: var(--ink); color: var(--paper); }
+.slide-teal   { background: var(--teal); }
+.slide-pink   { background: var(--pink); color: var(--paper); }
+.slide-plum   { background: var(--plum); color: var(--paper); }
+.slide-yellow { background: var(--yellow); }
+.slide-sand   { background: var(--sand); }
+
+.content { position: relative; z-index: 1; }
+
+/* WORKBOOK overrides */
+html[data-mode="participant"] .slide[data-type="title"] { min-height: 280px; padding: 56px 72px; justify-content: center; }
+html[data-mode="participant"] .slide[data-type="context"] { padding: 0; border-bottom: 1px solid rgba(16,0,0,0.1); min-height: unset; justify-content: flex-start; }
+html[data-mode="participant"] .slide[data-type="quick-hit"] { padding: 36px 72px; }
+html[data-mode="participant"] .slide[data-type="activity"] { padding: 56px 72px; border-top: 3px solid var(--ink); border-bottom: 3px solid var(--ink); margin: 20px 0; }
+html[data-mode="participant"] .slide[data-type="debrief"] { padding: 40px 72px; border-bottom: 1px solid rgba(16,0,0,0.1); }
+html[data-mode="participant"] .slide[data-type="break"] { display: none; }
+html[data-mode="participant"] .slide[data-type="close"] { min-height: unset; padding: 56px 72px; }
+
+/* CONTEXT ACCORDION */
+.ctx-header {
+  display: none; align-items: center; justify-content: space-between;
+  padding: 18px 72px; cursor: pointer; user-select: none;
+  border-bottom: 1px solid rgba(16,0,0,0.08); transition: background 0.15s; gap: 16px;
+  background: none; border-left: none; border-right: none; border-top: none;
+  width: 100%; font: inherit; text-align: left; color: inherit;
+}
+.ctx-header:hover { background: rgba(16,0,0,0.025); }
+html[data-mode="participant"] .slide[data-type="context"] .ctx-header { display: flex; }
+.ctx-header-left { display: flex; align-items: baseline; gap: 20px; }
+.ctx-eyebrow { font-family: 'Inter'; font-size: 9px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--muted); flex-shrink: 0; }
+.ctx-title { font-family: 'DM Serif Display', serif; font-size: 19px; letter-spacing: -0.01em; color: var(--charcoal); }
+.ctx-icon { font-family: 'Inter'; font-size: 20px; line-height: 1; color: var(--muted); flex-shrink: 0; transition: transform 0.25s; }
+[aria-expanded="true"] .ctx-icon { transform: rotate(45deg); }
+.slide-teaching {}
+html[data-mode="presenter"] .slide-teaching { flex: 1; display: flex; flex-direction: column; justify-content: center; max-height: none !important; overflow: visible !important; padding: 0 !important; }
+html[data-mode="participant"] .slide[data-type="context"] .slide-teaching { overflow: hidden; max-height: 0; padding: 0 72px; transition: max-height 0.4s ease, padding 0.4s ease; }
+html[data-mode="participant"] .slide[data-type="context"].is-open .slide-teaching { max-height: 1600px; padding: 40px 72px 52px; }
+html[data-mode="presenter"] .ctx-header { display: none !important; }
+
+/* FACILITATOR NOTES */
+.fac-note {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  background: rgba(16,0,0,0.88); color: rgba(251,247,238,0.82);
+  padding: 13px 72px; font-family: 'Inter'; font-size: 11.5px; line-height: 1.6; z-index: 10;
+}
+.fac-note strong { color: var(--yellow); font-weight: 600; }
+.fac-note em { font-style: italic; color: rgba(251,247,238,0.65); }
+html[data-mode="participant"] .fac-note { display: none; }
+
+/* PARTICIPANT INPUTS */
+html[data-mode="presenter"] .p-input { pointer-events: none; opacity: 0.18; }
+html[data-mode="participant"] .p-input { pointer-events: auto; opacity: 1; }
+.field-group { margin-bottom: 24px; }
+.field-label { display: block; margin-bottom: 8px; font-family: 'Patrick Hand', cursive; font-size: 14px; color: var(--charcoal); }
+.field-num { font-family: 'Inter'; font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-right: 8px; }
+.field-ta {
+  width: 100%; min-height: 80px; padding: 14px 16px;
+  font-family: 'Fraunces', serif; font-size: 15px; line-height: 1.6;
+  font-variation-settings: "SOFT" 50, "opsz" 144;
+  color: var(--ink); background: var(--paper);
+  border: 1px solid rgba(16,0,0,0.12); border-bottom: 2px solid var(--charcoal);
+  outline: none; resize: vertical; transition: border-color 0.15s;
+}
+.field-ta:focus { border-color: var(--plum-text); border-bottom-color: var(--plum-text); }
+.field-ta::placeholder { color: rgba(16,0,0,0.48); font-style: italic; }
+.field-ta-light { background: rgba(251,247,238,0.07); border-color: rgba(251,247,238,0.15); border-bottom-color: rgba(251,247,238,0.4); color: var(--paper); }
+.field-ta-light::placeholder { color: rgba(251,247,238,0.3); }
+.field-ta-light:focus { border-bottom-color: var(--yellow); }
+.field-label-light { color: rgba(251,247,238,0.65); }
+.field-label-light .field-num { color: rgba(251,247,238,0.35); }
+
+.save-toast {
+  position: fixed; bottom: 28px; right: 32px;
+  background: var(--ink); color: var(--paper);
+  font-family: 'Inter'; font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase;
+  padding: 8px 18px; z-index: 300; opacity: 0; pointer-events: none; transition: opacity 0.3s;
+}
+html[data-mode="participant"] .save-toast.visible { opacity: 1; }
+
+/* TYPOGRAPHY */
+.eyebrow {
+  font-family: 'Inter'; font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--charcoal);
+  display: inline-flex; align-items: center; gap: 14px; margin-bottom: 22px;
+}
+.eyebrow::before { content: ''; width: 28px; height: 1px; background: currentColor; opacity: 0.35; flex-shrink: 0; }
+.slide-plum .eyebrow, .slide-ink .eyebrow { color: rgba(251,247,238,0.6); }
+.slide-pink .eyebrow, .slide-teal .eyebrow, .slide-yellow .eyebrow { color: rgba(16,0,0,0.8); }
+
+.serif { font-family: 'DM Serif Display', serif; font-weight: 400; letter-spacing: -0.015em; line-height: 0.95; }
+.serif em { font-style: italic; color: var(--plum-text); }
+.slide-plum .serif em, .slide-ink .serif em { color: var(--yellow); }
+.slide-pink .serif em { color: var(--yellow); }
+.slide-teal .serif em, .slide-yellow .serif em { color: var(--plum); }
+
+.h1 { font-size: clamp(64px, 11vw, 152px); margin: 0 0 24px; }
+.h2 { font-size: clamp(40px, 6vw, 80px); margin: 0 0 22px; max-width: 900px; }
+.h3 { font-size: clamp(28px, 4vw, 52px); margin: 0 0 18px; max-width: 760px; }
+
+.fran { font-family: 'Fraunces', serif; font-weight: 400; line-height: 1.55; font-variation-settings: "SOFT" 50, "opsz" 144; }
+.fran em { font-style: italic; color: var(--plum-text); }
+.slide-plum .fran, .slide-ink .fran { color: rgba(251,247,238,0.85); }
+.slide-plum .fran em, .slide-ink .fran em { color: var(--yellow); }
+.slide-pink .fran { color: rgba(251,247,238,0.85); }
+
+.body-lg { font-size: clamp(17px, 2.2vw, 24px); max-width: 660px; margin: 0 0 18px; }
+.body-md { font-size: clamp(15px, 1.8vw, 20px); max-width: 640px; margin: 0 0 14px; }
+.body-sm { font-size: 14px; max-width: 580px; margin: 0 0 10px; color: var(--muted); }
+
+.sig { font-family: 'Allura', cursive; color: var(--plum-text); line-height: 1; display: block; transform: rotate(-3deg); transform-origin: left; }
+.slide-plum .sig, .slide-ink .sig { color: var(--yellow); }
+
+/* DECORATIVE */
+.stripe-bar-deco {
+  position: absolute; top: 0; left: 0; right: 0; height: 5px;
+  background: linear-gradient(90deg, var(--teal) 0 25%, var(--pink) 25% 50%, var(--yellow) 50% 75%, var(--plum) 75% 100%);
+}
+.bg-num {
+  position: absolute; bottom: -24px; right: 52px;
+  font-family: 'DM Serif Display', serif; font-size: clamp(140px, 22vw, 280px);
+  line-height: 0.85; letter-spacing: -0.04em;
+  pointer-events: none; user-select: none; opacity: 0.05; font-style: italic; color: inherit; z-index: 0;
+}
+html[data-mode="participant"] .slide[data-type="context"] .bg-num { display: none; }
+
+.mark-hi { background: linear-gradient(180deg, transparent 50%, rgba(255,189,89,0.55) 50%, rgba(255,189,89,0.55) 92%, transparent 92%); padding: 0 3px; }
+
+/* LISTS */
+.clean-list { list-style: none; padding: 0; margin: 12px 0 0; }
+.clean-list li {
+  display: flex; gap: 14px; align-items: baseline; padding: 9px 0; border-bottom: 1px solid rgba(16,0,0,0.07);
+  font-family: 'Fraunces', serif; font-size: clamp(14px, 1.7vw, 18px); line-height: 1.45;
+  font-variation-settings: "SOFT" 50, "opsz" 144; color: var(--charcoal);
+}
+.clean-list li:last-child { border-bottom: none; }
+.clean-list li::before { content: '—'; font-family: 'Inter'; font-size: 11px; color: var(--plum-text); flex-shrink: 0; }
+.slide-plum .clean-list li, .slide-ink .clean-list li { color: rgba(251,247,238,0.82); border-bottom-color: rgba(255,255,255,0.1); }
+.slide-plum .clean-list li::before, .slide-ink .clean-list li::before { color: var(--yellow); }
+
+/* ACTIVITY BLOCK */
+.act-block { border: 1px solid var(--ink); max-width: 900px; overflow: hidden; margin: 20px 0 28px; }
+.act-head { display: flex; align-items: center; justify-content: space-between; padding: 11px 22px; background: var(--ink); color: var(--paper); }
+.act-label { font-family: 'Inter'; font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; opacity: 0.55; }
+.act-time { font-family: 'Inter'; font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; background: var(--yellow); color: var(--ink); padding: 3px 10px; font-weight: 600; }
+.act-body { padding: 26px 26px 22px; background: var(--paper-2); }
+.act-instruction { font-family: 'DM Serif Display', serif; font-size: clamp(18px, 2.6vw, 26px); line-height: 1.18; letter-spacing: -0.01em; margin: 0 0 18px; }
+.act-instruction em { font-style: italic; color: var(--plum-text); }
+.act-rules { list-style: none; padding: 0; margin: 0; counter-reset: rules; }
+.act-rules li {
+  counter-increment: rules; display: flex; gap: 14px; align-items: baseline; padding: 9px 0; border-top: 1px solid rgba(16,0,0,0.08);
+  font-family: 'Fraunces', serif; font-size: 14px; line-height: 1.45; font-variation-settings: "SOFT" 50, "opsz" 144; color: var(--charcoal);
+}
+.act-rules li::before { content: counter(rules, decimal-leading-zero); font-family: 'Inter'; font-size: 9px; letter-spacing: 0.12em; color: var(--plum-text); flex-shrink: 0; padding-top: 1px; }
+
+/* DEBRIEF */
+.debrief-qs { margin: 16px 0 0; }
+.debrief-q {
+  font-family: 'DM Serif Display', serif; font-style: italic; font-size: clamp(19px, 2.5vw, 28px);
+  line-height: 1.2; color: var(--charcoal); padding: 15px 0; border-bottom: 1px solid rgba(16,0,0,0.1);
+}
+.debrief-q:last-child { border-bottom: none; }
+html[data-mode="presenter"] .reflection-field { display: none; }
+html[data-mode="participant"] .reflection-field { display: block; margin-top: 16px; }
+
+/* PULL QUOTE */
+.pull-quote { position: relative; padding: 0 0 0 6px; max-width: 820px; margin: 20px 0; }
+.pull-glyph { font-family: 'DM Serif Display', serif; font-size: 110px; line-height: 0.6; color: var(--plum-text); opacity: 0.85; display: block; margin-bottom: -18px; user-select: none; font-style: normal; }
+.slide-plum .pull-glyph, .slide-ink .pull-glyph { color: var(--yellow); opacity: 0.45; }
+.pull-q { font-family: 'DM Serif Display', serif; font-style: italic; font-size: clamp(20px, 3.2vw, 36px); line-height: 1.15; color: var(--ink); position: relative; z-index: 1; }
+.slide-plum .pull-q, .slide-ink .pull-q { color: var(--paper); }
+
+/* MODULE CTA */
+.module-cta {
+  display: inline-flex; align-items: center; gap: 16px; margin-top: 32px; text-decoration: none;
+  border: 1.5px solid rgba(251,247,238,0.4); padding: 13px 26px;
+  font-family: 'Inter'; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: rgba(251,247,238,0.75); transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+.module-cta:hover { background: rgba(251,247,238,0.1); border-color: rgba(251,247,238,0.7); color: var(--paper); }
+
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: start; max-width: 1100px; }
+.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 40px; align-items: start; max-width: 1100px; }
+
+html[data-mode="participant"] .section-divider {
+  display: flex; align-items: center; gap: 16px; padding: 28px 72px 0;
+  font-family: 'Inter'; font-size: 9px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--muted);
+}
+html[data-mode="presenter"] .section-divider { display: none; }
+.section-divider::before, .section-divider::after { content: ''; flex: 1; height: 1px; background: var(--sand); }
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .slide { padding: 80px 36px 64px; }
+  html[data-mode="participant"] .slide { padding: 40px 28px; }
+  html[data-mode="participant"] .slide[data-type="context"] .ctx-header { padding: 16px 28px; }
+  html[data-mode="participant"] .slide[data-type="context"] .slide-teaching { padding: 0 28px; }
+  html[data-mode="participant"] .slide[data-type="context"].is-open .slide-teaching { padding: 32px 28px 40px; }
+  html[data-mode="participant"] .section-divider { padding: 20px 28px 0; }
+  .fac-note { padding: 12px 36px; }
+  .two-col, .three-col { grid-template-columns: 1fr; gap: 32px; }
+  .topbar { padding: 0 16px; gap: 8px; }
+  .topbar-center, .topbar-module { display: none; }
+}
+
+/* PRINT */
+@media print {
+  @page { size: A4 portrait; margin: 18mm 16mm; }
+  html[data-mode="presenter"] * { display: none !important; }
+  html[data-mode="participant"] body { padding-top: 0; }
+  .topbar, .progress-wrap, .ctx-icon, .fac-note, .mode-toggle, .topbar-btn, .topbar-nav, .section-divider, .save-toast { display: none !important; }
+  .slides-wrap { display: block; }
+  .slide { break-inside: avoid; padding: 24px 0 20px; }
+  html[data-mode="participant"] .slide[data-type="break"] { display: none !important; }
+  html[data-mode="participant"] .slide[data-type="title"] { min-height: 100px; padding: 20px 0; }
+  .slide-plum, .slide-ink { background: #100000 !important; -webkit-print-color-adjust: exact; color-adjust: exact; }
+  .slide-yellow { background: #FFBD59 !important; -webkit-print-color-adjust: exact; color-adjust: exact; }
+  .slide-sand { background: #E0D2B5 !important; -webkit-print-color-adjust: exact; color-adjust: exact; }
+  html[data-mode="participant"] .slide[data-type="context"] .ctx-header { display: flex !important; border: none; cursor: default; }
+  html[data-mode="participant"] .slide[data-type="context"] .slide-teaching { max-height: none !important; padding: 16px 0 24px !important; overflow: visible !important; }
+  .field-ta { border: none; border-bottom: 1px solid rgba(16,0,0,0.2); resize: none; min-height: 56px; background: transparent; }
+  .act-block { border: 1px solid rgba(16,0,0,0.3); }
+  .act-head { background: #100000 !important; -webkit-print-color-adjust: exact; color-adjust: exact; }
+  .reflection-field { display: block !important; }
+  html[data-mode="participant"] .p-input { opacity: 1 !important; pointer-events: auto !important; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-left">
+    <a href="../../../index.html" class="topbar-brand">design‑led: <em>leader</em></a>
+    <div class="topbar-divider"></div>
+    <span class="topbar-module">Module 09 · The Language of Influence</span>
+  </div>
+  <div class="topbar-center">Half day · one break</div>
+  <div class="topbar-right">
+    <div class="topbar-nav">
+      <a href="08-structuring-how-the-business-decides.html" class="nav-btn">← Prev</a>
+      <a href="10-leading-through-ai-disruption.html" class="nav-btn">Next →</a>
+    </div>
+    <div class="mode-toggle">
+      <button class="mode-btn btn-presenter" onclick="setMode('presenter')">Present</button>
+      <div class="mode-sep"></div>
+      <button class="mode-btn btn-participant" onclick="setMode('participant')">Workbook</button>
+    </div>
+    <a href="09-language-of-influence-canvas.html" class="topbar-btn" target="_blank">A3 Canvas</a>
+    <button class="topbar-btn" onclick="window.print()">Print</button>
+  </div>
+</div>
+
+<div class="progress-wrap"><div class="progress-fill" id="progressFill"></div></div>
+<div class="save-toast" id="saveToast">Saved</div>
+
+<div class="slides-wrap" id="slidesWrap">
+
+  <!-- SLIDE 01 · TITLE -->
+  <section class="slide slide-plum" data-type="title" data-slide="1">
+    <div class="stripe-bar-deco"></div>
+    <div class="content">
+      <span class="sig" style="font-size:26px;margin-bottom:14px;">Design-Led: Leader · Module 09</span>
+      <h1 class="serif h1">The Language <em>of</em><br>Influence</h1>
+      <p class="fran body-lg">Language is an interface.<br>So is the way you talk to your own executive team.</p>
+    </div>
+    <div class="fac-note">
+      <strong>Before you start — DRAFT CONTENT:</strong> The opening story (Priya / Marlow Health), both activities, quick hits, and further reading in this module are invented placeholder narrative, written to match the tone and structure of Module 01, and are pending Jacinta's review before delivery. The tagline, core claim, and the three "leaders leave able to" outcomes are sourced directly from <em>Design_Led_Leader_Curriculum.docx</em> and are not placeholder. | <em>Open:</em> "Tell me about a strategic opinion you're currently sitting on — one nobody's asked you for." Take 2–3 answers, let the room notice how many of them stay silent by default.
+    </div>
+  </section>
+
+  <!-- SLIDE 02 · OVERVIEW -->
+  <section class="slide slide-paper2" data-type="context" data-slide="2">
+    <button type="button" class="ctx-header" onclick="toggleContext(this)" aria-expanded="false">
+      <div class="ctx-header-left"><span class="ctx-eyebrow">Overview</span><span class="ctx-title">What this module is about</span></div>
+      <span class="ctx-icon">+</span>
+    </button>
+    <div class="slide-teaching">
+      <div class="content" style="max-width:860px;">
+        <div class="eyebrow">This module</div>
+        <h2 class="serif h2">What we're doing<br><em>today</em></h2>
+        <ul class="clean-list">
+          <li>Why language is an interface, and most design leaders never design theirs</li>
+          <li>The Silent Expert habit — waiting to be asked, and what it costs</li>
+          <li>Translating one design recommendation into three executive vocabularies</li>
+          <li>Building a personal script for offering a strategic opinion without being asked</li>
+        </ul>
+        <div class="bg-num">02</div>
+      </div>
+    </div>
+    <div class="fac-note"><strong>Overview (5 min):</strong> Move fast — this module is practitioner-equivalent to Conversational UI, applied to the room instead of the product.</div>
+  </section>
+
+  <!-- SLIDE 03 · OPENING STORY -->
+  <section class="slide slide-paper" data-type="context" data-slide="3">
+    <button type="button" class="ctx-header" onclick="toggleContext(this)" aria-expanded="false">
+      <div class="ctx-header-left"><span class="ctx-eyebrow">Story · Draft</span><span class="ctx-title">Priya, Marlow Health</span></div>
+      <span class="ctx-icon">+</span>
+    </button>
+    <div class="slide-teaching">
+      <div class="content" style="max-width:860px;">
+        <div class="eyebrow">Opening story · draft</div>
+        <h2 class="serif h2">Three meetings.<br>One decision. <em>Zero words.</em></h2>
+        <ul class="clean-list">
+          <li>Head of Design at Marlow Health, a mid-size digital health platform</li>
+          <li>Watches a roadmap risk build across three consecutive leadership meetings — she's seen the pattern in user data for weeks</li>
+          <li>Says nothing each time. Not asked directly. Doesn't want to be the person who speaks out of turn</li>
+          <li>Third meeting: leadership commits next quarter's budget to the exact path her data warned against</li>
+          <li>She realises the invitation to speak was never coming — the room doesn't know to ask for an opinion it doesn't know she has</li>
+        </ul>
+        <p class="fran body-md" style="margin-top:20px;font-style:italic;">Being right in your notebook and being right in the room are not the same thing.</p>
+        <div class="bg-num">03</div>
+      </div>
+    </div>
+    <div class="fac-note"><strong>Story (5 min) — DRAFT:</strong> This is a placeholder composite, not a named real client. If Jacinta has a real, anonymisable case with this shape — silence that cost a decision — it will land harder than an invented one.</div>
+  </section>
+
+  <!-- SLIDE 04 · CONCEPT: LANGUAGE IS AN INTERFACE -->
+  <section class="slide slide-paper2" data-type="context" data-slide="4">
+    <button type="button" class="ctx-header" onclick="toggleContext(this)" aria-expanded="false">
+      <div class="ctx-header-left"><span class="ctx-eyebrow">Concept</span><span class="ctx-title">Language is an interface</span></div>
+      <span class="ctx-icon">+</span>
+    </button>
+    <div class="slide-teaching">
+      <div class="content" style="max-width:900px;">
+        <div class="eyebrow">The core claim</div>
+        <h2 class="serif h2">Language is <em>an interface.</em></h2>
+        <div class="pull-quote">
+          <span class="pull-glyph">"</span>
+          <p class="pull-q">The same care that goes into how a product speaks to a user needs to go into how a design leader speaks to a room that doesn't share their vocabulary by default.</p>
+        </div>
+        <p class="fran body-md" style="margin-top:20px;font-style:italic;">You wouldn't ship a feature with no onboarding for the user. Don't ship a recommendation with no onboarding for the room.</p>
+        <div class="bg-num">04</div>
+      </div>
+    </div>
+    <div class="fac-note"><strong>Concept (7 min):</strong> The pull-quote is sourced verbatim from <em>Design_Led_Leader_Curriculum.docx</em> — the module's core claim. The closing line beneath it is draft elaboration, invented to make the claim concrete for a design audience.</div>
+  </section>
+
+  <!-- SLIDE 05 · CONCEPT: THE SILENT EXPERT HABIT -->
+  <section class="slide slide-paper" data-type="context" data-slide="5">
+    <button type="button" class="ctx-header" onclick="toggleContext(this)" aria-expanded="false">
+      <div class="ctx-header-left"><span class="ctx-eyebrow">Concept</span><span class="ctx-title">The Silent Expert habit</span></div>
+      <span class="ctx-icon">+</span>
+    </button>
+    <div class="slide-teaching">
+      <div class="content" style="max-width:860px;">
+        <div class="eyebrow">You have the opinion. You're waiting to be asked.</div>
+        <ul class="clean-list">
+          <li><strong>The Silent Expert</strong> — has the strategic opinion, has learned not to offer it uninvited</li>
+          <li>Waiting to be asked isn't humility. It's a habit built somewhere it once made sense to build it</li>
+          <li>Somewhere along the way, "unsolicited" became a synonym for "overstepping"</li>
+          <li>Breaking the habit isn't about volume — it's about building a script for offering an opinion well</li>
+        </ul>
+        <p class="fran body-md" style="margin-top:20px;font-style:italic;">Priya wasn't wrong. She was quiet. The room only ever learns from the second one.</p>
+        <div class="bg-num">05</div>
+      </div>
+    </div>
+    <div class="fac-note"><strong>Concept (8 min):</strong> The Silent Expert trap itself is sourced from <em>Design_Led_Leader_Curriculum.docx</em> (introduced in Module 01's three traps). The elaboration lines here — why the habit forms, what breaking it actually requires — are draft, written for this module.</div>
+  </section>
+
+  <!-- SLIDE 06 · QUICK HIT 01 -->
+  <section class="slide slide-yellow" data-type="quick-hit" data-slide="6">
+    <div class="content" style="max-width:860px;">
+      <div class="eyebrow">Quick hit · 5 min</div>
+      <div class="pull-quote" style="margin-bottom:4px;">
+        <span class="pull-glyph" style="color:var(--plum);opacity:0.4;">"</span>
+        <p class="pull-q" style="color:var(--ink);">When did you last have the right<br>answer and not say it?</p>
+      </div>
+      <p class="fran body-md" style="margin-top:20px;">Not the meeting you spoke up in — the one you didn't.</p>
+      <div class="p-input field-group" style="margin-top:24px;max-width:580px;">
+        <textarea class="field-ta" data-field="dll_m09_quick_hit_1" rows="3" placeholder="The moment I had the answer and stayed quiet…"></textarea>
+      </div>
+    </div>
+    <div class="fac-note"><strong>Quick Hit 01 (5 min):</strong> Collect 3–4 answers from the room. Listen for the reason given for staying quiet — it usually reveals which trap is operating.</div>
+  </section>
+
+  <!-- SLIDE 07 · CONCEPT: THREE EXECUTIVE VOCABULARIES -->
+  <section class="slide slide-paper2" data-type="context" data-slide="7">
+    <button type="button" class="ctx-header" onclick="toggleContext(this)" aria-expanded="false">
+      <div class="ctx-header-left"><span class="ctx-eyebrow">Concept</span><span class="ctx-title">Three executive vocabularies</span></div>
+      <span class="ctx-icon">+</span>
+    </button>
+    <div class="slide-teaching">
+      <div class="content" style="max-width:1080px;">
+        <div class="eyebrow">Finance, sales, engineering — three different rooms</div>
+        <div class="three-col">
+          <div>
+            <h3 class="serif h3" style="font-size:24px;">Finance</h3>
+            <ul class="clean-list">
+              <li>Cost, risk, return</li>
+              <li>Time to value</li>
+              <li>What this saves or exposes</li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="serif h3" style="font-size:24px;">Sales</h3>
+            <ul class="clean-list">
+              <li>Win rate, deal velocity</li>
+              <li>Competitive differentiation</li>
+              <li>The objection this removes</li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="serif h3" style="font-size:24px;">Engineering</h3>
+            <ul class="clean-list">
+              <li>Technical debt, system risk</li>
+              <li>Build cost, maintainability</li>
+              <li>What this simplifies or complicates</li>
+            </ul>
+          </div>
+        </div>
+        <p class="fran body-md" style="margin-top:24px;font-style:italic;">Same recommendation. Same evidence. Different door in.</p>
+        <div class="bg-num">07</div>
+      </div>
+    </div>
+    <div class="fac-note"><strong>Concept (8 min):</strong> The three vocabularies (finance, sales, engineering) are sourced from the "leaders leave able to" outcomes in <em>Design_Led_Leader_Curriculum.docx</em>. What each vocabulary actually values, listed here, is draft elaboration invented for teaching purposes — sense-check against this cohort's real execs before delivery.</div>
+  </section>
+
+  <!-- SLIDE 08 · ACTIVITY 01 -->
+  <section class="slide slide-paper" data-type="activity" data-slide="8">
+    <div class="content" style="max-width:940px;">
+      <div class="eyebrow">Activity 01 · 20 min · Draft</div>
+      <h2 class="serif h2">Translate the <em>Recommendation</em></h2>
+      <div class="act-block p-input">
+        <div class="act-head"><span class="act-label">Activity 01</span><span class="act-time">20 min</span></div>
+        <div class="act-body">
+          <p class="act-instruction">Take one real design recommendation you've made or want to make. Translate it into three short versions — same core point, three different rooms.</p>
+          <ol class="act-rules">
+            <li>Individual — write the recommendation as you'd naturally say it to a design peer</li>
+            <li>Write a finance version, a sales version, an engineering version — 1–2 sentences each</li>
+            <li>Pairs — read your engineering version aloud to a partner. Would it actually land in that room, or does it still sound like a design memo?</li>
+          </ol>
+        </div>
+      </div>
+      <div class="p-input" style="margin-top:8px;">
+        <div class="field-group"><label class="field-label"><span class="field-num">01</span>The recommendation, as you'd naturally say it</label><textarea class="field-ta" data-field="dll_m09_recommendation" rows="2" placeholder="The recommendation…"></textarea></div>
+        <div class="field-group"><label class="field-label"><span class="field-num">02</span>Finance version</label><textarea class="field-ta" data-field="dll_m09_translate_finance" rows="2" placeholder="In finance language…"></textarea></div>
+        <div class="field-group"><label class="field-label"><span class="field-num">03</span>Sales version</label><textarea class="field-ta" data-field="dll_m09_translate_sales" rows="2" placeholder="In sales language…"></textarea></div>
+        <div class="field-group"><label class="field-label"><span class="field-num">04</span>Engineering version</label><textarea class="field-ta" data-field="dll_m09_translate_engineering" rows="2" placeholder="In engineering language…"></textarea></div>
+      </div>
+    </div>
+    <div class="fac-note"><strong>Activity 01 (20 min) — DRAFT:</strong> Watch for translations that just swap in a business-sounding word without changing the underlying logic ("improves usability" restated as "improves ROI" isn't a translation). Push for what that specific audience actually tracks. This activity is invented to fit the sourced "translate into three vocabularies" outcome; not itself sourced from the docx.</div>
+  </section>
+
+  <!-- SLIDE 09 · CONCEPT: THE UNSOLICITED OPINION -->
+  <section class="slide slide-paper2" data-type="context" data-slide="9">
+    <button type="button" class="ctx-header" onclick="toggleContext(this)" aria-expanded="false">
+      <div class="ctx-header-left"><span class="ctx-eyebrow">Concept</span><span class="ctx-title">Offering it well</span></div>
+      <span class="ctx-icon">+</span>
+    </button>
+    <div class="slide-teaching">
+      <div class="content" style="max-width:860px;">
+        <div class="eyebrow">Unsolicited doesn't have to mean overstepping</div>
+        <ul class="clean-list">
+          <li>Name why you're speaking now — "I wasn't asked, but this connects directly to what we just decided"</li>
+          <li>Lead with the stakes, not the opinion — what's at risk if the room doesn't hear it</li>
+          <li>Offer it as a contribution to the decision, not a correction of the room</li>
+          <li>Keep it short enough that it doesn't need permission to exist</li>
+        </ul>
+        <p class="fran body-md" style="margin-top:20px;font-style:italic;">A script isn't a speech. It's two or three sentences you've already rehearsed once, so you're not composing them live.</p>
+        <div class="bg-num">09</div>
+      </div>
+    </div>
+    <div class="fac-note"><strong>Concept (7 min) — DRAFT:</strong> This four-part script structure is invented for this module, built to deliver the sourced outcome "build a personal script for offering an unsolicited strategic opinion well." Not itself sourced from the docx.</div>
+  </section>
+
+  <!-- SLIDE 10 · QUICK HIT 02 -->
+  <section class="slide slide-yellow" data-type="quick-hit" data-slide="10">
+    <div class="content" style="max-width:860px;">
+      <div class="eyebrow">Quick hit · 5 min</div>
+      <div class="pull-quote" style="margin-bottom:4px;">
+        <span class="pull-glyph" style="color:var(--plum);opacity:0.4;">"</span>
+        <p class="pull-q" style="color:var(--ink);">What's the opening line that wouldn't<br>sound like you're overstepping?</p>
+      </div>
+      <p class="fran body-md" style="margin-top:20px;">One sentence. The door you'd walk through, not the opinion itself yet.</p>
+      <div class="p-input field-group" style="margin-top:24px;max-width:580px;">
+        <textarea class="field-ta" data-field="dll_m09_quick_hit_2" rows="3" placeholder="The line I'd open with…"></textarea>
+      </div>
+    </div>
+    <div class="fac-note"><strong>Quick Hit 02 (5 min):</strong> Take 3–4 answers from the room. This primes Activity 02 — don't let anyone workshop the full opinion yet, just the opening line.</div>
+  </section>
+
+  <!-- SLIDE 11 · ACTIVITY 02 -->
+  <section class="slide slide-paper" data-type="activity" data-slide="11">
+    <div class="content" style="max-width:940px;">
+      <div class="eyebrow">Activity 02 · 20 min · Draft</div>
+      <h2 class="serif h2">The Unsolicited <em>Opinion Script</em></h2>
+      <div class="act-block p-input">
+        <div class="act-head"><span class="act-label">Activity 02</span><span class="act-time">20 min</span></div>
+        <div class="act-body">
+          <p class="act-instruction">Write a personal script — 2–3 sentences — for offering a strategic opinion in a room without being asked.</p>
+          <ol class="act-rules">
+            <li>Individual — name a strategic opinion you're currently sitting on, unasked, right now</li>
+            <li>Write the opening line first — how you'd frame why you're speaking, so it doesn't read as a correction</li>
+            <li>Write the opinion itself, stated plainly, in one or two sentences after it</li>
+            <li>Pairs — say it out loud to a partner. Does the opening line sound like a memo, or a person?</li>
+          </ol>
+        </div>
+      </div>
+      <div class="p-input" style="margin-top:8px;">
+        <div class="field-group"><label class="field-label"><span class="field-num">01</span>The opinion I'm sitting on, unasked</label><textarea class="field-ta" data-field="dll_m09_opinion_context" rows="2" placeholder="What I think, and haven't said…"></textarea></div>
+        <div class="field-group"><label class="field-label"><span class="field-num">02</span>My script — opening line, then the opinion</label><textarea class="field-ta" data-field="dll_m09_opinion_script" rows="4" placeholder="I wasn't asked, but…"></textarea></div>
+      </div>
+    </div>
+    <div class="fac-note"><strong>Activity 02 (20 min) — DRAFT:</strong> Watch for scripts that skip straight to the opinion with no opening line — that's the tell it'll land as a correction, not a contribution. This activity is invented to fit the sourced "build a personal script" outcome; not itself sourced from the docx.</div>
+  </section>
+
+  <!-- SLIDE 12 · DEBRIEF: SYNTHESIS -->
+  <section class="slide slide-sand" data-type="debrief" data-slide="12">
+    <div class="content" style="max-width:820px;">
+      <div class="eyebrow">Synthesis · 10 min</div>
+      <h3 class="serif h3">Language is an interface. Design yours on purpose.</h3>
+      <div class="debrief-qs">
+        <div class="debrief-q">Translation isn't dilution — it's the same point, wearing a different room's clothes.</div>
+        <div class="debrief-q">The Silent Expert's silence isn't neutral. It's a decision too.</div>
+        <div class="debrief-q">A script rehearsed once beats a good opinion composed live and lost.</div>
+      </div>
+      <div class="reflection-field p-input">
+        <textarea class="field-ta" data-field="dll_m09_synthesis" rows="3" style="background:var(--paper);" placeholder="What I noticed…"></textarea>
+      </div>
+    </div>
+    <div class="fac-note"><strong>Synthesis (10 min):</strong> This is the bridge into Module 10 — AI disruption raises the same question at scale: who translates the value of design's judgment when the room doesn't already speak for it.</div>
+  </section>
+
+  <!-- SLIDE 13 · CLOSE -->
+  <section class="slide slide-plum" data-type="close" data-slide="13">
+    <div class="stripe-bar-deco"></div>
+    <div class="content" style="max-width:880px;">
+      <div class="eyebrow">Close · 10 min</div>
+      <h2 class="serif h2">One takeaway.<br>One question <em>still open.</em></h2>
+      <div class="p-input" style="margin-top:32px;max-width:600px;">
+        <label class="field-label field-label-light"><span class="field-num">Takeaway</span>What landed for you</label>
+        <textarea class="field-ta field-ta-light" data-field="dll_m09_takeaway" rows="2" placeholder="What landed…"></textarea>
+      </div>
+      <div class="p-input" style="margin-top:20px;max-width:600px;">
+        <label class="field-label field-label-light"><span class="field-num">Open</span>What's still unclear</label>
+        <textarea class="field-ta field-ta-light" data-field="dll_m09_open_question" rows="2" placeholder="What's still unclear…"></textarea>
+      </div>
+      <div style="margin-top:44px;padding-top:36px;border-top:1px solid rgba(251,247,238,0.18);">
+        <p class="fran body-sm" style="color:rgba(251,247,238,0.55);margin-bottom:6px;">Next module</p>
+        <p class="fran body-lg" style="margin:0 0 4px;">LEADING THROUGH AI DISRUPTION</p>
+        <p class="fran body-md" style="margin:0;"><em>Every function is being asked to justify itself against AI. Design is no exception.</em></p>
+        <a href="10-leading-through-ai-disruption.html" class="module-cta">Module 10 → Leading Through AI Disruption</a>
+      </div>
+    </div>
+    <div class="fac-note">
+      <strong>Close (10 min):</strong> One takeaway, one open question — don't resolve it, just capture it. | <strong>Further reading (facilitator) · draft list:</strong> <em>Resonate: Present Visual Stories that Transform Audiences</em> — Nancy Duarte · <em>Radical Candor: Be a Kick-Ass Boss Without Losing Your Humanity</em> — Kim Scott · <em>The Fearless Organization</em> — Amy C. Edmondson · <em>Crucial Conversations: Tools for Talking When Stakes Are High</em> — Kerry Patterson, Joseph Grenny, Ron McMillan &amp; Al Switzler · "Managing Your Boss" (HBR) — John J. Gabarro &amp; John P. Kotter.
+    </div>
+  </section>
+
+</div>
+
+<script>
+(function () {
+  'use strict';
+  var ROOT = document.documentElement;
+  var STORAGE_PREFIX = 'dll_m09_';
+  var saveTimer;
+
+  function setMode(mode) {
+    ROOT.dataset.mode = mode;
+    localStorage.setItem('dll_mode_global', mode);
+    if (mode === 'participant') { window.scrollTo(0, 0); }
+    else { var wrap = document.getElementById('slidesWrap'); if (wrap) wrap.scrollTo(0, 0); }
+  }
+  window.setMode = setMode;
+
+  function toggleContext(header) {
+    var expanded = header.getAttribute('aria-expanded') === 'true';
+    header.setAttribute('aria-expanded', String(!expanded));
+    var section = header.closest('section');
+    if (section) section.classList.toggle('is-open', !expanded);
+    var icon = header.querySelector('.ctx-icon');
+    if (icon) icon.textContent = !expanded ? '−' : '+';
+  }
+  window.toggleContext = toggleContext;
+
+  function initFields() {
+    document.querySelectorAll('[data-field]').forEach(function (el) {
+      var key = el.dataset.field.indexOf(STORAGE_PREFIX) === 0 ? el.dataset.field : STORAGE_PREFIX + el.dataset.field;
+      var saved = localStorage.getItem(key);
+      if (saved) el.value = saved;
+      el.addEventListener('input', function () {
+        localStorage.setItem(key, el.value);
+        updateProgress();
+        triggerSaveToast();
+      });
+    });
+    updateProgress();
+  }
+
+  function updateProgress() {
+    var fields = document.querySelectorAll('[data-field]');
+    var filled = 0;
+    fields.forEach(function (f) { if (f.value.trim().length > 8) filled++; });
+    var pct = fields.length ? (filled / fields.length) * 100 : 0;
+    var fill = document.getElementById('progressFill');
+    if (fill) fill.style.width = pct.toFixed(1) + '%';
+  }
+
+  function triggerSaveToast() {
+    var toast = document.getElementById('saveToast');
+    if (!toast) return;
+    toast.classList.add('visible');
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(function () { toast.classList.remove('visible'); }, 1800);
+  }
+
+  function init() {
+    var params = new URLSearchParams(window.location.search);
+    var urlMode = params.get('mode');
+    var savedMode = localStorage.getItem('dll_mode_global');
+    var mode = urlMode || savedMode || 'participant';
+    ROOT.dataset.mode = mode;
+    initFields();
+  }
+
+  if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', init); } else { init(); }
+})();
+</script>
+</body>
+</html>

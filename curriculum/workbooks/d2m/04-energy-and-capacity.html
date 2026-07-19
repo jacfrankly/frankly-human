@@ -1,0 +1,705 @@
+<!doctype html>
+<html lang="en" data-mode="participant">
+<head>
+<meta charset="utf-8" />
+<title>D2M · Module 04 · Energy &amp; Capacity — Design to Me</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..900,0..100;1,9..144,300..900,0..100&family=Inter:wght@400;500;600&family=Allura&family=Patrick+Hand&display=swap" rel="stylesheet">
+<style>
+/* =====================================================================
+   D2M · Module 04 · Energy & Capacity
+   ===================================================================== */
+:root {
+  --ink:      #100000;
+  --charcoal: #423B3B;
+  --paper:    #FBF7EE;
+  --paper-2:  #F4EFE2;
+  --sand:     #E0D2B5;
+  --teal:     #47ACA4;
+  --pink:     #FF3990;
+  --yellow:   #FFBD59;
+  --plum:     #7A1F4A;
+  --muted:    #5E584F;
+  --teal-text: #1F6E67;
+  --pink-text: #C40060;
+  --bar-h:    56px;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body { font-family: 'Inter', sans-serif; font-size: 16px; line-height: 1.55; background: var(--paper); color: var(--ink); -webkit-font-smoothing: antialiased; }
+
+/* TOPBAR */
+.topbar { position: fixed; top: 0; left: 0; right: 0; height: var(--bar-h); background: var(--paper); border-bottom: 1px solid rgba(16,0,0,0.12); display: flex; align-items: center; justify-content: space-between; padding: 0 32px; z-index: 200; gap: 16px; }
+.topbar-left { display: flex; align-items: center; gap: 18px; flex-shrink: 0; }
+.topbar-brand { font-family: 'DM Serif Display', serif; font-size: 18px; letter-spacing: -0.01em; color: var(--ink); text-decoration: none; white-space: nowrap; }
+.topbar-brand em { font-style: italic; color: var(--plum); }
+.topbar-divider { width: 1px; height: 18px; background: var(--sand); flex-shrink: 0; }
+.topbar-module { font-family: 'Inter'; font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+.topbar-center { font-family: 'Inter'; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); flex: 1; text-align: center; }
+.topbar-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.mode-toggle { display: flex; align-items: stretch; border: 1px solid var(--ink); overflow: hidden; height: 30px; }
+.mode-btn { padding: 0 14px; font-family: 'Inter'; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); background: none; border: none; cursor: pointer; transition: background 0.15s, color 0.15s; white-space: nowrap; }
+.mode-sep { width: 1px; background: var(--ink); flex-shrink: 0; }
+html[data-mode="presenter"] .mode-btn.btn-presenter,
+html[data-mode="participant"] .mode-btn.btn-participant { background: var(--ink); color: var(--paper); }
+.topbar-btn { height: 30px; padding: 0 14px; font-family: 'Inter'; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); background: none; border: 1px solid var(--ink); cursor: pointer; transition: background 0.15s, color 0.15s; white-space: nowrap; text-decoration: none; display: flex; align-items: center; }
+.topbar-btn:hover { background: var(--ink); color: var(--paper); }
+.topbar-nav { display: flex; align-items: center; gap: 2px; }
+.nav-btn { height: 30px; padding: 0 10px; font-family: 'Inter'; font-size: 11px; color: var(--muted); background: none; border: none; cursor: pointer; transition: color 0.15s; text-decoration: none; display: flex; align-items: center; }
+.nav-btn:hover { color: var(--ink); }
+.nav-btn.disabled { opacity: 0.3; cursor: default; }
+
+/* PROGRESS BAR */
+.progress-wrap { position: fixed; top: var(--bar-h); left: 0; right: 0; height: 3px; background: var(--sand); z-index: 199; opacity: 0; pointer-events: none; transition: opacity 0.25s; }
+html[data-mode="participant"] .progress-wrap { opacity: 1; pointer-events: auto; }
+.progress-fill { height: 100%; width: 0%; background: var(--teal); transition: width 0.5s ease; }
+
+/* SLIDES */
+html[data-mode="presenter"] body { overflow: hidden; }
+html[data-mode="presenter"] .slides-wrap { position: fixed; top: var(--bar-h); left: 0; right: 0; bottom: 0; overflow-y: scroll; overscroll-behavior: contain; }
+@media (prefers-reduced-motion: no-preference) {
+  html[data-mode="presenter"] .slides-wrap { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+}
+html[data-mode="participant"] body { overflow-y: auto; padding-top: calc(var(--bar-h) + 3px); }
+
+.slide { position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: center; padding: 80px 72px 64px; }
+html[data-mode="presenter"] .slide { min-height: calc(100vh - var(--bar-h)); scroll-snap-align: start; }
+html[data-mode="participant"] .slide { min-height: unset; padding: 56px 72px; scroll-snap-align: unset; justify-content: flex-start; }
+
+.slide-paper  { background: var(--paper); }
+.slide-paper2 { background: var(--paper-2); }
+.slide-ink    { background: var(--ink); color: var(--paper); }
+.slide-teal   { background: var(--teal); }
+.slide-pink   { background: var(--pink); color: var(--paper); }
+.slide-plum   { background: var(--plum); color: var(--paper); }
+.slide-yellow { background: var(--yellow); }
+.slide-sand   { background: var(--sand); }
+.content { position: relative; z-index: 1; }
+
+/* SLIDE TYPE OVERRIDES */
+html[data-mode="participant"] .slide[data-type="title"]    { min-height: 280px; padding: 56px 72px; justify-content: center; }
+html[data-mode="participant"] .slide[data-type="context"]  { padding: 0; border-bottom: 1px solid rgba(16,0,0,0.1); min-height: unset; justify-content: flex-start; }
+html[data-mode="participant"] .slide[data-type="quick-hit"]{ padding: 36px 72px; }
+html[data-mode="participant"] .slide[data-type="activity"] { padding: 56px 72px; border-top: 3px solid var(--ink); border-bottom: 3px solid var(--ink); margin: 20px 0; }
+html[data-mode="participant"] .slide[data-type="debrief"]  { padding: 40px 72px; border-bottom: 1px solid rgba(16,0,0,0.1); }
+html[data-mode="participant"] .slide[data-type="break"]    { display: none; }
+html[data-mode="participant"] .slide[data-type="close"]    { min-height: unset; padding: 56px 72px; }
+
+/* CONTEXT ACCORDION */
+.ctx-header { display: none; align-items: center; justify-content: space-between; padding: 18px 72px; cursor: pointer; user-select: none; border-bottom: 1px solid rgba(16,0,0,0.08); transition: background 0.15s; gap: 16px; background: none; border-left: none; border-right: none; border-top: none; width: 100%; font: inherit; text-align: left; color: inherit; }
+.ctx-header:hover { background: rgba(16,0,0,0.025); }
+html[data-mode="participant"] .slide[data-type="context"] .ctx-header { display: flex; }
+.ctx-header-left { display: flex; align-items: baseline; gap: 20px; }
+.ctx-eyebrow { font-family: 'Inter'; font-size: 9px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--muted); flex-shrink: 0; }
+.ctx-title { font-family: 'DM Serif Display', serif; font-size: 19px; letter-spacing: -0.01em; color: var(--charcoal); }
+.ctx-icon { font-family: 'Inter'; font-size: 20px; line-height: 1; color: var(--muted); flex-shrink: 0; transition: transform 0.25s; }
+[aria-expanded="true"] .ctx-icon { transform: rotate(45deg); }
+html[data-mode="presenter"] .slide-teaching { flex: 1; display: flex; flex-direction: column; justify-content: center; max-height: none !important; overflow: visible !important; padding: 0 !important; }
+html[data-mode="participant"] .slide[data-type="context"] .slide-teaching { overflow: hidden; max-height: 0; padding: 0 72px; transition: max-height 0.4s ease, padding 0.4s ease; }
+html[data-mode="participant"] .slide[data-type="context"].is-open .slide-teaching { max-height: 1600px; padding: 40px 72px 52px; }
+html[data-mode="presenter"] .ctx-header { display: none !important; }
+
+/* FAC NOTES */
+.fac-note { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(16,0,0,0.88); color: rgba(251,247,238,0.82); padding: 13px 72px; font-family: 'Inter'; font-size: 11.5px; line-height: 1.6; z-index: 10; }
+.fac-note strong { color: var(--yellow); font-weight: 600; }
+.fac-note em { font-style: italic; color: rgba(251,247,238,0.65); }
+html[data-mode="participant"] .fac-note { display: none; }
+
+/* INPUTS */
+html[data-mode="presenter"] .p-input { pointer-events: none; opacity: 0.18; }
+html[data-mode="participant"] .p-input { pointer-events: auto; opacity: 1; }
+.field-group { margin-bottom: 24px; }
+.field-label { display: block; margin-bottom: 8px; font-family: 'Patrick Hand', cursive; font-size: 14px; color: var(--charcoal); }
+.field-num { font-family: 'Inter'; font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-right: 8px; }
+.field-ta { width: 100%; min-height: 80px; padding: 14px 16px; font-family: 'Fraunces', serif; font-size: 15px; line-height: 1.6; font-variation-settings: "SOFT" 50, "opsz" 144; color: var(--ink); background: var(--paper); border: 1px solid rgba(16,0,0,0.12); border-bottom: 2px solid var(--charcoal); outline: none; resize: vertical; transition: border-color 0.15s; }
+.field-ta:focus { border-color: var(--teal-text); border-bottom-color: var(--teal-text); }
+.field-ta::placeholder { color: rgba(16,0,0,0.48); font-style: italic; }
+
+/* TOAST */
+.save-toast { position: fixed; bottom: 28px; right: 32px; background: var(--ink); color: var(--paper); font-family: 'Inter'; font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; padding: 8px 18px; z-index: 300; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+html[data-mode="participant"] .save-toast.visible { opacity: 1; }
+
+/* TYPOGRAPHY */
+.eyebrow { font-family: 'Inter'; font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--charcoal); display: inline-flex; align-items: center; gap: 14px; margin-bottom: 22px; }
+.eyebrow::before { content: ''; width: 28px; height: 1px; background: currentColor; opacity: 0.35; flex-shrink: 0; }
+.slide-plum .eyebrow { color: rgba(251,247,238,0.8); }
+.slide-ink .eyebrow { color: rgba(251,247,238,0.6); }
+.slide-pink .eyebrow { color: rgba(16,0,0,0.8); }
+.slide-teal .eyebrow, .slide-yellow .eyebrow { color: rgba(16,0,0,0.8); }
+
+.serif { font-family: 'DM Serif Display', serif; font-weight: 400; letter-spacing: -0.015em; line-height: 0.95; }
+.serif em { font-style: italic; color: var(--plum); }
+.slide-plum .serif em, .slide-ink .serif em { color: var(--yellow); }
+.slide-pink .serif em { color: var(--yellow); }
+.slide-yellow .serif em { color: var(--plum); }
+
+.h1 { font-size: clamp(64px, 11vw, 152px); margin: 0 0 24px; }
+.h2 { font-size: clamp(40px, 6vw, 80px); margin: 0 0 22px; max-width: 900px; }
+.h3 { font-size: clamp(28px, 4vw, 52px); margin: 0 0 18px; max-width: 760px; }
+
+.fran { font-family: 'Fraunces', serif; font-weight: 400; line-height: 1.55; font-variation-settings: "SOFT" 50, "opsz" 144; }
+.fran em { font-style: italic; color: var(--plum); }
+.slide-plum .fran, .slide-ink .fran { color: rgba(251,247,238,0.85); }
+.slide-plum .fran em, .slide-ink .fran em { color: var(--yellow); }
+.slide-pink .fran { color: rgba(251,247,238,0.85); }
+.slide-yellow .fran { color: rgba(16,0,0,0.78); }
+.slide-yellow .fran em { color: var(--plum); }
+
+.body-lg { font-size: clamp(17px, 2.2vw, 24px); max-width: 660px; margin: 0 0 18px; }
+.body-md { font-size: clamp(15px, 1.8vw, 20px); max-width: 640px; margin: 0 0 14px; }
+.body-sm { font-size: 14px; max-width: 580px; margin: 0 0 10px; color: var(--muted); }
+
+.sig { font-family: 'Allura', cursive; color: var(--plum); line-height: 1; display: block; transform: rotate(-3deg); transform-origin: left; }
+.slide-yellow .sig { color: var(--plum); }
+.slide-plum .sig, .slide-ink .sig { color: var(--yellow); }
+.slide-pink .sig { color: rgba(251,247,238,0.8); }
+
+/* DECORATIVE */
+.stripe-bar { position: absolute; top: 0; left: 0; right: 0; height: 5px; background: linear-gradient(90deg, var(--teal) 0 25%, var(--pink) 25% 50%, var(--yellow) 50% 75%, var(--plum) 75% 100%); }
+.bg-num { position: absolute; bottom: -24px; right: 52px; font-family: 'DM Serif Display', serif; font-size: clamp(140px, 22vw, 280px); line-height: 0.85; letter-spacing: -0.04em; pointer-events: none; user-select: none; opacity: 0.07; font-style: italic; color: inherit; z-index: 0; }
+html[data-mode="participant"] .slide[data-type="context"] .bg-num { display: none; }
+.mark-hi { background: linear-gradient(180deg, transparent 50%, rgba(255,189,89,0.55) 50%, rgba(255,189,89,0.55) 92%, transparent 92%); padding: 0 3px; }
+
+/* LISTS */
+.clean-list { list-style: none; padding: 0; margin: 12px 0 0; }
+.clean-list li { display: flex; gap: 14px; align-items: baseline; padding: 9px 0; border-bottom: 1px solid rgba(16,0,0,0.07); font-family: 'Fraunces', serif; font-size: clamp(14px, 1.7vw, 18px); line-height: 1.45; font-variation-settings: "SOFT" 50, "opsz" 144; color: var(--charcoal); }
+.clean-list li:last-child { border-bottom: none; }
+.clean-list li::before { content: '—'; font-family: 'Inter'; font-size: 11px; color: var(--teal-text); flex-shrink: 0; }
+.slide-yellow .clean-list li { color: rgba(16,0,0,0.8); border-bottom-color: rgba(16,0,0,0.1); }
+.slide-yellow .clean-list li::before { color: var(--plum); }
+
+/* ENERGY DOMAIN GRID */
+.domain-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; max-width: 760px; margin: 24px 0; }
+.domain-card { padding: 16px 20px; border: 1px solid rgba(16,0,0,0.12); }
+.domain-name { font-family: 'Inter'; font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+.domain-desc { font-family: 'Fraunces', serif; font-size: 14px; line-height: 1.45; font-variation-settings: "SOFT" 50, "opsz" 144; color: var(--charcoal); }
+
+/* ACTIVITY BLOCK */
+.act-block { border: 1px solid var(--ink); max-width: 900px; overflow: hidden; margin: 20px 0 28px; }
+.act-head { display: flex; align-items: center; justify-content: space-between; padding: 11px 22px; background: var(--ink); color: var(--paper); }
+.act-label { font-family: 'Inter'; font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; opacity: 0.55; }
+.act-time { font-family: 'Inter'; font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; background: var(--yellow); color: var(--ink); padding: 3px 10px; font-weight: 600; }
+.act-body { padding: 26px 26px 22px; background: var(--paper-2); }
+.act-instruction { font-family: 'DM Serif Display', serif; font-size: clamp(18px, 2.6vw, 26px); line-height: 1.18; letter-spacing: -0.01em; margin: 0 0 18px; }
+.act-instruction em { font-style: italic; color: var(--plum); }
+.act-rules { list-style: none; padding: 0; margin: 0; counter-reset: rules; }
+.act-rules li { counter-increment: rules; display: flex; gap: 14px; align-items: baseline; padding: 9px 0; border-top: 1px solid rgba(16,0,0,0.08); font-family: 'Fraunces', serif; font-size: 14px; line-height: 1.45; font-variation-settings: "SOFT" 50, "opsz" 144; color: var(--charcoal); }
+.act-rules li::before { content: counter(rules, decimal-leading-zero); font-family: 'Inter'; font-size: 9px; letter-spacing: 0.12em; color: var(--pink-text); flex-shrink: 0; padding-top: 1px; }
+
+/* TWO-COL */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: start; max-width: 1100px; }
+
+/* DEBRIEF */
+.debrief-qs { margin: 16px 0 0; }
+.debrief-q { font-family: 'DM Serif Display', serif; font-style: italic; font-size: clamp(19px, 2.5vw, 28px); line-height: 1.2; color: var(--charcoal); padding: 15px 0; border-bottom: 1px solid rgba(16,0,0,0.1); }
+.debrief-q:last-child { border-bottom: none; }
+html[data-mode="presenter"] .reflection-field { display: none; }
+html[data-mode="participant"] .reflection-field { display: block; margin-top: 16px; }
+
+/* PULL QUOTE */
+.pull-quote { position: relative; padding: 0 0 0 6px; max-width: 820px; margin: 20px 0; }
+.pull-glyph { font-family: 'DM Serif Display', serif; font-size: 110px; line-height: 0.6; color: var(--pink-text); opacity: 0.85; display: block; margin-bottom: -18px; user-select: none; font-style: normal; }
+.slide-yellow .pull-glyph { color: var(--plum); opacity: 0.25; }
+.pull-q { font-family: 'DM Serif Display', serif; font-style: italic; font-size: clamp(20px, 3.2vw, 36px); line-height: 1.15; color: var(--ink); position: relative; z-index: 1; }
+
+/* BREAK */
+.break-time { font-family: 'DM Serif Display', serif; font-size: clamp(80px, 15vw, 180px); line-height: 0.85; letter-spacing: -0.03em; color: var(--paper); }
+.break-time em { font-style: italic; color: var(--yellow); }
+
+/* MODULE CTA */
+.module-cta { display: inline-flex; align-items: center; gap: 16px; margin-top: 32px; text-decoration: none; border: 1.5px solid rgba(16,0,0,0.3); padding: 13px 26px; font-family: 'Inter'; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(16,0,0,0.65); transition: background 0.15s, border-color 0.15s, color 0.15s; }
+.module-cta:hover { background: rgba(16,0,0,0.06); border-color: var(--ink); color: var(--ink); }
+
+/* SECTION DIVIDER */
+html[data-mode="participant"] .section-divider { display: flex; align-items: center; gap: 16px; padding: 28px 72px 0; font-family: 'Inter'; font-size: 9px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--muted); }
+html[data-mode="presenter"] .section-divider { display: none; }
+.section-divider::before, .section-divider::after { content: ''; flex: 1; height: 1px; background: var(--sand); }
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .slide { padding: 80px 36px 64px; }
+  html[data-mode="participant"] .slide { padding: 40px 28px; }
+  html[data-mode="participant"] .slide[data-type="context"] .ctx-header { padding: 16px 28px; }
+  html[data-mode="participant"] .slide[data-type="context"] .slide-teaching { padding: 0 28px; }
+  html[data-mode="participant"] .slide[data-type="context"].is-open .slide-teaching { padding: 32px 28px 40px; }
+  html[data-mode="participant"] .section-divider { padding: 20px 28px 0; }
+  .fac-note { padding: 12px 36px; }
+  .two-col, .domain-grid { grid-template-columns: 1fr; gap: 16px; }
+  .topbar { padding: 0 16px; gap: 8px; }
+  .topbar-center, .topbar-module { display: none; }
+}
+
+/* PRINT */
+@media print {
+  @page { size: A4 portrait; margin: 18mm 16mm; }
+  html[data-mode="presenter"] * { display: none !important; }
+  html[data-mode="participant"] body { padding-top: 0; }
+  .topbar, .progress-wrap, .ctx-icon, .fac-note, .mode-toggle, .topbar-btn, .topbar-nav, .section-divider, .save-toast { display: none !important; }
+  .slides-wrap { display: block; }
+  .slide { break-inside: avoid; padding: 24px 0 20px; }
+  html[data-mode="participant"] .slide[data-type="break"] { display: none !important; }
+  html[data-mode="participant"] .slide[data-type="title"] { min-height: 100px; padding: 20px 0; }
+  .slide-yellow { background: #FFBD59 !important; -webkit-print-color-adjust: exact; color-adjust: exact; }
+  .slide-sand { background: #E0D2B5 !important; -webkit-print-color-adjust: exact; color-adjust: exact; }
+  html[data-mode="participant"] .slide[data-type="context"] .ctx-header { display: flex !important; border: none; cursor: default; }
+  html[data-mode="participant"] .slide[data-type="context"] .slide-teaching { max-height: none !important; padding: 16px 0 24px !important; overflow: visible !important; }
+  .field-ta { border: none; border-bottom: 1px solid rgba(16,0,0,0.2); resize: none; min-height: 56px; background: transparent; }
+  .act-block { border: 1px solid rgba(16,0,0,0.3); }
+  .act-head { background: #100000 !important; -webkit-print-color-adjust: exact; color-adjust: exact; }
+  .reflection-field { display: block !important; }
+  html[data-mode="participant"] .p-input { opacity: 1 !important; pointer-events: auto !important; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-left">
+    <a href="../../../index.html" class="topbar-brand"><em>frankly</em> human.</a>
+    <div class="topbar-divider"></div>
+    <span class="topbar-module">Module 04 · Energy &amp; Capacity</span>
+  </div>
+  <div class="topbar-center">2.5 hours · one 10-min break</div>
+  <div class="topbar-right">
+    <div class="topbar-nav">
+      <a href="03-identity-and-self.html" class="nav-btn">← Prev</a>
+      <a href="05-life-systems.html" class="nav-btn">Next →</a>
+    </div>
+    <div class="mode-toggle">
+      <button class="mode-btn btn-presenter" onclick="setMode('presenter')">Present</button>
+      <div class="mode-sep"></div>
+      <button class="mode-btn btn-participant" onclick="setMode('participant')">Workbook</button>
+    </div>
+    <a href="04-energy-and-capacity-canvas.html" class="topbar-btn" target="_blank">A3 Canvas</a>
+    <button class="topbar-btn" onclick="window.print()">Print</button>
+  </div>
+</div>
+
+<div class="progress-wrap"><div class="progress-fill" id="progressFill"></div></div>
+<div class="save-toast" id="saveToast">Saved</div>
+
+<div class="slides-wrap" id="slidesWrap">
+
+  <!-- ─── SLIDE 01 · TITLE ─── -->
+  <section class="slide slide-yellow" data-type="title" data-slide="1">
+    <div class="stripe-bar"></div>
+    <div class="bg-num">04</div>
+    <div class="content">
+      <span class="sig" style="font-size:26px;margin-bottom:14px;">Design to Me · Module 04</span>
+      <h1 class="serif h1">Energy &amp;<br><em>Capacity</em></h1>
+      <p class="fran body-lg">Your life is designed by<br>what you have energy for.</p>
+    </div>
+    <div class="fac-note">
+      <strong>Before you start:</strong> Print or share the Energy &amp; Capacity worksheet. Non-moralising tone — this is clarifying, not shaming. | <em>Open:</em> "When you think about your energy right now — what's the first word that comes to mind?" Take 2–3 answers. Move quickly to context.
+    </div>
+  </section>
+
+
+  <!-- ─── SLIDE 02 · OVERVIEW ─── -->
+  <section class="slide slide-paper2" data-type="context" data-slide="2">
+    <button type="button" class="ctx-header" onclick="toggleContext(this)" aria-expanded="false">
+      <div class="ctx-header-left"><span class="ctx-eyebrow">Overview</span><span class="ctx-title">What we're doing today</span></div>
+      <span class="ctx-icon">+</span>
+    </button>
+    <div class="slide-teaching">
+      <div class="bg-num">04</div>
+      <div class="content">
+        <div class="eyebrow">Module 04 · Overview</div>
+        <h2 class="serif h2">What this module<br>is <em>about</em></h2>
+        <ul class="clean-list">
+          <li>Energy leaks — where your energy drains fastest</li>
+          <li>Energy sources — what reliably restores you</li>
+          <li>Capacity constraints — the real limits that shape your life</li>
+          <li>Capacity shifts — designing within reality, not against it</li>
+        </ul>
+      </div>
+      <div class="fac-note">
+        <strong>Frame:</strong> "Most people plan their life as if they have infinite capacity. But your life is designed by what you actually have energy for." | Set up the multi-domain energy model before moving on.
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ─── SLIDE 03 · THE FOUR ENERGY DOMAINS ─── -->
+  <section class="slide slide-paper" data-type="context" data-slide="3">
+    <button type="button" class="ctx-header" onclick="toggleContext(this)" aria-expanded="false">
+      <div class="ctx-header-left"><span class="ctx-eyebrow">Concept</span><span class="ctx-title">The Four Energy Domains</span></div>
+      <span class="ctx-icon">+</span>
+    </button>
+    <div class="slide-teaching">
+      <div class="content">
+        <div class="eyebrow">Concept · Energy</div>
+        <h2 class="serif h2">Energy is<br><em>multi-dimensional</em></h2>
+        <div class="domain-grid">
+          <div class="domain-card">
+            <div class="domain-name">Physical</div>
+            <div class="domain-desc">Sleep, movement, food, illness, pain, chronic load</div>
+          </div>
+          <div class="domain-card">
+            <div class="domain-name">Emotional</div>
+            <div class="domain-desc">Relationships, care, grief, conflict, emotional labour</div>
+          </div>
+          <div class="domain-card">
+            <div class="domain-name">Mental</div>
+            <div class="domain-desc">Decisions, complexity, context-switching, cognitive load</div>
+          </div>
+          <div class="domain-card">
+            <div class="domain-name">Creative</div>
+            <div class="domain-desc">Making, thinking, expression, play, curiosity, meaning</div>
+          </div>
+        </div>
+        <p class="fran body-sm" style="margin-top:16px;">Most people track one domain and wonder why they're depleted in the others.</p>
+      </div>
+      <div class="fac-note">
+        <strong>Ask:</strong> "Which domain feels most depleted for you lately?" Don't take answers yet — sets up Quick Hit 01. | Watch for: people only naming physical energy — invite emotional, mental, and creative.
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ─── SLIDE 04 · QUICK HIT 01 ─── -->
+  <section class="slide slide-yellow" data-type="quick-hit" data-slide="4">
+    <div class="bg-num">01</div>
+    <div class="content">
+      <div class="eyebrow">Quick Hit · 5 min</div>
+      <div class="pull-quote">
+        <span class="pull-glyph">"</span>
+        <p class="pull-q">Where does your energy leak most consistently?</p>
+      </div>
+      <p class="fran body-md" style="margin-top:16px;">Write it down. Don't edit it.</p>
+      <div class="p-input" style="margin-top:24px; max-width:640px;">
+        <textarea class="field-ta" rows="3"
+          data-field="m04_quick_hit_1"
+          placeholder="My biggest energy leak is…"></textarea>
+      </div>
+    </div>
+    <div class="fac-note">
+      <strong>Timer:</strong> 60 sec silent writing · 2 min pair share · collect 3–4 from the room. | Common answers: overfunctioning, people-pleasing, context-switching, emotional labour. | Land on: "Energy leaks aren't failures — they're signals."
+    </div>
+  </section>
+
+
+  <!-- ─── SLIDE 05 · ENERGY LEAKS ─── -->
+  <section class="slide slide-paper2" data-type="context" data-slide="5">
+    <button type="button" class="ctx-header" onclick="toggleContext(this)" aria-expanded="false">
+      <div class="ctx-header-left"><span class="ctx-eyebrow">Concept</span><span class="ctx-title">Energy Leaks</span></div>
+      <span class="ctx-icon">+</span>
+    </button>
+    <div class="slide-teaching">
+      <div class="content">
+        <div class="eyebrow">Concept · Energy Leaks</div>
+        <h2 class="serif h2">Leaks are signals,<br>not <em>failures</em></h2>
+        <p class="fran body-lg">Leaks show up as:</p>
+        <ul class="clean-list">
+          <li>Overfunctioning — doing what others could do</li>
+          <li>People-pleasing — overriding your own needs</li>
+          <li>Perfectionism — spending 80% for 5% return</li>
+          <li>Avoidance — the cost of not deciding</li>
+          <li>Emotional labour — carrying what isn't yours</li>
+        </ul>
+        <p class="fran body-md" style="margin-top:20px;">Leaks are often inherited or rewarded. They cost more than time — they cost <em>identity</em> and integrity.</p>
+      </div>
+      <div class="fac-note">
+        <strong>Ask:</strong> "What does your biggest leak cost you?" Take 2–3 examples. | Reframe any self-blame: "Energy leaks are information — what is this one telling you?"
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ─── SLIDE 06 · ENERGY SOURCES ─── -->
+  <section class="slide slide-paper" data-type="context" data-slide="6">
+    <button type="button" class="ctx-header" onclick="toggleContext(this)" aria-expanded="false">
+      <div class="ctx-header-left"><span class="ctx-eyebrow">Concept</span><span class="ctx-title">Energy Sources</span></div>
+      <span class="ctx-icon">+</span>
+    </button>
+    <div class="slide-teaching">
+      <div class="content">
+        <div class="eyebrow">Concept · Energy Sources</div>
+        <h2 class="serif h2">What <em>restores</em> you</h2>
+        <div class="two-col">
+          <div>
+            <p class="fran body-md">Sources reliably restore energy:</p>
+            <ul class="clean-list">
+              <li>Rest &amp; sleep</li>
+              <li>Solitude</li>
+              <li>Connection</li>
+              <li>Creativity &amp; play</li>
+            </ul>
+          </div>
+          <div>
+            <ul class="clean-list" style="margin-top:0;">
+              <li>Movement</li>
+              <li>Nature</li>
+              <li>Structure &amp; rhythm</li>
+              <li>Meaning &amp; contribution</li>
+            </ul>
+            <p class="fran body-sm" style="margin-top:16px;">Most people underestimate how little they need to feel restored.</p>
+          </div>
+        </div>
+      </div>
+      <div class="fac-note">
+        <strong>Set up Activity 01.</strong> | Watch for: people listing "should" sources — redirect to what <em>actually</em> restores them. | "Energy sources aren't indulgent — they're fuel."
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ─── SLIDE 07 · ACTIVITY 01 ─── -->
+  <section class="slide slide-paper2" data-type="activity" data-slide="7">
+    <div class="content">
+      <div class="eyebrow">Activity 01 · 20 min</div>
+      <div class="act-block">
+        <div class="act-head">
+          <span class="act-label">Activity 01 — Individual + Pairs + Group</span>
+          <span class="act-time">20 min</span>
+        </div>
+        <div class="act-body">
+          <p class="act-instruction">Map your <em>Energy</em>: Leaks → Sources → Patterns</p>
+          <ul class="act-rules">
+            <li>List your energy leaks — where you consistently lose energy</li>
+            <li>List your energy sources — what reliably restores you</li>
+            <li>Notice patterns across the four domains</li>
+            <li>Pairs (6 min): share one leak + one source</li>
+            <li>Group (2 min): "What surprised you about your energy map?"</li>
+          </ul>
+        </div>
+      </div>
+      <div class="p-input">
+        <div class="field-group">
+          <label class="field-label"><span class="field-num">01</span>My energy leaks — where I consistently lose energy</label>
+          <textarea class="field-ta" rows="4"
+            data-field="m04_energy_leaks"
+            placeholder="Physical: … Emotional: … Mental: … Creative: …"></textarea>
+        </div>
+        <div class="field-group">
+          <label class="field-label"><span class="field-num">02</span>My energy sources — what reliably restores me</label>
+          <textarea class="field-ta" rows="4"
+            data-field="m04_energy_sources"
+            placeholder="What actually restores me (not what I think should)…"></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="fac-note">
+      <strong>Watch for:</strong> Moralising leaks → "Energy leaks are information." | "Should" sources → redirect to what <em>actually</em> restores. | Only naming physical energy → invite emotional, mental, creative domains.
+    </div>
+  </section>
+
+
+  <!-- ─── SLIDE 08 · DEBRIEF 01 ─── -->
+  <section class="slide slide-sand" data-type="debrief" data-slide="8">
+    <div class="content">
+      <div class="eyebrow">Debrief 01 · 10 min</div>
+      <h3 class="serif h3">Choose one to<br><em>explore</em></h3>
+      <div class="debrief-qs">
+        <p class="debrief-q">Which leak drains you fastest?</p>
+        <p class="debrief-q">Which source restores you most reliably?</p>
+        <p class="debrief-q">What pattern did you notice across the four domains?</p>
+      </div>
+      <div class="reflection-field p-input">
+        <textarea class="field-ta" rows="3"
+          data-field="m04_debrief1_reflection"
+          placeholder="What landed for you in this debrief?"></textarea>
+      </div>
+    </div>
+    <div class="fac-note">
+      <strong>Land on:</strong> "Your energy tells the truth faster than your mind does." | Let the room sit with this before the break.
+    </div>
+  </section>
+
+
+  <!-- ─── SLIDE 09 · BREAK ─── -->
+  <section class="slide slide-ink" data-type="break" data-slide="9">
+    <div class="content">
+      <div class="eyebrow">Break</div>
+      <div class="break-time">10<br><em>min</em></div>
+      <p class="fran body-lg" style="margin-top:32px; color:rgba(251,247,238,0.65);">Be back at: ___________</p>
+    </div>
+  </section>
+
+
+  <!-- ─── SLIDE 10 · CAPACITY CONSTRAINTS ─── -->
+  <section class="slide slide-paper2" data-type="context" data-slide="10">
+    <button type="button" class="ctx-header" onclick="toggleContext(this)" aria-expanded="false">
+      <div class="ctx-header-left"><span class="ctx-eyebrow">Concept</span><span class="ctx-title">Capacity Constraints</span></div>
+      <span class="ctx-icon">+</span>
+    </button>
+    <div class="slide-teaching">
+      <div class="content">
+        <div class="eyebrow">Concept · Capacity</div>
+        <h2 class="serif h2">Constraints are<br><em>design parameters</em></h2>
+        <div class="two-col">
+          <div>
+            <p class="fran body-md">Real constraints include:</p>
+            <ul class="clean-list">
+              <li>Time</li>
+              <li>Money</li>
+              <li>Health</li>
+              <li>Care responsibilities</li>
+              <li>Bandwidth</li>
+              <li>Emotional load</li>
+            </ul>
+          </div>
+          <div>
+            <p class="fran body-md">Constraints aren't weaknesses.<br>They're design parameters.</p>
+            <p class="fran body-md">Designing <em>against</em> constraints creates burnout.<br>Designing <em>with</em> them creates sustainability.</p>
+          </div>
+        </div>
+      </div>
+      <div class="fac-note">
+        <strong>Ask:</strong> "What constraint do you need to design with, not against?" | Sets up Activity 02. | Normalise: "Constraints aren't excuses — they're the reality your design has to fit."
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ─── SLIDE 11 · ACTIVITY 02 ─── -->
+  <section class="slide slide-paper2" data-type="activity" data-slide="11">
+    <div class="content">
+      <div class="eyebrow">Activity 02 · 20 min</div>
+      <div class="act-block">
+        <div class="act-head">
+          <span class="act-label">Activity 02 — Individual + Pairs + Group</span>
+          <span class="act-time">20 min</span>
+        </div>
+        <div class="act-body">
+          <p class="act-instruction">Name your <em>Capacity Constraint</em> + Choose a Capacity Shift</p>
+          <ul class="act-rules">
+            <li>Name one real capacity constraint you've been designing against</li>
+            <li>Write what happens when you ignore it</li>
+            <li>Choose one shift that honours your real bandwidth</li>
+            <li>Pairs (6 min): share the shift</li>
+            <li>Group (2 min): "What made that shift feel important?"</li>
+          </ul>
+        </div>
+      </div>
+      <div class="p-input">
+        <div class="field-group">
+          <label class="field-label"><span class="field-num">01</span>My real capacity constraint — and what happens when I ignore it</label>
+          <textarea class="field-ta" rows="4"
+            data-field="m04_capacity_constraints"
+            placeholder="The constraint I need to design with, not against… When I ignore it, what happens is…"></textarea>
+        </div>
+        <div class="field-group">
+          <label class="field-label"><span class="field-num">02</span>One shift that honours my capacity</label>
+          <textarea class="field-ta" rows="3"
+            data-field="m04_capacity_shift"
+            placeholder="The smallest shift that still honours my real bandwidth…"></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="fac-note">
+      <strong>Watch for:</strong> Shifts too big → "What's the 5% version?" | People minimising constraints → normalise them. | Self-criticism → "This isn't about discipline — it's about design."
+    </div>
+  </section>
+
+
+  <!-- ─── SLIDE 12 · DEBRIEF 02 ─── -->
+  <section class="slide slide-sand" data-type="debrief" data-slide="12">
+    <div class="content">
+      <div class="eyebrow">Debrief 02 · 10 min</div>
+      <h3 class="serif h3">Choose one to<br><em>explore</em></h3>
+      <div class="debrief-qs">
+        <p class="debrief-q">What constraint do you need to honour more consistently?</p>
+        <p class="debrief-q">What shift feels most supportive right now?</p>
+        <p class="debrief-q">What value does this shift protect?</p>
+      </div>
+      <div class="reflection-field p-input">
+        <textarea class="field-ta" rows="3"
+          data-field="m04_debrief2_reflection"
+          placeholder="What shifted for you in this debrief?"></textarea>
+      </div>
+    </div>
+    <div class="fac-note">
+      <strong>Land on:</strong> "You don't need more discipline. You need a life that fits your energy." | This lands hard for most rooms — let it breathe.
+    </div>
+  </section>
+
+
+  <!-- ─── SLIDE 13 · CLOSE ─── -->
+  <section class="slide slide-yellow" data-type="close" data-slide="13">
+    <div class="stripe-bar"></div>
+    <div class="content">
+      <div class="eyebrow">Close · 10 min</div>
+      <h2 class="serif h2" style="max-width:800px;">One shift you'll<br><em>honour</em> this week</h2>
+      <p class="fran body-lg" style="margin-top:16px;">What did you find? What will you protect?</p>
+
+      <div class="p-input" style="margin:28px 0 0; max-width:680px;">
+        <div class="field-group">
+          <label class="field-label">My takeaway from this module</label>
+          <textarea class="field-ta" rows="3"
+            data-field="m04_takeaway"
+            placeholder="One thing I'm taking away…"></textarea>
+        </div>
+      </div>
+
+      <a href="05-life-systems.html" class="module-cta">
+        Next: Life Systems →
+      </a>
+    </div>
+    <div class="fac-note">
+      <strong>Ask:</strong> "One thing you're taking away. One shift you'll honour this week." | Don't answer open questions — capture for Module 05. | Preview: "Next: Life Systems — because your life isn't random. It's systemic."
+    </div>
+  </section>
+
+</div><!-- /slides-wrap -->
+
+<script>
+var ROOT = document.documentElement;
+var STORE_KEY = 'd2m_m04_';
+
+function setMode(mode) {
+  ROOT.dataset.mode = mode;
+  localStorage.setItem('d2m_mode_global', mode);
+  if (mode === 'participant') { window.scrollTo(0, 0); }
+  else { document.getElementById('slidesWrap').scrollTo(0, 0); }
+  updateProgress();
+}
+
+function toggleContext(header) {
+  var expanded = header.getAttribute('aria-expanded') === 'true';
+  header.setAttribute('aria-expanded', String(!expanded));
+  var section = header.closest('section');
+  if (section) section.classList.toggle('is-open', !expanded);
+  var icon = header.querySelector('.ctx-icon');
+  if (icon) icon.textContent = !expanded ? '−' : '+';
+}
+
+var toastTimer;
+function showToast() {
+  var t = document.getElementById('saveToast');
+  t.classList.add('visible');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function() { t.classList.remove('visible'); }, 1800);
+}
+
+document.querySelectorAll('textarea[data-field]').forEach(function(ta) {
+  var key = STORE_KEY + ta.dataset.field;
+  var saved = localStorage.getItem(key);
+  if (saved) ta.value = saved;
+  ta.addEventListener('input', function() {
+    localStorage.setItem(key, ta.value);
+    showToast();
+    updateProgress();
+  });
+});
+
+function updateProgress() {
+  var fields = document.querySelectorAll('textarea[data-field]');
+  var filled = 0;
+  fields.forEach(function(ta) { if (ta.value && ta.value.trim().length > 8) filled++; });
+  var pct = fields.length ? Math.round((filled / fields.length) * 100) : 0;
+  var fill = document.getElementById('progressFill');
+  if (fill) fill.style.width = pct + '%';
+}
+
+(function() {
+  var savedMode = localStorage.getItem('d2m_mode_global') || 'participant';
+  var urlMode = new URLSearchParams(window.location.search).get('mode');
+  setMode(urlMode || savedMode);
+  updateProgress();
+})();
+</script>
+</body>
+</html>

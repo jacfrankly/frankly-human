@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="450" viewBox="0 0 400 450">
+
+  <defs>
+    <!-- Clip to inner arch boundary -->
+    <clipPath id="arch-clip">
+      <path d="M 26,425 L 26,200 A 174,174,0,0,1,374,200 L 374,425 Z"/>
+    </clipPath>
+  </defs>
+
+  <!-- White canvas -->
+  <rect width="400" height="450" fill="#FFFFFF"/>
+
+  <!-- ======================================================
+       CONTENT — clipped to inner arch
+       ====================================================== -->
+  <g clip-path="url(#arch-clip)">
+
+    <!-- 1. BASE — solid navy, full composition width, ~60px tall -->
+    <rect x="26" y="366" width="348" height="59" fill="#000000"/>
+
+    <!-- 2. TOWER BODY — tapered trapezoid with 5 alternating bands
+         Bottom: x=160–240 (80px wide) at y=366
+         Top:    x=173–227 (54px wide) at y=166
+         Taper per pixel (y going up): ±13px over 200px = ±0.065px/px
+         Intermediate x values:
+           y=366: L=160  R=240
+           y=326: L=162.6  R=237.4
+           y=286: L=165.2  R=234.8
+           y=246: L=167.8  R=232.2
+           y=206: L=170.4  R=229.6
+           y=166: L=173    R=227
+    -->
+
+    <!-- Band 1 — navy (bottom) -->
+    <polygon points="160,366 240,366 237.4,326 162.6,326" fill="#000000"/>
+    <!-- Band 2 — white -->
+    <polygon points="162.6,326 237.4,326 234.8,286 165.2,286" fill="#FFFFFF"/>
+    <!-- Band 3 — navy -->
+    <polygon points="165.2,286 234.8,286 232.2,246 167.8,246" fill="#000000"/>
+    <!-- Band 4 — white -->
+    <polygon points="167.8,246 232.2,246 229.6,206 170.4,206" fill="#FFFFFF"/>
+    <!-- Band 5 — navy (top) -->
+    <polygon points="170.4,206 229.6,206 227,166 173,166" fill="#000000"/>
+
+    <!-- Tower outline -->
+    <polygon points="160,366 240,366 227,166 173,166"
+             fill="none" stroke="#000000" stroke-width="2" stroke-linejoin="miter"/>
+
+    <!-- 3. GALLERY — thin navy bar, slightly wider than tower top (66px vs 54px) -->
+    <rect x="167" y="158" width="66" height="8" fill="#000000"/>
+
+    <!-- 4. LANTERN ROOM — navy square, 46×40px, centred; small white window -->
+    <rect x="177" y="118" width="46" height="40" fill="#000000"/>
+    <rect x="194" y="130" width="12" height="16" fill="#FFFFFF"/>
+
+    <!-- 5. ROOF — isoceles triangle, base at y=118, peak at (200,90) -->
+    <polygon points="177,118 223,118 200,90" fill="#000000"/>
+
+    <!-- 6. LIGHT RAYS — 8 lines from roof peak (200,90) radiating upward
+         Spread ±75° from vertical in even steps:
+         –75°, –54°, –32°, –11°, +11°, +32°, +54°, +75°
+         Length 200px; rays extend past arch and are clipped naturally.
+         End-point maths: x = 200 + 200·sin(θ), y = 90 − 200·cos(θ)
+    -->
+    <g stroke="#000000" stroke-width="1.5" stroke-linecap="round">
+      <line x1="200" y1="90" x2="7"   y2="38"/>   <!-- –75°  -->
+      <line x1="200" y1="90" x2="38"  y2="-28"/>  <!-- –54°  -->
+      <line x1="200" y1="90" x2="94"  y2="-80"/>  <!-- –32°  -->
+      <line x1="200" y1="90" x2="162" y2="-107"/> <!-- –11°  -->
+      <line x1="200" y1="90" x2="238" y2="-107"/> <!-- +11°  -->
+      <line x1="200" y1="90" x2="306" y2="-80"/>  <!-- +32°  -->
+      <line x1="200" y1="90" x2="362" y2="-28"/>  <!-- +54°  -->
+      <line x1="200" y1="90" x2="393" y2="38"/>   <!-- +75°  -->
+    </g>
+
+    <!-- 7. BOAT — orange, lower right, hull sitting on base (waterline y=366) -->
+    <!-- Hull -->
+    <path d="M 265,366 Q 301,376 337,366 L 331,384 L 271,384 Z" fill="#F15A22"/>
+    <!-- Mast -->
+    <line x1="297" y1="366" x2="297" y2="302"
+          stroke="#F15A22" stroke-width="2.5" stroke-linecap="round"/>
+    <!-- Main sail -->
+    <path d="M 297,306 L 297,362 L 334,354 Z" fill="#F15A22"/>
+    <!-- Jib sail -->
+    <path d="M 297,312 L 265,360 L 297,362 Z" fill="#F15A22"/>
+
+  </g>
+
+  <!-- ======================================================
+       ARCH BORDERS — drawn on top so they're always crisp
+       Outer 3px / 4px gap / Inner 1.5px
+       Gap check (sides): outer inner-edge x=21.5, inner outer-edge x=25.25 → gap ≈ 3.75px ✓
+       Gap check (bottom): outer inner-edge y=428.5, inner outer-edge y=424.25 → gap ≈ 4.25px ✓
+       ====================================================== -->
+  <path d="M 20,430 L 20,200 A 180,180,0,0,1,380,200 L 380,430 Z"
+        fill="none" stroke="#000000" stroke-width="3"/>
+  <path d="M 26,425 L 26,200 A 174,174,0,0,1,374,200 L 374,425 Z"
+        fill="none" stroke="#000000" stroke-width="1.5"/>
+
+</svg>

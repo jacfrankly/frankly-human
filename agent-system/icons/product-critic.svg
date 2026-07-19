@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="450" viewBox="0 0 400 450">
+  <defs>
+    <clipPath id="arch-clip">
+      <path d="M 26,425 L 26,200 A 174,174,0,0,1,374,200 L 374,425 Z"/>
+    </clipPath>
+  </defs>
+  <rect width="400" height="450" fill="#FFFFFF"/>
+  <g clip-path="url(#arch-clip)">
+
+    <!-- HANDLE — long, thin, angled upper-left to lower-right -->
+    <line x1="272" y1="362" x2="170" y2="210"
+          stroke="#000000" stroke-width="8" stroke-linecap="round"/>
+
+    <!-- GRIP RINGS — knurling detail on lower handle section -->
+    <g stroke="#FFFFFF" stroke-width="2" stroke-linecap="round">
+      <line x1="248" y1="340" x2="238" y2="323"/>
+      <line x1="258" y1="348" x2="248" y2="331"/>
+      <line x1="238" y1="332" x2="228" y2="315"/>
+    </g>
+
+    <!-- NECK — short angled connector between handle and mirror head -->
+    <line x1="170" y1="210" x2="156" y2="184"
+          stroke="#000000" stroke-width="5" stroke-linecap="round"/>
+
+    <!-- MIRROR HEAD — circular disc, clean geometric form -->
+    <!-- Outer bezel ring -->
+    <circle cx="144" cy="166" r="36" fill="#000000"/>
+    <!-- Mirror face (white) -->
+    <circle cx="144" cy="166" r="28" fill="#FFFFFF"/>
+    <!-- Inner bevel line -->
+    <circle cx="144" cy="166" r="22" fill="none" stroke="#000000" stroke-width="1.5"/>
+
+    <!-- ORANGE MARK — the specific finding, the thing the systematic eye catches -->
+    <circle cx="154" cy="158" r="6" fill="#F15A22"/>
+
+  </g>
+  <path d="M 20,430 L 20,200 A 180,180,0,0,1,380,200 L 380,430 Z"
+        fill="none" stroke="#000000" stroke-width="3"/>
+  <path d="M 26,425 L 26,200 A 174,174,0,0,1,374,200 L 374,425 Z"
+        fill="none" stroke="#000000" stroke-width="1.5"/>
+</svg>

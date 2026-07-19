@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Design-Led: Leader · Module 13 · The Operating System for Design Leadership Canvas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..900,0..100;1,9..144,300..900,0..100&family=Inter:wght@400;500;600&family=Allura&family=Patrick+Hand&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #100000; --paper: #FBF7EE; --paper2: #F4EFE2; --sand: #E0D2B5;
+    --teal: #47ACA4; --pink: #FF3990; --yellow: #FFBD59; --plum: #7A1F4A; --muted: #7A736B;
+    --w: 1587px; --h: 1123px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #888; display: flex; align-items: flex-start; justify-content: center;
+    min-height: 100vh; padding: 32px; font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased;
+  }
+  .canvas-outer { width: var(--w); height: var(--h); transform-origin: top center; box-shadow: 0 12px 64px rgba(0,0,0,0.45); }
+  .canvas { width: var(--w); height: var(--h); background: var(--paper); color: var(--ink); display: flex; flex-direction: column; overflow: hidden; }
+  .canvas-header { background: var(--ink); color: var(--paper); padding: 20px 40px 18px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+  .canvas-header .eyebrow { font-family: 'Inter'; font-size: 9px; letter-spacing: 0.24em; text-transform: uppercase; opacity: 0.7; margin-bottom: 4px; }
+  .canvas-header .module-title { font-family: 'DM Serif Display', serif; font-size: 24px; line-height: 1; letter-spacing: -0.01em; }
+  .canvas-header .module-title em { font-style: italic; opacity: 0.75; color: var(--plum); }
+  .canvas-header-right { text-align: right; }
+  .canvas-header .tagline { font-family: 'Fraunces', serif; font-size: 12px; font-variation-settings: "SOFT" 60, "opsz" 144; font-style: italic; opacity: 0.8; margin-bottom: 6px; }
+  .canvas-header .brand { font-family: 'Allura', cursive; font-size: 22px; opacity: 0.9; line-height: 1; }
+  .stripe { height: 4px; background: linear-gradient(90deg, var(--teal) 0 25%, var(--pink) 25% 50%, var(--yellow) 50% 75%, var(--plum) 75% 100%); flex-shrink: 0; }
+  .canvas-body { flex: 1; display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; grid-template-rows: 1fr; gap: 0; min-height: 0; }
+  .zone { border-right: 1px solid var(--ink); display: flex; flex-direction: column; padding: 22px 24px 20px; position: relative; overflow: hidden; }
+  .zone:last-child { border-right: none; }
+  .zone-accent { position: absolute; top: 0; left: 0; right: 0; height: 4px; }
+  .zone-number { font-family: 'Inter'; font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+  .zone-number::before { content: ''; display: inline-block; width: 18px; height: 1px; background: currentColor; }
+  .zone-title { font-family: 'DM Serif Display', serif; font-size: 19px; line-height: 1.05; letter-spacing: -0.01em; margin-bottom: 4px; }
+  .zone-title em { font-style: italic; }
+  .zone-prompt { font-family: 'Fraunces', serif; font-size: 11px; font-variation-settings: "SOFT" 50, "opsz" 144; color: var(--muted); line-height: 1.45; margin-bottom: 14px; }
+  .lines { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; gap: 0; }
+  .line { border-bottom: 1px solid var(--sand); height: 24px; flex-shrink: 0; }
+  .line-label { font-family: 'Patrick Hand', cursive; font-size: 9px; letter-spacing: 0.1em; color: var(--muted); padding-bottom: 3px; margin-top: 10px; border-bottom: 1px solid var(--ink); }
+  .line-label:first-child { margin-top: 0; }
+  .pull-quote { font-family: 'DM Serif Display', serif; font-size: 12px; font-style: italic; line-height: 1.4; color: var(--plum); padding: 9px 13px; border-left: 2px solid var(--plum); margin: 8px 0 12px; background: rgba(122,31,74,0.04); }
+  .chip-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+  .chip { font-family: 'Inter'; font-size: 8px; border: 1px solid var(--sand); padding: 4px 7px; color: var(--muted); }
+  .trap-item { font-family: 'DM Serif Display', serif; font-style: italic; font-size: 12.5px; color: var(--plum); margin-bottom: 3px; }
+  .thread-item { font-family: 'Fraunces', serif; font-size: 11.5px; color: var(--charcoal); margin-bottom: 3px; }
+  .thread-item strong { color: var(--ink); }
+  .mini-label { font-family: 'Inter'; font-size: 8px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); margin: 10px 0 4px; }
+  .mini-label:first-child { margin-top: 0; }
+  .takeaway { border-top: 1px solid var(--ink); background: var(--paper2); padding: 12px 40px; display: flex; align-items: center; gap: 24px; flex-shrink: 0; }
+  .takeaway-label { font-family: 'Inter'; font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; white-space: nowrap; color: var(--plum); font-weight: 600; }
+  .takeaway-line { flex: 1; border-bottom: 1.5px solid var(--plum); }
+  .takeaway-sig { font-family: 'Allura', cursive; font-size: 17px; color: var(--muted); white-space: nowrap; line-height: 1; }
+  .print-bar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(16,0,0,0.85); color: #FBF7EE; display: flex; align-items: center; justify-content: center; gap: 24px; padding: 14px; font-family: 'Inter'; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; }
+  .print-bar button { background: var(--plum); color: #FBF7EE; border: none; padding: 10px 24px; font-family: 'Inter'; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; cursor: pointer; }
+  .print-bar button:hover { background: #5a1636; }
+  .print-bar a { color: var(--sand); text-decoration: none; opacity: 0.7; }
+  .print-bar a:hover { opacity: 1; }
+  @media print {
+    @page { size: A3 landscape; margin: 0; }
+    html, body { width: 420mm; height: 297mm; margin: 0; padding: 0; overflow: hidden; background: none; display: block; }
+    .canvas-outer { transform: none !important; width: 420mm; height: 297mm; box-shadow: none; page-break-after: avoid; }
+    .canvas { width: 420mm; height: 297mm; overflow: hidden; }
+    .print-bar { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="canvas-outer" id="canvasOuter">
+  <div class="canvas">
+
+    <div class="canvas-header">
+      <div>
+        <div class="eyebrow">Design-Led: Leader · Module 13 · Final module</div>
+        <div class="module-title">The Operating <em>System</em> for Design Leadership</div>
+      </div>
+      <div class="canvas-header-right">
+        <div class="tagline">"Integration is the moment leadership stops being a performance and starts being a practice."</div>
+        <div class="brand">design‑led.</div>
+      </div>
+    </div>
+
+    <div class="stripe"></div>
+
+    <div class="canvas-body">
+
+      <!-- Zone 1: Four Threads / Three Traps Recap -->
+      <div class="zone">
+        <div class="zone-accent" style="background:var(--teal);"></div>
+        <div class="zone-number">01 · The Recap</div>
+        <div class="zone-title">Four Threads, <em>Three Traps</em></div>
+        <p class="zone-prompt">What you've built across 12 modules — not new content, the whole system in one place.</p>
+        <div class="mini-label">Four threads</div>
+        <div class="thread-item"><strong>Budget</strong> · <strong>Roadmap</strong> · <strong>Exec Trust</strong> · <strong>Relational</strong></div>
+        <div class="mini-label">Three traps</div>
+        <div class="trap-item">Service Department</div>
+        <div class="trap-item">Feature Factory Manager</div>
+        <div class="trap-item">Silent Expert</div>
+        <div class="lines">
+          <div class="line-label">Which thread or trap moved the most for me since Module 01…</div>
+          <div class="line"></div>
+        </div>
+      </div>
+
+      <!-- Zone 2: Leadership Manifesto -->
+      <div class="zone">
+        <div class="zone-accent" style="background:var(--yellow);"></div>
+        <div class="zone-number">02 · Activity 01</div>
+        <div class="zone-title">Leadership <em>Manifesto</em></div>
+        <p class="zone-prompt">3–5 non-negotiables you will hold regardless of organisational pressure.</p>
+        <div class="lines">
+          <div class="line-label">My non-negotiables…</div>
+          <div class="line"></div><div class="line"></div><div class="line"></div>
+          <div class="line-label">The pressure that tests each one…</div>
+          <div class="line"></div><div class="line"></div>
+        </div>
+      </div>
+
+      <!-- Zone 3: 90-Day Plan -->
+      <div class="zone">
+        <div class="zone-accent" style="background:var(--pink);"></div>
+        <div class="zone-number">03 · Activity 02 · Capstone</div>
+        <div class="zone-title">The <em>90-Day Plan</em></div>
+        <p class="zone-prompt">The thread and trap most true for you, the first move, and whose sponsorship carries it.</p>
+        <div class="mini-label">Thread &amp; trap most true for me</div>
+        <div class="line"></div>
+        <div class="mini-label">First concrete move</div>
+        <div class="line"></div>
+        <div class="mini-label">Sponsorship I need</div>
+        <div class="lines">
+          <div class="line"></div>
+        </div>
+      </div>
+
+      <!-- Zone 4: Rituals & Non-Negotiables / Sponsorship Map -->
+      <div class="zone">
+        <div class="zone-accent" style="background:var(--plum);"></div>
+        <div class="zone-number">04 · Sustaining It</div>
+        <div class="zone-title">Rituals &amp; <em>Sponsorship Map</em></div>
+        <p class="zone-prompt">A win is a moment. A ritual is a system. Who sponsors you, who you sponsor, who's gone quiet.</p>
+        <div class="pull-quote">"A design leader who's rebuilt all three levers still needs rituals and non-negotiables to sustain the position."</div>
+        <div class="lines">
+          <div class="line-label">The recurring ritual that holds this past day 90…</div>
+          <div class="line"></div><div class="line"></div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="takeaway">
+      <div class="takeaway-label">One commitment →</div>
+      <div class="takeaway-line"></div>
+      <div class="takeaway-sig">design‑led.</div>
+    </div>
+
+  </div>
+</div>
+
+<div class="print-bar">
+  <a href="13-operating-system-for-design-leadership.html">← Back to module</a>
+  <span>Module 13 · The Operating System for Design Leadership — A3 Canvas</span>
+  <button onclick="window.print()">Print A3 →</button>
+</div>
+
+<script>
+  function scaleCanvas() {
+    var outer = document.getElementById('canvasOuter');
+    var vw = window.innerWidth - 64;
+    var scale = Math.min(1, vw / 1587);
+    outer.style.transform = 'scale(' + scale + ')';
+    outer.parentElement.style.paddingBottom = '72px';
+  }
+  scaleCanvas();
+  window.addEventListener('resize', scaleCanvas);
+</script>
+</body>
+</html>

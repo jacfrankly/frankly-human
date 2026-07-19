@@ -110,13 +110,30 @@ function Card({ value, idx, shape, layout, flipped, onFlip, picked, onPick, mini
 // ── Focus modal ──────────────────────────────────────────────────────────
 function Focus({ idx, setIdx, all, shape, layout, picks, onPick, onClose }) {
   const [flipped, setFlipped] = useState(false);
+  const dialogRef = useRef(null);
+  const closeRef = useRef(null);
   useEffect(() => setFlipped(false), [idx]);
+  useEffect(() => {
+    // Move focus into the dialog on open; native focus is otherwise left
+    // wherever it was on the (now hidden-behind-overlay) grid.
+    if (closeRef.current) closeRef.current.focus();
+  }, []);
   useEffect(() => {
     const k = (e) => {
       if (e.key === "ArrowRight") setIdx((idx + 1) % all.length);
       else if (e.key === "ArrowLeft") setIdx((idx - 1 + all.length) % all.length);
       else if (e.key === " ") { e.preventDefault(); setFlipped(f => !f); }
       else if (e.key === "Escape") onClose();
+      else if (e.key === "Tab") {
+        // Basic focus trap: wrap Tab/Shift+Tab within the dialog's focusable elements.
+        const focusable = dialogRef.current
+          ? [...dialogRef.current.querySelectorAll('button, [tabindex]:not([tabindex="-1"])')]
+          : [];
+        if (!focusable.length) return;
+        const first = focusable[0], last = focusable[focusable.length - 1];
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
     };
     window.addEventListener("keydown", k);
     return () => window.removeEventListener("keydown", k);
@@ -124,8 +141,8 @@ function Focus({ idx, setIdx, all, shape, layout, picks, onPick, onClose }) {
 
   const v = all[idx];
   return (
-    <div className="v2-focus">
-      <button className="v2-focus-close" onClick={onClose}>✕</button>
+    <div className="v2-focus" ref={dialogRef} role="dialog" aria-modal="true" aria-label={v.name}>
+      <button className="v2-focus-close" ref={closeRef} onClick={onClose}>✕</button>
       <button className="v2-focus-nav v2-prev" onClick={() => setIdx((idx - 1 + all.length) % all.length)}>←</button>
       <div className="v2-focus-stage">
         <Card value={v} idx={v._origIdx} shape={shape} layout={layout}
@@ -146,13 +163,14 @@ function Focus({ idx, setIdx, all, shape, layout, picks, onPick, onClose }) {
 }
 
 // ── Tray ─────────────────────────────────────────────────────────────────
-function Tray({ picks, onPick, shape, onOpen }) {
+function Tray({ picks, onPick, shape, onOpen, fullMsg }) {
   return (
     <div className="v2-tray">
       <div className="v2-tray-label">
         <span className="v2-tray-num">{picks.length}<span className="v2-tray-of">/5</span></span>
         <span className="v2-tray-cap">my top values</span>
         {picks.length === 0 && <span className="v2-tray-hint">— tap + on any card</span>}
+        {fullMsg && <span className="v2-tray-hint v2-tray-hint-full">— tray's full, remove one first</span>}
       </div>
       <div className="v2-tray-slots">
         {Array.from({ length: 5 }).map((_, i) => {
@@ -171,6 +189,9 @@ function Tray({ picks, onPick, shape, onOpen }) {
           );
         })}
       </div>
+      <a className="v2-tray-print" href="Why%20Deck%20-%20Print%20Sheets.html" target="_blank" rel="noopener">
+        Print the full deck →
+      </a>
     </div>
   );
 }
@@ -184,11 +205,14 @@ const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
 }/*EDITMODE-END*/;
 
 function App() {
-  const [t, setTweak] = window.useTweaks(TWEAK_DEFAULTS);
+  const [t] = useState(TWEAK_DEFAULTS);
   const [view, setView] = useState("grid");
   const [focusIdx, setFocusIdx] = useState(0);
   const [picks, setPicks] = useState([]);
   const [query, setQuery] = useState("");
+  const [trayFull, setTrayFull] = useState(false);
+  const trayFullTimer = useRef(null);
+  const lastTriggerRef = useRef(null);
 
   const all = useMemo(() => window.VALUES.map(([name, archetype, blurb, prompt], i) => ({
     name, archetype, blurb, prompt, _origIdx: i,
@@ -213,12 +237,25 @@ function App() {
   const togglePick = (name) => {
     setPicks(p => {
       if (p.includes(name)) return p.filter(x => x !== name);
-      if (p.length >= 5) return p;
+      if (p.length >= 5) {
+        setTrayFull(true);
+        clearTimeout(trayFullTimer.current);
+        trayFullTimer.current = setTimeout(() => setTrayFull(false), 2200);
+        return p;
+      }
       return [...p, name];
     });
   };
 
-  const openIdx = (origIdx) => { setFocusIdx(origIdx); setView("focus"); };
+  const openIdx = (origIdx) => {
+    lastTriggerRef.current = document.activeElement;
+    setFocusIdx(origIdx);
+    setView("focus");
+  };
+  const closeFocus = () => {
+    setView("grid");
+    if (lastTriggerRef.current) lastTriggerRef.current.focus();
+  };
 
   return (
     <div className="v2-app">
@@ -248,7 +285,7 @@ function App() {
         </div>
       </header>
 
-      <main className="v2-main">
+      <main className="v2-main" aria-hidden={view === "focus" ? "true" : undefined}>
         {Object.keys(groups).sort().map(letter => (
           <section key={letter} className="v2-letter-section" id={"L" + letter}>
             <div className="v2-letter-row">
@@ -258,7 +295,12 @@ function App() {
             </div>
             <div className="v2-grid">
               {groups[letter].map(v => (
-                <div key={v.name} className="v2-cell" onClick={() => openIdx(v._origIdx)}>
+                <div key={v.name} className="v2-cell" role="button" tabIndex={0}
+                     aria-label={"Open " + v.name}
+                     onClick={() => openIdx(v._origIdx)}
+                     onKeyDown={(e) => {
+                       if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openIdx(v._origIdx); }
+                     }}>
                   <Card value={v} idx={v._origIdx}
                         shape={t.shape} layout={t.layout}
                         flipped={false} onFlip={() => openIdx(v._origIdx)}
@@ -291,29 +333,14 @@ function App() {
       )}
 
       <Tray picks={picks} onPick={togglePick} shape={t.shape}
-            onOpen={(i) => openIdx(i)} />
+            onOpen={(i) => openIdx(i)} fullMsg={trayFull} />
 
       {view === "focus" && (
         <Focus idx={focusIdx} setIdx={setFocusIdx} all={all}
                shape={t.shape} layout={t.layout}
                picks={picks} onPick={togglePick}
-               onClose={() => setView("grid")} />
+               onClose={closeFocus} />
       )}
-
-      <window.TweaksPanel title="Tweaks">
-        <window.TweakSection label="Card" />
-        <window.TweakRadio label="Shape" value={t.shape}
-          options={[{ value: "rounded", label: "Rounded" }, { value: "square", label: "Square" }, { value: "arched", label: "Arched" }]}
-          onChange={(v) => setTweak("shape", v)} />
-        <window.TweakRadio label="Layout" value={t.layout}
-          options={[{ value: "centered", label: "Centered" }, { value: "asymmetric", label: "Asym." }, { value: "fullbleed", label: "Bleed" }]}
-          onChange={(v) => setTweak("layout", v)} />
-        <window.TweakSection label="Navigation" />
-        <window.TweakToggle label="A–Z rail" value={t.showLetterNav}
-          onChange={(v) => setTweak("showLetterNav", v)} />
-        <window.TweakToggle label="Paper grain" value={t.grain}
-          onChange={(v) => setTweak("grain", v)} />
-      </window.TweaksPanel>
 
       <style>{t.grain ? "" : ".v2-grain{display:none !important}"}</style>
     </div>

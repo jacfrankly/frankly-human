@@ -1,0 +1,227 @@
+
+★
+DESIGN-LED: LEADER
+FULL CURRICULUM (2026 EDITION)
+For Heads of Design and senior design leaders ready to stop being the service department.
+Frankly Human · Jacinta McMahon
+Companion curriculum to Design-Led: Practitioner
+
+THE POINT OF VIEW
+Designers who build real product management capability — and get recognised for it — build stronger, more credible leadership careers than designers who don&apos;t.
+Two different things have to be true at once. Capability is actually being able to do product thinking: prioritising under real scarcity, making commercial tradeoffs, sequencing a roadmap when you can&apos;t do everything at once. Not performing it in a meeting — doing it, with real constraints, until it&apos;s a rep you&apos;ve built rather than a slide you&apos;ve memorised. Credibility is being recognised as capable of it by the people who decide who gets the seat. Most leadership advice for designers only ever addresses the second — better language, better positioning — without the first.
+Why now, specifically: AI has compressed the execution layer of both design and product at once — the pixels, the specs, the tickets, all faster and cheaper than two years ago. What&apos;s left is judgment, and judgment doesn&apos;t respect the old boundary between &quot;design&apos;s job&quot; and &quot;product&apos;s job.&quot; It goes to whoever can hold the whole decision, credibly, because they&apos;ve actually made decisions like it before.
+This isn&apos;t a call to become a product manager instead of a designer. It&apos;s a call to stop treating product capability as someone else&apos;s discipline to defer to, and start building it deliberately — through real reps, not borrowed language. Design-Led: Leader is built on that thesis: credibility earned the only way it&apos;s ever actually earned, by building the capability first.
+WHAT DESIGN-LED: LEADER IS
+Design-Led: Leader is a program about organisational influence — the kind that determines whether a design function stays a service department or becomes the function that shapes how the business thinks.
+It&apos;s not a leadership style course. It&apos;s not a communications course. It&apos;s not Design-Led: Practitioner with more seniority in the room. It is not a program that turns designers into product managers.
+It&apos;s a program about power, structure, and the specific, nameable patterns that keep senior design leaders credible but sidelined — built on the belief that the seat at the table now goes to whoever can hold judgment across the whole decision, not defend one discipline&apos;s slice of it.
+It teaches leaders how to:
+Read where their real organisational influence sits, across four threads — including the unwritten, relational ones
+Recognise and break the leadership trap they&apos;re caught in
+Translate design judgment into language the business already trusts
+Move earlier in the process, not just work harder once it&apos;s too late
+Read who actually needs to be on side before a decision, not just who&apos;s formally in the room
+Build metrics, business cases, and rituals that sustain influence beyond any one win
+
+Design-Led: Leader is the executive counterpart to Design-Led: Practitioner. Where Practitioner teaches judgment inside a project, Leader teaches judgment inside an organisation — and the politics, budget, structure, and relationships that come with it.
+THE CORE CLAIM
+Organisational influence is not granted by title or earned by craft alone — it runs through four threads: Budget Authority, Roadmap Influence, Executive Trust, and Relationship Capital. The first three are the ones a rational, well-run organisation responds to. The fourth is the one a political, relationship-oriented organisation responds to whether or not it says so out loud.
+If a design function is stuck as a service department, the fix isn&apos;t better work. It&apos;s a structural change to when, where, and how that work enters the organisation&apos;s decisions — and the fluency to hold judgment across the full decision, not just the design third of it.
+Design-Led: Leader gives leaders the tools to make that structural change.
+THE FOUR THREADS OF INFLUENCE (from the Design Leadership Diagnostic, plus one)
+Budget Authority — shaping spend, not just executing against someone else&apos;s
+Roadmap Influence — shaping what&apos;s next, not reacting to what&apos;s already been decided
+Executive Trust — being in the room when strategy is decided, not briefed on it after
+Relationship Capital — who sponsors you, who owes you, who you owe, and whether that map is current
+A NOTE ON POLITICAL, RELATIONSHIP-ORIENTED ORGANISATIONS
+The first three threads assume influence follows formal process: build the right business case, present the right metrics, and the system responds. That&apos;s necessary but not sufficient in a highly political, relationship-oriented organisation — a brilliant business case can lose to a weaker one that has the right sponsor behind it.
+Relationship Capital is added as a fourth thread rather than folded into the other three because it deserves its own attention, not an asterisk. Most design leadership content avoids naming office politics directly, which makes it feel naive to leaders who&apos;ve actually had to survive one. This curriculum names it instead.
+THE THREE TRAPS
+The Service Department Trap — brought in to execute a decision already made elsewhere
+The Feature Factory Manager — measured on velocity and output, not outcomes or strategy
+The Silent Expert — has the strategic opinion, has learned not to offer it uninvited
+Every module names which thread it strengthens and which trap it helps break.
+
+CAPABILITY, NOT JUST CREDIBILITY
+A design principle for this curriculum, not just a claim in the introduction: wherever a module could teach the language of a skill or the actual doing of it, this curriculum chooses the doing.
+Four modules in particular carry real product-management reps rather than simulations of them — Module 04 (a real prioritisation call under scarcity), Module 05 (a real sequencing decision for competing initiatives), Module 06 (real payback-period maths on a real investment case), and Module 11 (a real North Star metric tree for an actual product area). These are the modules most likely to produce a leader who can&apos;t be out-judged by a product manager, because they&apos;ve done a version of the product manager&apos;s actual job, not just learned to talk about it.
+The other modules still matter — credibility without capability doesn&apos;t hold up, but capability without credibility never gets the chance to matter. Both have to be built.
+THE MODULES AT A GLANCE
+13 half-day modules. Each one takes a Design-Led: Practitioner discipline and asks: how does this play at the executive table — including the political, relational reality of how that table actually works?
+01 — The Business Case for Design
+Practitioner equivalent: Foundations
+AI compressed execution. It didn&apos;t compress judgment — and judgment is where the seat at the table lives now.
+Design isn&apos;t evolving into product management, and pretending otherwise insults everyone who built product&apos;s hard-won skills honestly. But AI has compressed the execution layer of both disciplines at once — the pixels, the specs, the tickets, all faster and cheaper. What&apos;s left is judgment: what&apos;s worth building, for whom, and whether it&apos;ll work. That judgment used to be split across disciplines defending their patch. Now the seat at the table goes to whoever can hold the whole call, not just their third of it — and design leadership means building that fluency deliberately.
+Leaders leave able to:
+State the AI-compressed-judgment thesis in language a CFO would nod at, not just a designer
+Diagnose which of the four threads — Budget Authority, Roadmap Influence, Executive Trust, Relationship Capital — is weakest in their own function
+Open a business case without leading with craft, and without overclaiming a product-management title they haven&apos;t earned
+Introduces the four threads of influence as the spine of the program, grounded in the AI-compressed-judgment thesis.
+
+02 — Research as Organisational Intelligence
+Practitioner equivalent: Research
+Research that only informs screens is underused. Research that moves strategy is a leadership asset.
+The same discipline that improves a feature can reposition a function — if it&apos;s aimed at the decisions executives are already trying to make.
+Leaders leave able to:
+Redirect a research function toward strategic, not just tactical, questions
+Package findings for a strategy conversation, not a design review
+Build the habit of research as an executive-trust-building activity
+Strengthens the Executive Trust lever.
+
+03 — Making the Insight Undeniable
+Practitioner equivalent: Analysis
+An insight that doesn&apos;t change a decision wasn&apos;t really an insight.
+Analysis becomes leadership currency only when it&apos;s structured as a narrative someone with fifteen minutes and five other priorities can act on.
+Leaders leave able to:
+Turn raw analysis into a board-ready one-page narrative
+Pre-empt the three objections a room will raise before they raise them
+Know when a finding is strong enough to bet a recommendation on
+Builds the communication muscle the Silent Expert trap has let atrophy.
+
+04 — Owning the Roadmap
+Practitioner equivalent: Strategy
+Reacting to the roadmap and setting it are two different jobs.
+Roadmap influence isn&apos;t granted by title — it&apos;s earned by showing up early enough, with enough commercial fluency, to shape the question before it&apos;s already been answered.
+Leaders leave able to:
+Identify the exact point in the planning cycle where design currently gets looped in — and how early it needs to move
+Build a point of view on the roadmap before being asked for one
+Practise defending a strategic bet in commercial, not craft, language
+Identify whose backing is needed before a roadmap bet is proposed, not just after
+Score three real, competing initiatives against a scarcity constraint and defend the resulting sequence — a real prioritisation rep, not a hypothetical one
+Directly strengthens the Roadmap Influence lever, builds real prioritisation capability (not just the language of it), and leans on Relationship Capital in politically-oriented organisations.
+
+05 — From Service Function to Product Partner
+Practitioner equivalent: Product
+Being brought in to execute a decision already made is a structural problem, not a personality one.
+Escaping the Service Department Trap requires changing where in the process design enters — not working harder once it&apos;s already too late to shape the outcome.
+Leaders leave able to:
+Name the exact handoff point where the function gets relegated to execution
+Propose a structural change to when and how design is looped in
+Distinguish a one-off fix from a durable structural change
+Produce a defensible sequencing decision for three competing initiatives and one team — the actual call a product partner has to make, not a simulation of it
+Names and addresses the Service Department Trap directly; builds the sequencing capability that earns product-partner standing.
+
+06 — Investing in Internal Capability
+Practitioner equivalent: DevEx &amp; Product Intelligence
+Nobody funds what they can&apos;t see the return on.
+Budget authority follows a track record of framing investment asks the way finance already evaluates them — payback period, risk reduction, capacity unlocked.
+Leaders leave able to:
+Build a one-page investment case for a tool, a hire, or a capability
+Speak fluently in payback period and risk reduction, not just craft benefit
+Recognise the Feature Factory Manager trap when velocity metrics are crowding out investment conversations
+Calculate real payback period and risk-adjusted return for an actual investment case — the underlying maths, not just the pitch built on top of it
+Directly strengthens the Budget Authority lever; names the Feature Factory Manager trap; builds real financial-case capability, not just the vocabulary of one.
+
+07 — Systems-Level Influence
+Practitioner equivalent: Service Design
+The biggest wins live in the seams between functions nobody owns — and the seams are political.
+Service design&apos;s real leadership use isn&apos;t mapping the formal system — it&apos;s reading the informal one: who actually needs to be pre-briefed before a room, who the real sponsors are, and where the org chart quietly lies about where power sits.
+Leaders leave able to:
+Map where a cross-functional outcome currently has no clear owner
+Claim orchestration of a seam without needing formal authority over it
+Build a coalition across functions that don&apos;t report to them
+Map the informal sponsorship network behind a real decision, not just the formal org chart
+Identify who needs pre-briefing before a room, and in what order, before the room happens
+Extends influence beyond the design function&apos;s formal boundaries; directly builds Relationship Capital alongside Executive Trust.
+
+08 — Structuring How the Business Decides
+Practitioner equivalent: Information Architecture
+IA thinking doesn&apos;t stop at screens. Decisions have structure too.
+The same discipline that untangles a confusing navigation can untangle a confusing decision-making process — and whoever untangles it earns quiet authority over it.
+Leaders leave able to:
+Diagram how a real organisational decision actually gets made, including the informal parts
+Identify where a decision structure is the actual blocker, not the people in it
+Propose a cleaner decision structure without it reading as a power grab
+Meta-application of a practitioner discipline to organisational structure.
+
+09 — The Language of Influence
+Practitioner equivalent: Conversational UI
+Language is an interface. So is the way you talk to your own executive team.
+The same care that goes into how a product speaks to a user needs to go into how a design leader speaks to a room that doesn&apos;t share their vocabulary by default.
+Leaders leave able to:
+Translate a design recommendation into three different executive vocabularies (finance, sales, engineering)
+Break the Silent Expert habit of waiting to be asked
+Build a personal script for offering an unsolicited strategic opinion well
+Directly addresses the Silent Expert trap; strengthens Executive Trust.
+
+10 — Leading Through AI Disruption
+Practitioner equivalent: AI-Era Design
+Every function is being asked to justify itself against AI. Design is no exception.
+The functions that lead through AI disruption are the ones who define their own value proposition before someone else defines it for them.
+Leaders leave able to:
+Articulate what the design function uniquely contributes as AI accelerates execution
+Anticipate the argument for shrinking the function, and pre-empt it
+Position the team&apos;s role in an AI-augmented roadmap, not just react to one
+Applies the Budget Authority and Roadmap Influence levers to the sharpest current threat.
+
+11 — Metrics That Win the Room
+Practitioner equivalent: Data &amp; Decisions
+The dashboard that makes your case without you in the room is worth more than the meeting you weren&apos;t invited to.
+Executive trust compounds when a function&apos;s impact is visible in the metrics leadership already watches, not a separate design-only scorecard nobody else reads.
+Leaders leave able to:
+Build a metric that ties design&apos;s contribution to a number the business already tracks
+Kill a vanity metric that isn&apos;t earning the function credibility
+Present a dashboard built for someone else&apos;s five-second glance, not a design team&apos;s deep dive
+Construct a real North Star metric tree for an actual product area, tracing design decisions to the business outcome they should move
+Strengthens Executive Trust and Budget Authority together; builds the metric-construction capability leadership credibility depends on.
+
+12 — Executive Decision Hygiene
+Practitioner equivalent: Judgment in Practice
+The same decision hygiene that improves a product call improves a board call — but it doesn&apos;t guarantee it wins.
+Good judgment at board level follows the same hygiene as good judgment at project level — named criteria, pre-mortems, decoupling the decision from who&apos;s most senior in the room. In a political organisation, decision hygiene improves the quality of the call without guaranteeing it wins. This module is honest about that gap, and teaches leaders when to invest in process and when to invest instead in the relationship that will actually decide the outcome.
+Leaders leave able to:
+Apply a decision matrix to a leadership-level, not project-level, choice
+Separate a good decision from a good outcome after the fact
+Bring decision hygiene into a room that doesn&apos;t yet practise it
+Recognise when a decision will be won on the merits versus won on sponsorship — and prepare accordingly
+Elevates decision hygiene to the executive table; names the limits of process and pairs it explicitly with Relationship Capital.
+
+13 — The Operating System for Design Leadership
+Practitioner equivalent: Capstone / Integration
+Integration is the moment leadership stops being a performance and starts being a practice.
+A design leader who&apos;s rebuilt all three levers still needs rituals and non-negotiables to sustain the position — this is the module where it becomes durable, not situational.
+Leaders leave able to:
+Build a personal leadership manifesto and a set of non-negotiables
+Design a rhythm of rituals that sustain influence beyond any one win
+Leave with a 90-day plan for the specific lever and trap named in their diagnostic — including a current relationship/sponsorship map
+Integrates all four threads and all three traps into a durable operating system.
+
+
+WHAT PARTICIPANTS LEAVE ABLE TO DO
+Read the system
+Diagnose where their real influence sits across the three levers
+Recognise which leadership trap is operating, and why
+Map where a decision structure, not a person, is the actual blocker
+Move earlier
+Enter the planning cycle before the roadmap is already set
+Build a point of view before being asked for one
+Claim orchestration of cross-functional seams without formal authority
+Speak the business&apos;s language
+Translate design judgment into finance, sales, and engineering vocabularies
+Build investment cases in payback period and risk reduction
+Present metrics tied to numbers the business already tracks
+Sustain it
+Apply decision hygiene at board level
+Break the Silent Expert habit permanently, not just for one meeting
+Run a leadership operating system with rituals and non-negotiables
+THE TONE &amp; EXPERIENCE
+Design-Led: Leader is:
+Direct, not diplomatic for its own sake
+Commercially fluent, unflinching about politics
+Structured, with real organisational stakes attached to every exercise
+Pitched to an audience that wants to be taken seriously fast, not eased in gently
+
+It&apos;s the kind of program that feels like finally being told the truth about why the room keeps closing without you in it — and leaving with a structural plan to change that, not just a mindset shift.
+
+DELIVERY
+No self-paced version — this audience needs structured cohort delivery, and corporate buyers need accountability mechanisms built in.
+Design Leadership Diagnostic
+Entry point. $500. 20–30 minute AI-coached or 1:1 paid intake.
+Group Program
+The full 13-module curriculum, cohort-delivered. $5,000.
+Executive Coaching
+1:1, for leaders who need the curriculum applied directly to their own organisation in real time. $15,000.
+Corporate Cohort Licensing
+Delivered in-house for a leadership team or design function. $25,000–$50,000.
+WHAT COMES BEFORE
+The Design Leadership Diagnostic is the entry point — it names the lever and trap a leader is caught in, and this curriculum is built to directly address whatever it surfaces. Module 13&apos;s 90-day plan closes the loop by returning explicitly to each participant&apos;s own diagnostic result.

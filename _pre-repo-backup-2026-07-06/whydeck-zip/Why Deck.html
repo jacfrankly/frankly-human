@@ -1,0 +1,479 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>The Why Deck</title>
+
+  <!-- Type -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Spectral:ital,wght@0,400;0,500;0,600;1,400&family=Rubik:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; min-height: 100%; }
+    body {
+      background: #F4ECDC;
+      color: #2A2520;
+      font-family: 'Fraunces', Georgia, serif;
+      font-feature-settings: "ss01", "ss02";
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    /* ── App shell ─────────────────────────────────────────────── */
+    .app { min-height: 100vh; padding: 56px 48px 220px; }
+
+    .app-header {
+      max-width: 1280px;
+      margin: 0 auto 56px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      grid-template-rows: auto auto;
+      grid-template-areas:
+        "mark title actions"
+        "mark sub   actions";
+      column-gap: 20px;
+      row-gap: 4px;
+      align-items: center;
+    }
+    .app-mark {
+      grid-area: mark;
+      display: flex;
+      gap: 6px;
+      align-self: center;
+    }
+    .app-mark-dot {
+      width: 14px; height: 14px; border-radius: 50%;
+      box-shadow: inset 0 -1px 0 rgba(0,0,0,0.12);
+    }
+    .app-title {
+      grid-area: title;
+      font-size: 44px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1;
+      margin: 0;
+    }
+    .app-sub {
+      grid-area: sub;
+      font-size: 15px;
+      opacity: 0.7;
+      line-height: 1.45;
+      margin: 0;
+    }
+    .app-actions {
+      grid-area: actions;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    .btn {
+      appearance: none;
+      background: transparent;
+      border: 1.5px solid;
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+    }
+    .btn:hover {
+      background: var(--ink);
+      color: var(--bg) !important;
+    }
+    .app-count {
+      font-size: 12px;
+      opacity: 0.55;
+      letter-spacing: 0.02em;
+      margin-left: 8px;
+    }
+
+    /* ── Grid ──────────────────────────────────────────────────── */
+    .app-main { max-width: 1280px; margin: 0 auto; }
+    .grid-wrap { width: 100%; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 36px 28px;
+      justify-items: center;
+      align-items: start;
+    }
+    .grid-cell {
+      cursor: pointer;
+      transition: transform 0.25s cubic-bezier(.2,.7,.2,1);
+    }
+    .grid-cell:hover { transform: translateY(-4px) rotate(-0.4deg); }
+
+    /* ── Card 3D flip ──────────────────────────────────────────── */
+    .card-3d {
+      perspective: 1600px;
+      cursor: pointer;
+      filter: drop-shadow(0 12px 18px rgba(40,30,15,0.10)) drop-shadow(0 2px 4px rgba(40,30,15,0.08));
+    }
+    .card-flip {
+      position: relative;
+      width: 100%; height: 100%;
+      transform-style: preserve-3d;
+      transition: transform 0.7s cubic-bezier(.2,.7,.2,1);
+    }
+    .card-flip.is-flipped { transform: rotateY(180deg); }
+    .card-face {
+      position: absolute; inset: 0;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      overflow: hidden;
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,0.04);
+      /* Opacity fallback so html-to-image / PDF / PPTX exports don't show the
+         mirrored back face through the front. Transitions in sync with flip. */
+      transition: opacity 0.35s ease 0.25s;
+    }
+    .card-back { transform: rotateY(180deg); }
+    /* When not flipped, hide the back; when flipped, hide the front. The
+       transition delay above lines this up with the midpoint of the rotateY. */
+    .card-flip:not(.is-flipped) .card-back { opacity: 0; }
+    .card-flip.is-flipped .card-face:not(.card-back) { opacity: 0; }
+    .card-grain {
+      position: absolute; inset: 0;
+      pointer-events: none;
+      background-image:
+        url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      mix-blend-mode: multiply;
+      opacity: 0.55;
+    }
+
+    /* ── Card front layouts ───────────────────────────────────── */
+    .card-front-inner {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column;
+      padding: 18px;
+    }
+    .card-front-inner[data-layout="centered"] {
+      align-items: stretch; justify-content: space-between;
+    }
+    .card-art-wrap { width: 100%; flex: 1 1 auto; }
+    .card-art-wrap svg { width: 100%; height: 100%; display: block; }
+
+    .card-art-centered { padding: 4px 0 4px; }
+    .card-name-centered {
+      text-align: center;
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1;
+      padding: 10px 0 6px;
+    }
+
+    .card-front-inner[data-layout="asymmetric"] {
+      padding: 22px;
+      display: grid;
+      grid-template-rows: 1fr auto;
+      gap: 8px;
+    }
+    .card-art-asym {
+      align-self: end;
+      width: 78%;
+      margin-left: -6%;
+      aspect-ratio: 200/260;
+    }
+    .card-name-asym {
+      font-size: 30px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 0.95;
+      text-align: left;
+      padding: 0 0 4px;
+    }
+
+    .card-front-inner[data-layout="fullbleed"] {
+      padding: 0;
+      display: grid;
+      grid-template-rows: 1fr auto;
+    }
+    .card-art-full { width: 100%; height: 100%; overflow: hidden; }
+    .card-art-full svg { width: 100%; height: 100%; }
+    .card-name-band {
+      padding: 14px 16px 16px;
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1;
+      text-align: center;
+    }
+
+    .card-corner-id {
+      position: absolute;
+      bottom: 8px; left: 12px; right: 12px;
+      font-size: 8.5px;
+      letter-spacing: 0.16em;
+      opacity: 0.45;
+      display: flex; gap: 6px;
+      pointer-events: none;
+      font-variant-numeric: tabular-nums;
+    }
+    .card-front-inner[data-layout="fullbleed"] ~ .card-corner-id { display: none; }
+
+    .card-pick {
+      position: absolute;
+      top: 10px; right: 10px;
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      border: 1.5px solid;
+      background: transparent;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: transform 0.15s, background 0.15s, color 0.15s;
+      z-index: 3;
+    }
+    .card-pick:hover { transform: scale(1.1); }
+    .card-pick.is-picked { transform: scale(1.05); }
+
+    /* ── Card back ─────────────────────────────────────────────── */
+    .card-back-inner {
+      position: absolute; inset: 0;
+      padding: 24px 22px 20px;
+      display: flex; flex-direction: column;
+    }
+    .card-back-num {
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      font-weight: 500;
+      font-variant-numeric: tabular-nums;
+    }
+    .card-back-name {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-top: 4px;
+      line-height: 1;
+    }
+    .card-back-rule {
+      width: 36px; height: 3px;
+      margin: 14px 0 12px;
+      border-radius: 2px;
+    }
+    .card-back-blurb {
+      font-size: 14px;
+      line-height: 1.5;
+      flex: 0 0 auto;
+      text-wrap: pretty;
+    }
+    .card-back-prompt-label {
+      margin-top: auto;
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      font-weight: 600;
+      padding-top: 10px;
+    }
+    .card-back-prompt {
+      font-size: 16px;
+      font-style: italic;
+      line-height: 1.3;
+      margin-top: 4px;
+      text-wrap: balance;
+    }
+    .card-back-mark {
+      position: absolute;
+      bottom: 14px; right: 14px;
+      width: 56px; height: 56px;
+      opacity: 0.85;
+    }
+
+    /* ── Focus view (modal) ────────────────────────────────────── */
+    .focus {
+      position: fixed; inset: 0;
+      background: rgba(20, 16, 10, 0.62);
+      backdrop-filter: blur(14px) saturate(140%);
+      -webkit-backdrop-filter: blur(14px) saturate(140%);
+      z-index: 2000;
+      display: grid;
+      grid-template-columns: 80px 1fr 80px;
+      align-items: center;
+      animation: focusFade 0.3s ease;
+    }
+    @keyframes focusFade {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .focus-stage {
+      grid-column: 2;
+      display: flex; flex-direction: column;
+      align-items: center; gap: 28px;
+      animation: focusRise 0.45s cubic-bezier(.2,.7,.2,1);
+    }
+    @keyframes focusRise {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .focus-stage .card-3d { transform: scale(1.15); }
+    .focus-meta {
+      color: rgba(255,255,255,0.7);
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      display: flex; gap: 10px;
+      margin-top: 36px;
+    }
+    .focus-meta-sep { opacity: 0.4; }
+
+    .focus-close {
+      position: absolute;
+      top: 24px; right: 24px;
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(255,255,255,0.5);
+      background: transparent;
+      color: rgba(255,255,255,0.85);
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.15s;
+    }
+    .focus-close:hover {
+      background: rgba(255,255,255,0.12);
+      transform: rotate(90deg);
+    }
+    .focus-nav {
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(255,255,255,0.4);
+      background: transparent;
+      color: rgba(255,255,255,0.85);
+      font-size: 22px;
+      cursor: pointer;
+      justify-self: center;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.15s, transform 0.15s, border-color 0.15s;
+    }
+    .focus-nav:hover {
+      background: rgba(255,255,255,0.12);
+      border-color: rgba(255,255,255,0.7);
+    }
+    .focus-prev:hover { transform: translateX(-3px); }
+    .focus-next:hover { transform: translateX(3px); }
+
+    /* ── Pick tray ─────────────────────────────────────────────── */
+    .tray {
+      position: fixed;
+      left: 0; right: 0; bottom: 0;
+      padding: 18px 48px 24px;
+      border-top: 1px solid;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      z-index: 100;
+    }
+    .tray-label {
+      display: flex; align-items: baseline; gap: 10px;
+      flex: 0 0 auto;
+      min-width: 200px;
+    }
+    .tray-num {
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1;
+    }
+    .tray-label > span:nth-child(2) {
+      font-size: 13px;
+      letter-spacing: 0.04em;
+      opacity: 0.75;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+    .tray-hint {
+      font-size: 12px;
+      opacity: 0.5;
+      font-style: italic;
+    }
+    .tray-slots {
+      display: flex;
+      gap: 12px;
+      flex: 1 1 auto;
+    }
+    .tray-slot {
+      width: 76px; height: 108px;
+      flex: 0 0 auto;
+      position: relative;
+      transition: transform 0.2s;
+    }
+    .tray-slot-empty {
+      border: 1.5px dashed;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+    }
+    .tray-slot-full {
+      cursor: pointer;
+    }
+    .tray-slot-full:hover {
+      transform: translateY(-3px) rotate(-1deg);
+    }
+    .tray-remove {
+      position: absolute;
+      top: -6px; right: -6px;
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      border: 0;
+      cursor: pointer;
+      font-size: 11px;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+    .tray-slot-full:hover .tray-remove { opacity: 1; }
+
+    .card-mini {
+      width: 100%; height: 100%;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(40,30,15,0.15);
+      display: flex; flex-direction: column;
+    }
+    .card-mini svg { flex: 1 1 auto; }
+    .card-mini-name {
+      font-size: 11px;
+      font-weight: 700;
+      text-align: center;
+      padding: 4px 2px 8px;
+      letter-spacing: -0.01em;
+    }
+
+    /* ── Responsive ─────────────────────────────────────────────── */
+    @media (max-width: 720px) {
+      .app { padding: 32px 20px 200px; }
+      .app-header {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+          "mark"
+          "title"
+          "sub"
+          "actions";
+      }
+      .app-title { font-size: 32px; }
+      .grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 22px 16px; }
+      .tray { padding: 14px 16px 18px; gap: 12px; }
+      .tray-label { min-width: auto; }
+      .tray-slot { width: 56px; height: 80px; }
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <!-- React + Babel -->
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+  <script type="text/babel" src="tweaks-panel.jsx"></script>
+  <script type="text/babel" src="card-art.jsx"></script>
+  <script type="text/babel" src="app.jsx"></script>
+</body>
+</html>

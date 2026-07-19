@@ -1,0 +1,691 @@
+<!doctype html>
+<html lang="en" data-mode="participant">
+<head>
+<meta charset="utf-8" />
+<title>D2M · Module 06 · Future Self — Design to Me</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..900,0..100;1,9..144,300..900,0..100&family=Inter:wght@400;500;600&family=Allura&family=Patrick+Hand&display=swap" rel="stylesheet">
+<style>
+/* =====================================================================
+   D2M · Module 06 · Future Self
+   ===================================================================== */
+:root {
+  --ink:      #100000;
+  --charcoal: #423B3B;
+  --paper:    #FBF7EE;
+  --paper-2:  #F4EFE2;
+  --sand:     #E0D2B5;
+  --teal:     #47ACA4;
+  --pink:     #FF3990;
+  --yellow:   #FFBD59;
+  --plum:     #7A1F4A;
+  --muted:    #5E584F;
+  --teal-text: #1F6E67;
+  --pink-text: #C40060;
+  --bar-h:    56px;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body { font-family: 'Inter', sans-serif; font-size: 16px; line-height: 1.55; background: var(--paper); color: var(--ink); -webkit-font-smoothing: antialiased; }
+
+/* TOPBAR */
+.topbar { position: fixed; top: 0; left: 0; right: 0; height: var(--bar-h); background: var(--paper); border-bottom: 1px solid rgba(16,0,0,0.12); display: flex; align-items: center; justify-content: space-between; padding: 0 32px; z-index: 200; gap: 16px; }
+.topbar-left { display: flex; align-items: center; gap: 18px; flex-shrink: 0; }
+.topbar-brand { font-family: 'DM Serif Display', serif; font-size: 18px; letter-spacing: -0.01em; color: var(--ink); text-decoration: none; white-space: nowrap; }
+.topbar-brand em { font-style: italic; color: var(--plum); }
+.topbar-divider { width: 1px; height: 18px; background: var(--sand); flex-shrink: 0; }
+.topbar-module { font-family: 'Inter'; font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+.topbar-center { font-family: 'Inter'; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); flex: 1; text-align: center; }
+.topbar-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.mode-toggle { display: flex; align-items: stretch; border: 1px solid var(--ink); overflow: hidden; height: 30px; }
+.mode-btn { padding: 0 14px; font-family: 'Inter'; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); background: none; border: none; cursor: pointer; transition: background 0.15s, color 0.15s; white-space: nowrap; }
+.mode-sep { width: 1px; background: var(--ink); flex-shrink: 0; }
+html[data-mode="presenter"] .mode-btn.btn-presenter,
+html[data-mode="participant"] .mode-btn.btn-participant { background: var(--ink); color: var(--paper); }
+.topbar-btn { height: 30px; padding: 0 14px; font-family: 'Inter'; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); background: none; border: 1px solid var(--ink); cursor: pointer; transition: background 0.15s, color 0.15s; white-space: nowrap; text-decoration: none; display: flex; align-items: center; }
+.topbar-btn:hover { background: var(--ink); color: var(--paper); }
+.topbar-nav { display: flex; align-items: center; gap: 2px; }
+.nav-btn { height: 30px; padding: 0 10px; font-family: 'Inter'; font-size: 11px; color: var(--muted); background: none; border: none; cursor: pointer; transition: color 0.15s; text-decoration: none; display: flex; align-items: center; }
+.nav-btn:hover { color: var(--ink); }
+
+/* PROGRESS */
+.progress-wrap { position: fixed; top: var(--bar-h); left: 0; right: 0; height: 3px; background: var(--sand); z-index: 199; opacity: 0; pointer-events: none; transition: opacity 0.25s; }
+html[data-mode="participant"] .progress-wrap { opacity: 1; pointer-events: auto; }
+.progress-fill { height: 100%; width: 0%; background: var(--teal); transition: width 0.5s ease; }
+
+/* SLIDES */
+html[data-mode="presenter"] body { overflow: hidden; }
+html[data-mode="presenter"] .slides-wrap { position: fixed; top: var(--bar-h); left: 0; right: 0; bottom: 0; overflow-y: scroll; overscroll-behavior: contain; }
+@media (prefers-reduced-motion: no-preference) {
+  html[data-mode="presenter"] .slides-wrap { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+}
+html[data-mode="participant"] body { overflow-y: auto; padding-top: calc(var(--bar-h) + 3px); }
+
+.slide { position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: center; padding: 80px 72px 64px; }
+html[data-mode="presenter"] .slide { min-height: calc(100vh - var(--bar-h)); scroll-snap-align: start; }
+html[data-mode="participant"] .slide { min-height: unset; padding: 56px 72px; scroll-snap-align: unset; justify-content: flex-start; }
+
+.slide-paper  { background: var(--paper); }
+.slide-paper2 { background: var(--paper-2); }
+.slide-ink    { background: var(--ink); color: var(--paper); }
+.slide-teal   { background: var(--teal); }
+.slide-pink   { background: var(--pink); color: var(--paper); }
+.slide-plum   { background: var(--plum); color: var(--paper); }
+.slide-yellow { background: var(--yellow); }
+.slide-sand   { background: var(--sand); }
+.content { position: relative; z-index: 1; }
+
+/* SLIDE TYPE OVERRIDES */
+html[data-mode="participant"] .slide[data-type="title"]    { min-height: 280px; padding: 56px 72px; justify-content: center; }
+html[data-mode="participant"] .slide[data-type="context"]  { padding: 0; border-bottom: 1px solid rgba(16,0,0,0.1); min-height: unset; justify-content: flex-start; }
+html[data-mode="participant"] .slide[data-type="quick-hit"]{ padding: 36px 72px; }
+html[data-mode="participant"] .slide[data-type="activity"] { padding: 56px 72px; border-top: 3px solid var(--ink); border-bottom: 3px solid var(--ink); margin: 20px 0; }
+html[data-mode="participant"] .slide[data-type="debrief"]  { padding: 40px 72px; border-bottom: 1px solid rgba(16,0,0,0.1); }
+html[data-mode="participant"] .slide[data-type="break"]    { display: none; }
+html[data-mode="participant"] .slide[data-type="close"]    { min-height: unset; padding: 56px 72px; }
+
+/* ACCORDION */
+.ctx-header { display: none; align-items: center; justify-content: space-between; padding: 18px 72px; cursor: pointer; user-select: none; border-bottom: 1px solid rgba(16,0,0,0.08); transition: background 0.15s; gap: 16px; background: none; border-left: none; border-right: none; border-top: none; width: 100%; font: inherit; text-align: left; color: inherit; }
+.ctx-header:hover { background: rgba(16,0,0,0.025); }
+html[data-mode="participant"] .slide[data-type="context"] .ctx-header { display: flex; }
+.ctx-header-left { display: flex; align-items: baseline; gap: 20px; }
+.ctx-eyebrow { font-family: 'Inter'; font-size: 9px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--muted); flex-shrink: 0; }
+.ctx-title { font-family: 'DM Serif Display', serif; font-size: 19px; letter-spacing: -0.01em; color: var(--charcoal); }
+.ctx-icon { font-family: 'Inter'; font-size: 20px; line-height: 1; color: var(--muted); flex-shrink: 0; transition: transform 0.25s; }
+[aria-expanded="true"] .ctx-icon { transform: rotate(45deg); }
+html[data-mode="presenter"] .slide-teaching { flex: 1; display: flex; flex-direction: column; justify-content: center; max-height: none !important; overflow: visible !important; padding: 0 !important; }
+html[data-mode="participant"] .slide[data-type="context"] .slide-teaching { overflow: hidden; max-height: 0; padding: 0 72px; transition: max-height 0.4s ease, padding 0.4s ease; }
+html[data-mode="participant"] .slide[data-type="context"].is-open .slide-teaching { max-height: 1600px; padding: 40px 72px 52px; }
+html[data-mode="presenter"] .ctx-header { display: none !important; }
+
+/* FAC NOTES */
+.fac-note { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(16,0,0,0.88); color: rgba(251,247,238,0.82); padding: 13px 72px; font-family: 'Inter'; font-size: 11.5px; line-height: 1.6; z-index: 10; }
+.fac-note strong { color: var(--yellow); font-weight: 600; }
+.fac-note em { font-style: italic; color: rgba(251,247,238,0.65); }
+html[data-mode="participant"] .fac-note { display: none; }
+
+/* INPUTS */
+html[data-mode="presenter"] .p-input { pointer-events: none; opacity: 0.18; }
+html[data-mode="participant"] .p-input { pointer-events: auto; opacity: 1; }
+.field-group { margin-bottom: 24px; }
+.field-label { display: block; margin-bottom: 8px; font-family: 'Patrick Hand', cursive; font-size: 14px; color: var(--charcoal); }
+.field-num { font-family: 'Inter'; font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-right: 8px; }
+.field-ta { width: 100%; min-height: 80px; padding: 14px 16px; font-family: 'Fraunces', serif; font-size: 15px; line-height: 1.6; font-variation-settings: "SOFT" 50, "opsz" 144; color: var(--ink); background: var(--paper); border: 1px solid rgba(16,0,0,0.12); border-bottom: 2px solid var(--charcoal); outline: none; resize: vertical; transition: border-color 0.15s; }
+.field-ta:focus { border-color: var(--teal-text); border-bottom-color: var(--teal-text); }
+.field-ta::placeholder { color: rgba(16,0,0,0.48); font-style: italic; }
+
+.save-toast { position: fixed; bottom: 28px; right: 32px; background: var(--ink); color: var(--paper); font-family: 'Inter'; font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; padding: 8px 18px; z-index: 300; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+html[data-mode="participant"] .save-toast.visible { opacity: 1; }
+
+/* TYPOGRAPHY */
+.eyebrow { font-family: 'Inter'; font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--charcoal); display: inline-flex; align-items: center; gap: 14px; margin-bottom: 22px; }
+.eyebrow::before { content: ''; width: 28px; height: 1px; background: currentColor; opacity: 0.35; flex-shrink: 0; }
+.slide-plum .eyebrow { color: rgba(251,247,238,0.8); }
+.slide-ink .eyebrow { color: rgba(251,247,238,0.6); }
+.slide-pink .eyebrow { color: rgba(16,0,0,0.8); }
+.slide-teal .eyebrow, .slide-yellow .eyebrow { color: rgba(16,0,0,0.8); }
+
+.serif { font-family: 'DM Serif Display', serif; font-weight: 400; letter-spacing: -0.015em; line-height: 0.95; }
+.serif em { font-style: italic; color: var(--yellow); }
+.slide-paper .serif em, .slide-paper2 .serif em, .slide-sand .serif em { color: var(--plum); }
+.slide-teal .serif em { color: var(--plum); }
+
+.h1 { font-size: clamp(64px, 11vw, 152px); margin: 0 0 24px; }
+.h2 { font-size: clamp(40px, 6vw, 80px); margin: 0 0 22px; max-width: 900px; }
+.h3 { font-size: clamp(28px, 4vw, 52px); margin: 0 0 18px; max-width: 760px; }
+
+.fran { font-family: 'Fraunces', serif; font-weight: 400; line-height: 1.55; font-variation-settings: "SOFT" 50, "opsz" 144; }
+.fran em { font-style: italic; color: var(--plum); }
+.slide-teal .fran { color: rgba(16,0,0,0.78); }
+.slide-teal .fran em { color: var(--plum); }
+
+.body-lg { font-size: clamp(17px, 2.2vw, 24px); max-width: 660px; margin: 0 0 18px; }
+.body-md { font-size: clamp(15px, 1.8vw, 20px); max-width: 640px; margin: 0 0 14px; }
+.body-sm { font-size: 14px; max-width: 580px; margin: 0 0 10px; color: var(--muted); }
+
+.sig { font-family: 'Allura', cursive; line-height: 1; display: block; transform: rotate(-3deg); transform-origin: left; }
+.slide-teal .sig { color: var(--plum); }
+.slide-paper .sig, .slide-paper2 .sig { color: var(--plum); }
+
+/* DECORATIVE */
+.stripe-bar { position: absolute; top: 0; left: 0; right: 0; height: 5px; background: linear-gradient(90deg, var(--teal) 0 25%, var(--pink) 25% 50%, var(--yellow) 50% 75%, var(--plum) 75% 100%); }
+.bg-num { position: absolute; bottom: -24px; right: 52px; font-family: 'DM Serif Display', serif; font-size: clamp(140px, 22vw, 280px); line-height: 0.85; letter-spacing: -0.04em; pointer-events: none; user-select: none; opacity: 0.07; font-style: italic; color: inherit; z-index: 0; }
+html[data-mode="participant"] .slide[data-type="context"] .bg-num { display: none; }
+.mark-hi { background: linear-gradient(180deg, transparent 50%, rgba(255,189,89,0.55) 50%, rgba(255,189,89,0.55) 92%, transparent 92%); padding: 0 3px; }
+
+/* LISTS */
+.clean-list { list-style: none; padding: 0; margin: 12px 0 0; }
+.clean-list li { display: flex; gap: 14px; align-items: baseline; padding: 9px 0; border-bottom: 1px solid rgba(16,0,0,0.07); font-family: 'Fraunces', serif; font-size: clamp(14px, 1.7vw, 18px); line-height: 1.45; font-variation-settings: "SOFT" 50, "opsz" 144; color: var(--charcoal); }
+.clean-list li:last-child { border-bottom: none; }
+.clean-list li::before { content: '—'; font-family: 'Inter'; font-size: 11px; color: var(--teal-text); flex-shrink: 0; }
+.slide-teal .clean-list li { color: rgba(16,0,0,0.8); border-bottom-color: rgba(16,0,0,0.1); }
+.slide-teal .clean-list li::before { color: var(--plum); }
+
+/* FUTURE SELF MAP */
+.fs-map { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; max-width: 1000px; margin: 20px 0; }
+.fs-map-cell { border: 1px solid rgba(16,0,0,0.12); padding: 18px 20px; }
+.fs-map-cell.wide { grid-column: span 3; }
+.fs-map-label { font-family: 'Inter'; font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+.fs-map-label::before { content: ''; width: 12px; height: 2px; background: var(--teal); display: inline-block; flex-shrink: 0; }
+.fs-map-desc { font-family: 'Fraunces', serif; font-size: 13px; line-height: 1.5; font-variation-settings: "SOFT" 50, "opsz" 144; color: var(--muted); }
+
+/* GAP GRID */
+.gap-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; max-width: 900px; margin: 20px 0; }
+.gap-card { border-left: 3px solid var(--ink); padding: 16px 18px; background: var(--paper-2); }
+.gap-card-label { font-family: 'Inter'; font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+.gap-card-text { font-family: 'Fraunces', serif; font-size: 14px; line-height: 1.5; font-variation-settings: "SOFT" 50, "opsz" 144; color: var(--charcoal); font-style: italic; }
+.gap-card.identity { border-left-color: var(--teal); }
+.gap-card.behaviour { border-left-color: var(--pink); }
+.gap-card.environment { border-left-color: var(--yellow); }
+.gap-card.support { border-left-color: var(--plum); }
+
+/* BRIDGE VISUAL */
+.bridge-visual { display: flex; align-items: stretch; gap: 0; max-width: 900px; margin: 20px 0; }
+.bridge-node { flex: 1; border: 1.5px solid var(--ink); padding: 20px 22px; }
+.bridge-node.future { border-color: var(--teal); background: rgba(71,172,164,0.05); }
+.bridge-node-label { font-family: 'Inter'; font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+.bridge-node.future .bridge-node-label { color: var(--teal-text); }
+.bridge-node-text { font-family: 'Fraunces', serif; font-size: 14px; line-height: 1.5; font-variation-settings: "SOFT" 50, "opsz" 144; color: var(--charcoal); font-style: italic; }
+.bridge-connector { display: flex; align-items: center; justify-content: center; padding: 0 18px; font-family: 'DM Serif Display', serif; font-size: 28px; color: var(--sand); flex-shrink: 0; }
+
+/* ACTIVITY BLOCK */
+.act-block { border: 1px solid var(--ink); max-width: 900px; overflow: hidden; margin: 20px 0 28px; }
+.act-head { display: flex; align-items: center; justify-content: space-between; padding: 11px 22px; background: var(--ink); color: var(--paper); }
+.act-label { font-family: 'Inter'; font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; opacity: 0.55; }
+.act-time { font-family: 'Inter'; font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; background: var(--yellow); color: var(--ink); padding: 3px 10px; font-weight: 600; }
+.act-body { padding: 26px 26px 22px; background: var(--paper-2); }
+.act-instruction { font-family: 'DM Serif Display', serif; font-size: clamp(18px, 2.6vw, 26px); line-height: 1.18; letter-spacing: -0.01em; margin: 0 0 18px; }
+.act-instruction em { font-style: italic; color: var(--plum); }
+.act-rules { list-style: none; padding: 0; margin: 0; counter-reset: rules; }
+.act-rules li { counter-increment: rules; display: flex; gap: 14px; align-items: baseline; padding: 9px 0; border-top: 1px solid rgba(16,0,0,0.08); font-family: 'Fraunces', serif; font-size: 14px; line-height: 1.45; font-variation-settings: "SOFT" 50, "opsz" 144; color: var(--charcoal); }
+.act-rules li::before { content: counter(rules, decimal-leading-zero); font-family: 'Inter'; font-size: 9px; letter-spacing: 0.12em; color: var(--pink-text); flex-shrink: 0; padding-top: 1px; }
+
+/* TWO-COL */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: start; max-width: 1100px; }
+
+/* DEBRIEF */
+.debrief-qs { margin: 16px 0 0; }
+.debrief-q { font-family: 'DM Serif Display', serif; font-style: italic; font-size: clamp(19px, 2.5vw, 28px); line-height: 1.2; color: var(--charcoal); padding: 15px 0; border-bottom: 1px solid rgba(16,0,0,0.1); }
+.debrief-q:last-child { border-bottom: none; }
+html[data-mode="presenter"] .reflection-field { display: none; }
+html[data-mode="participant"] .reflection-field { display: block; margin-top: 16px; }
+
+/* PULL QUOTE */
+.pull-quote { position: relative; padding: 0 0 0 6px; max-width: 820px; margin: 20px 0; }
+.pull-glyph { font-family: 'DM Serif Display', serif; font-size: 110px; line-height: 0.6; color: var(--teal-text); opacity: 0.85; display: block; margin-bottom: -18px; user-select: none; font-style: normal; }
+.pull-q { font-family: 'DM Serif Display', serif; font-style: italic; font-size: clamp(20px, 3.2vw, 36px); line-height: 1.15; color: var(--ink); position: relative; z-index: 1; }
+
+/* BREAK */
+.break-time { font-family: 'DM Serif Display', serif; font-size: clamp(80px, 15vw, 180px); line-height: 0.85; letter-spacing: -0.03em; color: var(--paper); }
+.break-time em { font-style: italic; color: var(--yellow); }
+
+/* MODULE CTA */
+.module-cta { display: inline-flex; align-items: center; gap: 16px; margin-top: 32px; text-decoration: none; border: 1.5px solid rgba(16,0,0,0.3); padding: 13px 26px; font-family: 'Inter'; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(16,0,0,0.6); transition: background 0.15s, border-color 0.15s, color 0.15s; }
+.module-cta:hover { background: rgba(16,0,0,0.07); border-color: rgba(16,0,0,0.6); color: var(--ink); }
+
+/* SECTION DIVIDER */
+html[data-mode="participant"] .section-divider { display: flex; align-items: center; gap: 16px; padding: 28px 72px 0; font-family: 'Inter'; font-size: 9px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--muted); }
+html[data-mode="presenter"] .section-divider { display: none; }
+.section-divider::before, .section-divider::after { content: ''; flex: 1; height: 1px; background: var(--sand); }
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .slide { padding: 80px 36px 64px; }
+  html[data-mode="participant"] .slide { padding: 40px 28px; }
+  html[data-mode="participant"] .slide[data-type="context"] .ctx-header { padding: 16px 28px; }
+  html[data-mode="participant"] .slide[data-type="context"] .slide-teaching { padding: 0 28px; }
+  html[data-mode="participant"] .slide[data-type="context"].is-open .slide-teaching { padding: 32px 28px 40px; }
+  html[data-mode="participant"] .section-divider { padding: 20px 28px 0; }
+  .fac-note { padding: 12px 36px; }
+  .two-col, .fs-map, .gap-grid { grid-template-columns: 1fr; gap: 16px; }
+  .fs-map-cell.wide { grid-column: span 1; }
+  .bridge-visual { flex-direction: column; }
+  .bridge-connector { transform: rotate(90deg); padding: 8px 0; }
+  .topbar { padding: 0 16px; gap: 8px; }
+  .topbar-center, .topbar-module { display: none; }
+}
+
+/* PRINT */
+@media print {
+  @page { size: A4 portrait; margin: 18mm 16mm; }
+  html[data-mode="presenter"] * { display: none !important; }
+  html[data-mode="participant"] body { padding-top: 0; }
+  .topbar, .progress-wrap, .ctx-icon, .fac-note, .mode-toggle, .topbar-btn, .topbar-nav, .section-divider, .save-toast { display: none !important; }
+  .slides-wrap { display: block; }
+  .slide { break-inside: avoid; padding: 24px 0 20px; }
+  html[data-mode="participant"] .slide[data-type="break"] { display: none !important; }
+  html[data-mode="participant"] .slide[data-type="title"] { min-height: 100px; padding: 20px 0; }
+  .slide-teal { background: #47ACA4 !important; -webkit-print-color-adjust: exact; color-adjust: exact; }
+  html[data-mode="participant"] .slide[data-type="context"] .ctx-header { display: flex !important; border: none; cursor: default; }
+  html[data-mode="participant"] .slide[data-type="context"] .slide-teaching { max-height: none !important; padding: 16px 0 24px !important; overflow: visible !important; }
+  .field-ta { border: none; border-bottom: 1px solid rgba(16,0,0,0.2); resize: none; min-height: 56px; background: transparent; }
+  .act-block { border: 1px solid rgba(16,0,0,0.3); }
+  .act-head { background: #100000 !important; -webkit-print-color-adjust: exact; color-adjust: exact; }
+  .reflection-field { display: block !important; }
+  html[data-mode="participant"] .p-input { opacity: 1 !important; pointer-events: auto !important; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-left">
+    <a href="../../../index.html" class="topbar-brand"><em>frankly</em> human.</a>
+    <div class="topbar-divider"></div>
+    <span class="topbar-module">Module 06 · Future Self</span>
+  </div>
+  <div class="topbar-center">2.5 hours · one 10-min break</div>
+  <div class="topbar-right">
+    <div class="topbar-nav">
+      <a href="05-life-systems.html" class="nav-btn">← Prev</a>
+      <a href="07-decision-design.html" class="nav-btn">Next →</a>
+    </div>
+    <div class="mode-toggle">
+      <button class="mode-btn btn-presenter" onclick="setMode('presenter')">Present</button>
+      <div class="mode-sep"></div>
+      <button class="mode-btn btn-participant" onclick="setMode('participant')">Workbook</button>
+    </div>
+    <a href="06-future-self-canvas.html" class="topbar-btn" target="_blank">A3 Canvas</a>
+    <button class="topbar-btn" onclick="window.print()">Print</button>
+  </div>
+</div>
+
+<div class="progress-wrap"><div class="progress-fill" id="progressFill"></div></div>
+<div class="save-toast" id="saveToast">Saved</div>
+
+<div class="slides-wrap" id="slidesWrap">
+
+  <!-- Slide 1 · Title -->
+  <div class="slide slide-teal" data-type="title">
+    <div class="stripe-bar"></div>
+    <div class="content">
+      <div class="eyebrow">Design to Me · Module 06</div>
+      <h1 class="serif h1">Future<br><em>Self</em></h1>
+      <p class="fran body-lg" style="margin-top:16px;">You can't design a life you haven't imagined.</p>
+      <span class="sig" style="font-size:42px; margin-top:28px;">frankly human.</span>
+    </div>
+    <div class="bg-num">06</div>
+  </div>
+
+  <!-- Slide 2 · Context: What this module is about -->
+  <div class="slide slide-paper" data-type="context">
+    <button type="button" class="ctx-header" onclick="toggleCtx(this)" aria-expanded="false">
+      <div class="ctx-header-left">
+        <span class="ctx-eyebrow">Module Overview</span>
+        <span class="ctx-title">What We're Doing Today</span>
+      </div>
+      <span class="ctx-icon">+</span>
+    </button>
+    <div class="slide-teaching">
+      <div class="content">
+        <div class="eyebrow">Module Overview</div>
+        <h2 class="serif h2">What We're Doing <em>Today</em></h2>
+        <p class="fran body-lg">Most people plan their future based on their past. This module shifts the frame.</p>
+        <ul class="clean-list">
+          <li>Future Self Map — who you're becoming</li>
+          <li>Identity gap — the shift underneath</li>
+          <li>Behaviour gap — what your future self practices</li>
+          <li>Environment &amp; support gap — what you need around you</li>
+          <li>Behaviour bridge — the smallest step across</li>
+        </ul>
+      </div>
+    </div>
+    <div class="bg-num">02</div>
+  </div>
+
+  <!-- Slide 3 · Context: Future Self as Design Partner -->
+  <div class="slide slide-paper2" data-type="context">
+    <button type="button" class="ctx-header" onclick="toggleCtx(this)" aria-expanded="false">
+      <div class="ctx-header-left">
+        <span class="ctx-eyebrow">The Frame</span>
+        <span class="ctx-title">Your Future Self as Design Partner</span>
+      </div>
+      <span class="ctx-icon">+</span>
+    </button>
+    <div class="slide-teaching">
+      <div class="content">
+        <div class="eyebrow">The Frame</div>
+        <h2 class="serif h2">Your Future Self as <em>Design Partner</em></h2>
+        <p class="fran body-lg">Your future self is not a fantasy. It's a direction.</p>
+        <ul class="clean-list">
+          <li>Directional — not an endpoint, a compass</li>
+          <li>Grounded — shaped by your real values and constraints</li>
+          <li>Values-aligned — already reflected in who you're becoming</li>
+          <li>Already emerging — showing up in small moments right now</li>
+        </ul>
+        <p class="fran body-md" style="margin-top:20px; color:var(--muted);">Imagining your future self gives you direction, not pressure. It's a design partner, not a performance standard.</p>
+      </div>
+    </div>
+    <div class="bg-num">03</div>
+  </div>
+
+  <!-- Slide 4 · Quick Hit 01 -->
+  <div class="slide slide-ink" data-type="quick-hit">
+    <div class="content">
+      <div class="eyebrow">Quick Hit 01</div>
+      <h2 class="serif h2" style="color:var(--paper);">What does your future self <em>do</em> that you don't yet?</h2>
+      <p class="fran body-md" style="color:rgba(251,247,238,0.7); margin-top:16px;">Write it down. Don't edit it.</p>
+      <div class="p-input" style="margin-top:28px;">
+        <div class="field-group">
+          <label class="field-label" style="color:rgba(251,247,238,0.55);">One thing your future self does consistently…</label>
+          <textarea class="field-ta" style="background:rgba(251,247,238,0.06); border-color:rgba(251,247,238,0.12); border-bottom-color:rgba(251,247,238,0.35); color:var(--paper);" rows="3" data-field="m06_quickhit" placeholder="She rests without guilt. He creates before he checks email…"></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="fac-note"><strong>Facilitator:</strong> 60s silent writing → 2 min pair share → collect 3–4 from room. <em>Common answers: rests more, says no earlier, creates consistently, asks for help, takes risks.</em> Use them to land: "Your future self reveals what wants to grow in you."</div>
+  </div>
+
+  <!-- Slide 5 · Concept: Future Self Map -->
+  <div class="slide slide-paper" data-type="context">
+    <button type="button" class="ctx-header" onclick="toggleCtx(this)" aria-expanded="false">
+      <div class="ctx-header-left">
+        <span class="ctx-eyebrow">Concept 01</span>
+        <span class="ctx-title">The Future Self Map</span>
+      </div>
+      <span class="ctx-icon">+</span>
+    </button>
+    <div class="slide-teaching">
+      <div class="content">
+        <div class="eyebrow">Concept 01</div>
+        <h2 class="serif h2">The Future <em>Self Map</em></h2>
+        <p class="fran body-lg">Your future self isn't just a job or a goal. It's a whole person.</p>
+        <div class="fs-map">
+          <div class="fs-map-cell">
+            <div class="fs-map-label">Identity</div>
+            <div class="fs-map-desc">Who they are. How they show up. The story they live from.</div>
+          </div>
+          <div class="fs-map-cell">
+            <div class="fs-map-label">Behaviour</div>
+            <div class="fs-map-desc">What they do consistently. What they've stopped doing.</div>
+          </div>
+          <div class="fs-map-cell">
+            <div class="fs-map-label">Environment</div>
+            <div class="fs-map-desc">Where they work, rest, create. What surrounds them.</div>
+          </div>
+          <div class="fs-map-cell">
+            <div class="fs-map-label">Relationships</div>
+            <div class="fs-map-desc">Who they're close to. How they ask for help.</div>
+          </div>
+          <div class="fs-map-cell">
+            <div class="fs-map-label">Work</div>
+            <div class="fs-map-desc">What they do, why, and how much energy it takes.</div>
+          </div>
+          <div class="fs-map-cell" style="display:flex; align-items:center; justify-content:center;">
+            <p class="fran" style="font-size:13px; color:var(--muted); font-style:italic; text-align:center;">Not a perfect version — a <em>directional</em> one.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="bg-num">05</div>
+  </div>
+
+  <!-- Slide 6 · Concept: Gap Analysis -->
+  <div class="slide slide-paper2" data-type="context">
+    <button type="button" class="ctx-header" onclick="toggleCtx(this)" aria-expanded="false">
+      <div class="ctx-header-left">
+        <span class="ctx-eyebrow">Concept 02</span>
+        <span class="ctx-title">Gap Analysis</span>
+      </div>
+      <span class="ctx-icon">+</span>
+    </button>
+    <div class="slide-teaching">
+      <div class="content">
+        <div class="eyebrow">Concept 02</div>
+        <h2 class="serif h2">Gaps Are <em>Design Opportunities</em></h2>
+        <p class="fran body-lg">The gap between you now and your future self is not a failure. It's a design brief.</p>
+        <div class="gap-grid">
+          <div class="gap-card identity">
+            <div class="gap-card-label">Identity Gap</div>
+            <div class="gap-card-text">Who do you need to become? What story do you need to shift?</div>
+          </div>
+          <div class="gap-card behaviour">
+            <div class="gap-card-label">Behaviour Gap</div>
+            <div class="gap-card-text">What does your future self do that you don't yet?</div>
+          </div>
+          <div class="gap-card environment">
+            <div class="gap-card-label">Environment Gap</div>
+            <div class="gap-card-text">What does your future self have around them that you don't?</div>
+          </div>
+          <div class="gap-card support">
+            <div class="gap-card-label">Support Gap</div>
+            <div class="gap-card-text">Who do they have in their corner? What support exists?</div>
+          </div>
+        </div>
+        <p class="fran body-sm" style="margin-top:12px;">The goal is not to close all gaps. Choose the ones that matter most.</p>
+      </div>
+    </div>
+    <div class="bg-num">06</div>
+  </div>
+
+  <!-- Slide 7 · Activity 01 -->
+  <div class="slide slide-paper" data-type="activity">
+    <div class="content">
+      <div class="eyebrow">Activity 01</div>
+      <div class="act-block">
+        <div class="act-head">
+          <span class="act-label">Activity 01 · Future Self Map + Gap Identification</span>
+          <span class="act-time">20 min</span>
+        </div>
+        <div class="act-body">
+          <p class="act-instruction">Map your future self. Then name <em>the gap.</em></p>
+          <ul class="act-rules">
+            <li>Write your Future Self Map — 12–18 months from now. Identity, behaviour, environment, relationships, work.</li>
+            <li>Identify your identity gap — who do you need to become?</li>
+            <li>Identify your behaviour gap — what does your future self do that you don't yet?</li>
+            <li>Identify your environment or support gap.</li>
+            <li>Pairs: share the gap that feels most important.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="p-input">
+        <div class="field-group">
+          <label class="field-label"><span class="field-num">01</span>My future self — 12–18 months from now</label>
+          <textarea class="field-ta" rows="5" data-field="m06_future_self_map" placeholder="Describe who you're becoming — identity, behaviour, environment, relationships, work…"></textarea>
+        </div>
+        <div class="two-col" style="gap:28px; max-width:900px;">
+          <div class="field-group">
+            <label class="field-label"><span class="field-num">02</span>Identity gap — who I need to become</label>
+            <textarea class="field-ta" rows="3" data-field="m06_identity_gap" placeholder="The shift in how I see myself…"></textarea>
+          </div>
+          <div class="field-group">
+            <label class="field-label"><span class="field-num">03</span>Behaviour gap — what my future self does</label>
+            <textarea class="field-ta" rows="3" data-field="m06_behaviour_gap" placeholder="The thing I don't do yet that my future self does…"></textarea>
+          </div>
+        </div>
+        <div class="field-group" style="max-width:900px;">
+          <label class="field-label"><span class="field-num">04</span>Environment or support gap</label>
+          <textarea class="field-ta" rows="3" data-field="m06_environment_gap" placeholder="What my future self has around them that I don't yet…"></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="fac-note"><strong>Watch for:</strong> fantasy futures — ground gently. Work-only futures — invite whole-life thinking. Minimising gaps — normalise them. <em>12 min individual → 6 min pairs → 2 min group: "Which gap surprised you?"</em></div>
+  </div>
+
+  <!-- Slide 8 · Debrief 01 -->
+  <div class="slide slide-paper2" data-type="debrief">
+    <div class="content">
+      <div class="eyebrow">Debrief 01</div>
+      <h2 class="serif h3">Your future self is already <em>in motion.</em></h2>
+      <div class="debrief-qs">
+        <p class="debrief-q">Which gap feels most important to close?</p>
+        <p class="debrief-q">Which gap feels easiest to start with?</p>
+        <p class="debrief-q">Which gap surprised you?</p>
+      </div>
+      <p class="fran body-md" style="margin-top:24px; color:var(--muted);">Land on: <em>"You're just catching up to the version of yourself that's already becoming."</em></p>
+      <div class="reflection-field p-input">
+        <textarea class="field-ta" rows="3" data-field="m06_debrief1_reflection" placeholder="What landed for you in this debrief…"></textarea>
+      </div>
+    </div>
+    <div class="fac-note"><strong>Facilitator:</strong> Choose one debrief question based on room energy. Land on the affirmation before the break.</div>
+  </div>
+
+  <!-- Slide 9 · Break -->
+  <div class="slide slide-ink" data-type="break">
+    <div class="content">
+      <div class="eyebrow" style="color:rgba(251,247,238,0.5);">Take a breath</div>
+      <div class="break-time">10<br><em>min</em></div>
+      <p class="fran body-md" style="color:rgba(251,247,238,0.55); margin-top:20px;">Be back at: <strong style="color:var(--yellow);">______</strong></p>
+    </div>
+  </div>
+
+  <!-- Slide 10 · Concept: Designing the Bridge -->
+  <div class="slide slide-paper" data-type="context">
+    <button type="button" class="ctx-header" onclick="toggleCtx(this)" aria-expanded="false">
+      <div class="ctx-header-left">
+        <span class="ctx-eyebrow">Concept 03</span>
+        <span class="ctx-title">Designing the Bridge</span>
+      </div>
+      <span class="ctx-icon">+</span>
+    </button>
+    <div class="slide-teaching">
+      <div class="content">
+        <div class="eyebrow">Concept 03</div>
+        <h2 class="serif h2">Designing the <em>Bridge</em></h2>
+        <p class="fran body-lg">You don't become your future self through willpower. You become them through behaviour.</p>
+        <div class="bridge-visual">
+          <div class="bridge-node">
+            <div class="bridge-node-label">Present Self</div>
+            <div class="bridge-node-text">Where you are now. What you do today.</div>
+          </div>
+          <div class="bridge-connector">→</div>
+          <div class="bridge-node future">
+            <div class="bridge-node-label">Behaviour Bridge</div>
+            <div class="bridge-node-text">The smallest version of the behaviour that begins to close the gap.</div>
+          </div>
+          <div class="bridge-connector">→</div>
+          <div class="bridge-node">
+            <div class="bridge-node-label">Future Self</div>
+            <div class="bridge-node-text">Who you're becoming. The direction you're designing toward.</div>
+          </div>
+        </div>
+        <ul class="clean-list" style="max-width:700px;">
+          <li>Future self journals daily → You journal once a week.</li>
+          <li>Future self sets boundaries → You say no to one thing.</li>
+          <li>Future self creates → You create for 10 minutes.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="bg-num">10</div>
+  </div>
+
+  <!-- Slide 11 · Activity 02 -->
+  <div class="slide slide-paper2" data-type="activity">
+    <div class="content">
+      <div class="eyebrow">Activity 02</div>
+      <div class="act-block">
+        <div class="act-head">
+          <span class="act-label">Activity 02 · Choose a Behaviour Bridge</span>
+          <span class="act-time">20 min</span>
+        </div>
+        <div class="act-body">
+          <p class="act-instruction">Choose one behaviour your future self practices. Then <em>shrink it.</em></p>
+          <ul class="act-rules">
+            <li>Choose one behaviour your future self does consistently.</li>
+            <li>Write the smallest version of that behaviour — the 5% version.</li>
+            <li>Identify what support would help you practice it this week.</li>
+            <li>Pairs: share your behaviour bridge.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="p-input">
+        <div class="field-group" style="max-width:900px;">
+          <label class="field-label"><span class="field-num">05</span>My behaviour bridge — the smallest version</label>
+          <textarea class="field-ta" rows="4" data-field="m06_future_self_shift" placeholder="My future self does X consistently. This week, the smallest version is…"></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="fac-note"><strong>Watch for:</strong> behaviours too big → shrink to 5% version. Self-criticism → reframe as alignment not achievement. <em>12 min individual → 6 min pairs → 2 min group: "What made that behaviour feel important?"</em></div>
+  </div>
+
+  <!-- Slide 12 · Debrief 02 -->
+  <div class="slide slide-paper" data-type="debrief">
+    <div class="content">
+      <div class="eyebrow">Debrief 02</div>
+      <h2 class="serif h3">Your future self becomes real the moment you <em>act like them.</em></h2>
+      <div class="debrief-qs">
+        <p class="debrief-q">What behaviour bridges present you and future you?</p>
+        <p class="debrief-q">What value does this behaviour honour?</p>
+        <p class="debrief-q">What constraint does this behaviour respect?</p>
+      </div>
+      <div class="reflection-field p-input">
+        <textarea class="field-ta" rows="3" data-field="m06_debrief2_reflection" placeholder="What you're taking away from this debrief…"></textarea>
+      </div>
+    </div>
+    <div class="fac-note"><strong>Facilitator:</strong> Choose one question based on energy. Land on the closing line before moving to the close slide.</div>
+  </div>
+
+  <!-- Slide 13 · Close -->
+  <div class="slide slide-teal" data-type="close">
+    <div class="stripe-bar"></div>
+    <div class="content">
+      <div class="eyebrow">Module 06 · Close</div>
+      <h2 class="serif h2">One takeaway. One behaviour you'll <em>begin</em> this week.</h2>
+      <p class="fran body-md" style="margin-top:20px; color:rgba(16,0,0,0.7);">Don't answer the open questions — capture them for Module 07.</p>
+      <div class="pull-quote" style="margin-top:24px;">
+        <span class="pull-glyph">"</span>
+        <p class="pull-q" style="color:var(--ink);">Next: Decision Design — because your life is shaped by the decisions you make repeatedly.</p>
+      </div>
+      <a href="index.html" class="module-cta">Back to the curriculum →</a>
+    </div>
+    <div class="fac-note"><strong>Facilitator:</strong> Take one answer from the room per prompt. Preview Module 07. Close with warmth — this module opens something tender.</div>
+  </div>
+
+</div><!-- /slides-wrap -->
+
+<script>
+function setMode(m) {
+  document.documentElement.setAttribute('data-mode', m);
+  localStorage.setItem('d2m_mode_global', m);
+}
+(function(){
+  var params = new URLSearchParams(window.location.search);
+  var urlMode = params.get('mode');
+  var savedMode = localStorage.getItem('d2m_mode_global') || 'participant';
+  document.documentElement.setAttribute('data-mode', urlMode || savedMode);
+})();
+
+function toggleCtx(header) {
+  var expanded = header.getAttribute('aria-expanded') === 'true';
+  header.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+  var slide = header.closest('.slide');
+  if (slide) slide.classList.toggle('is-open', !expanded);
+}
+
+var TOAST_TIMER;
+function showToast() {
+  var t = document.getElementById('saveToast');
+  t.classList.add('visible');
+  clearTimeout(TOAST_TIMER);
+  TOAST_TIMER = setTimeout(function(){ t.classList.remove('visible'); }, 1800);
+}
+
+(function(){
+  var PREFIX = 'd2m_m06_';
+  var fields = document.querySelectorAll('[data-field]');
+  fields.forEach(function(el) {
+    var key = PREFIX + el.getAttribute('data-field');
+    var saved = localStorage.getItem(key);
+    if (saved) el.value = saved;
+    el.addEventListener('input', function() {
+      localStorage.setItem(key, el.value);
+      showToast();
+      updateProgress();
+    });
+  });
+
+  function updateProgress() {
+    var filled = 0;
+    fields.forEach(function (f) {
+      if (f.value.trim().length > 8) filled++;
+    });
+    var pct = fields.length ? (filled / fields.length) * 100 : 0;
+    var fill = document.getElementById('progressFill');
+    if (fill) fill.style.width = pct.toFixed(1) + '%';
+  }
+  updateProgress();
+})();
+</script>
+</body>
+</html>

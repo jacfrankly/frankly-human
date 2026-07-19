@@ -1,0 +1,1930 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>App Onboarding Service — Prototype</title>
+<style>
+:root {
+  --navy:#1e3a5f;--blue:#2563eb;--blue-light:#eff6ff;--blue-mid:#bfdbfe;
+  --green:#16a34a;--green-bg:#f0fdf4;--green-bd:#bbf7d0;
+  --amber:#b45309;--amber-bg:#fffbeb;--amber-bd:#fde68a;
+  --red:#dc2626;--red-bg:#fef2f2;--red-bd:#fecaca;
+  --gray-50:#f8fafc;--gray-100:#f1f5f9;--gray-200:#e2e8f0;
+  --gray-400:#94a3b8;--gray-600:#475569;--gray-700:#334155;--gray-800:#1e293b;
+  --radius:8px;--shadow:0 1px 3px rgba(0,0,0,.1),0 1px 2px rgba(0,0,0,.06);
+  --shadow-md:0 4px 6px rgba(0,0,0,.07),0 2px 4px rgba(0,0,0,.06);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--gray-50);color:var(--gray-800);font-size:14px;line-height:1.6}
+a{color:var(--blue);text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* NAV */
+.nav{background:var(--navy);color:#fff;padding:0 24px;display:flex;align-items:center;gap:16px;height:52px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.nav-brand{font-size:15px;font-weight:600;letter-spacing:.3px;flex:1}
+.nav-brand span{opacity:.6;font-weight:400;font-size:13px;margin-left:8px}
+.nav-btn{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:#fff;padding:5px 12px;border-radius:5px;cursor:pointer;font-size:12px}
+.nav-btn:hover{background:rgba(255,255,255,.2)}
+.nav-tag{background:rgba(255,200,0,.2);color:#fde68a;font-size:10px;padding:2px 7px;border-radius:3px;font-weight:600;letter-spacing:.5px}
+
+/* SCREEN */
+.screen{display:none;min-height:calc(100vh - 52px)}
+.screen.active{display:block}
+.page{max-width:860px;margin:0 auto;padding:32px 24px 80px}
+.page-wide{max-width:1060px;margin:0 auto;padding:24px 24px 80px}
+
+/* BREADCRUMB */
+.breadcrumb{font-size:12px;color:var(--gray-400);margin-bottom:20px;display:flex;align-items:center;gap:6px}
+.breadcrumb a{color:var(--gray-400)}
+.breadcrumb a:hover{color:var(--blue)}
+.breadcrumb-sep{color:var(--gray-200)}
+
+/* HERO */
+.hero{background:var(--navy);color:#fff;padding:40px 24px;text-align:center}
+.hero h1{font-size:26px;font-weight:600;margin-bottom:8px}
+.hero p{opacity:.75;font-size:14px;max-width:520px;margin:0 auto 24px}
+.search-wrap{max-width:520px;margin:0 auto;position:relative}
+.search-wrap input{width:100%;padding:13px 48px 13px 16px;border-radius:var(--radius);border:none;font-size:14px;box-shadow:var(--shadow-md)}
+.search-wrap input:focus{outline:2px solid var(--blue-mid)}
+.search-wrap button{position:absolute;right:4px;top:4px;bottom:4px;padding:0 14px;background:var(--blue);color:#fff;border:none;border-radius:5px;cursor:pointer;font-size:13px;font-weight:500}
+.search-wrap button:hover{background:#1d4ed8}
+.search-hint{font-size:12px;opacity:.55;margin-top:10px}
+
+/* CATEGORY NAV */
+.cat-nav{background:#fff;border-bottom:1px solid var(--gray-200);padding:10px 24px;display:flex;gap:8px;flex-wrap:wrap;position:sticky;top:52px;z-index:90}
+.cat-pill{padding:5px 14px;border-radius:20px;font-size:12px;font-weight:500;cursor:pointer;border:1px solid var(--gray-200);background:#fff;color:var(--gray-600);transition:all .15s;white-space:nowrap}
+.cat-pill:hover,.cat-pill.active{background:var(--blue);color:#fff;border-color:var(--blue)}
+
+/* HOME LAYOUT */
+.home-layout{display:grid;grid-template-columns:1fr 320px;gap:24px;align-items:start}
+@media(max-width:860px){.home-layout{grid-template-columns:1fr}}
+.home-main{min-width:0}
+.home-sidebar{display:flex;flex-direction:column;gap:12px}
+
+/* HOME NOTIFICATION */
+.home-notif-bar{background:var(--blue);color:#fff;padding:12px 24px;display:flex;align-items:center;gap:10px;font-size:13px}
+.home-notif-bar strong{font-weight:600}
+.home-notif-link{color:#fff;font-weight:600;text-decoration:underline;cursor:pointer;margin-left:auto;white-space:nowrap;font-size:13px}
+.home-notif-bar .notif-icon{font-size:16px;flex-shrink:0}
+
+/* JTBD WIDGET */
+.jtbd-widget{background:#fff;border:1px solid var(--gray-200);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow)}
+.jtbd-roles{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.jtbd-role{padding:7px 14px;border-radius:6px;border:1px solid var(--gray-200);background:#fff;font-size:12px;font-weight:500;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:6px;color:var(--gray-700)}
+.jtbd-role:hover{border-color:var(--blue);color:var(--blue)}
+.jtbd-role.active{background:var(--blue-light);border-color:var(--blue);color:var(--blue)}
+.jtbd-recs{margin-top:14px;padding-top:14px;border-top:1px solid var(--gray-200);display:none}
+.jtbd-recs.visible{display:block}
+.jtbd-rec-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--gray-400);margin-bottom:10px}
+.jtbd-rec-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.jtbd-rec-card{border:1px solid var(--gray-200);border-radius:6px;padding:10px;cursor:pointer;text-align:center;transition:all .15s;background:#fff}
+.jtbd-rec-card:hover{border-color:var(--blue);box-shadow:var(--shadow)}
+.jtbd-rec-name{font-size:12px;font-weight:600;color:var(--gray-800)}
+.jtbd-rec-cat{font-size:10px;color:var(--gray-400);margin-top:2px}
+.jtbd-rec-status{margin-top:6px}
+
+/* HOME MY REQUESTS SIDEBAR */
+.home-req-section{background:#fff;border:1px solid var(--gray-200);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)}
+.home-req-hd{padding:10px 14px;background:var(--gray-50);border-bottom:1px solid var(--gray-200);display:flex;align-items:center;justify-content:space-between}
+.home-req-hd-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--gray-600)}
+.home-req-row{padding:10px 14px;border-bottom:1px solid var(--gray-100);cursor:pointer;transition:background .1s}
+.home-req-row:hover{background:var(--gray-50)}
+.home-req-app{font-size:13px;font-weight:600;color:var(--gray-800);margin-bottom:3px}
+.home-req-meta{font-size:11px;color:var(--gray-400);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.home-req-empty{padding:16px 14px;font-size:12px;color:var(--gray-400)}
+
+/* FACILITATOR QUICK LINKS */
+.fac-links{padding:10px 14px;background:rgba(37,99,235,.04);border-top:1px solid var(--blue-mid)}
+.fac-links-label{font-size:10px;color:var(--gray-400);font-family:monospace;margin-bottom:6px}
+.fac-links-row{display:flex;gap:5px;flex-wrap:wrap}
+.fac-link{font-size:11px;padding:4px 8px;border-radius:4px;background:#fff;border:1px solid var(--gray-200);color:var(--gray-600);cursor:pointer;transition:all .1s}
+.fac-link:hover{border-color:var(--blue);color:var(--blue)}
+
+/* CARDS */
+.card{background:#fff;border:1px solid var(--gray-200);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow)}
+.card+.card{margin-top:12px}
+.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-top:12px}
+
+/* APP CARD */
+.app-card{background:#fff;border:1px solid var(--gray-200);border-radius:var(--radius);padding:16px;cursor:pointer;transition:border-color .15s,box-shadow .15s}
+.app-card:hover{border-color:var(--blue-mid);box-shadow:var(--shadow-md)}
+.app-card-cat{font-size:11px;color:var(--gray-400);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.app-card-name{font-size:15px;font-weight:600;margin-bottom:4px}
+.app-card-desc{font-size:12px;color:var(--gray-600);line-height:1.5}
+.app-card-foot{margin-top:10px;display:flex;align-items:center;justify-content:space-between}
+
+/* BADGES */
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:2px 8px;border-radius:3px;letter-spacing:.03em}
+.badge-approved{background:var(--green-bg);color:var(--green);border:1px solid var(--green-bd)}
+.badge-review{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-bd)}
+.badge-rejected{background:var(--red-bg);color:var(--red);border:1px solid var(--red-bd)}
+.badge-retired{background:var(--gray-100);color:var(--gray-400);border:1px solid var(--gray-200)}
+.badge-decision{background:#ede9fe;color:#5b21b6;border:1px solid #ddd6fe}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:var(--radius);font-size:13px;font-weight:500;cursor:pointer;border:none;transition:all .15s}
+.btn-primary{background:var(--blue);color:#fff}
+.btn-primary:hover{background:#1d4ed8}
+.btn-secondary{background:#fff;color:var(--gray-800);border:1px solid var(--gray-200)}
+.btn-secondary:hover{background:var(--gray-50);border-color:var(--gray-400)}
+.btn-success{background:var(--green);color:#fff}
+.btn-success:hover{background:#15803d}
+.btn-sm{padding:6px 12px;font-size:12px}
+.btn-lg{padding:12px 24px;font-size:14px}
+
+/* SECTION HEADINGS */
+.section-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--gray-400);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--gray-200)}
+h2.page-title{font-size:22px;font-weight:600;margin-bottom:6px}
+h1.app-h1{font-size:26px;font-weight:700;color:var(--navy);margin-bottom:16px;line-height:1.2}
+h3.section-title{font-size:16px;font-weight:600;margin-bottom:4px}
+.page-subtitle{color:var(--gray-600);font-size:13px;margin-bottom:24px}
+
+/* CALLOUTS */
+.callout{border-radius:var(--radius);padding:14px 16px;margin-bottom:16px;font-size:13px}
+.callout-blue{background:var(--blue-light);border-left:3px solid var(--blue);color:#1e40af}
+.callout-green{background:var(--green-bg);border-left:3px solid var(--green);color:#14532d}
+.callout-amber{background:var(--amber-bg);border-left:3px solid var(--amber);color:#78350f}
+.callout-red{background:var(--red-bg);border-left:3px solid var(--red);color:#991b1b}
+.callout p{margin:0}
+.callout strong{font-weight:600}
+
+/* FORM */
+.form-section{margin-bottom:28px}
+.form-section-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--navy);background:var(--gray-100);padding:8px 12px;border-radius:5px;margin-bottom:14px}
+.field{margin-bottom:16px}
+.field label{display:block;font-size:13px;font-weight:500;margin-bottom:5px}
+.field .help{font-size:12px;color:var(--gray-600);margin-top:3px}
+.field .required{color:var(--red);margin-left:2px}
+input[type=text],input[type=date],input[type=url],select,textarea{width:100%;padding:9px 12px;border:1px solid var(--gray-200);border-radius:5px;font-size:13px;font-family:inherit;background:#fff;transition:border-color .15s}
+input[type=text]:focus,input[type=date]:focus,input[type=url]:focus,select:focus,textarea:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+textarea{resize:vertical;min-height:80px}
+.checkbox-group,.radio-group{display:flex;flex-direction:column;gap:8px}
+.checkbox-row,.radio-row{display:flex;align-items:center;gap:8px;font-size:13px}
+.checkbox-row input,.radio-row input{width:auto;margin:0}
+.field-hidden{display:none}
+.form-actions{display:flex;gap:10px;align-items:center;padding-top:16px;border-top:1px solid var(--gray-200)}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:600px){.field-row{grid-template-columns:1fr}}
+
+/* QUALIFYING SCREEN */
+.qual-progress{display:flex;align-items:center;gap:10px;margin-bottom:24px;padding:14px 16px;background:#fff;border:1px solid var(--gray-200);border-radius:var(--radius)}
+.qual-step-badge{background:var(--blue);color:#fff;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+.qual-step-text{font-size:13px;font-weight:600;color:var(--gray-800)}
+.qual-step-sub{font-size:12px;color:var(--gray-400)}
+.qual-card{background:#fff;border:1px solid var(--gray-200);border-radius:var(--radius);padding:20px;margin-bottom:14px;box-shadow:var(--shadow)}
+.qual-card-num{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--gray-400);margin-bottom:6px}
+.qual-q{font-size:15px;font-weight:600;color:var(--gray-800);margin-bottom:14px;line-height:1.4}
+.qual-def-toggle{font-size:12px;color:var(--blue);cursor:pointer;display:inline-flex;align-items:center;gap:4px;margin-top:10px;background:none;border:none;padding:0;font-family:inherit}
+.qual-def-text{font-size:12px;color:#1e40af;background:var(--blue-light);border-left:3px solid var(--blue);padding:10px 12px;border-radius:0 4px 4px 0;margin-top:8px;line-height:1.6;display:none}
+.qual-def-text.open{display:block}
+
+/* STATUS TRACKER */
+.status-track{display:flex;align-items:flex-start;gap:0;margin:24px 0}
+.status-step{flex:1;text-align:center;position:relative}
+.status-step::before{content:'';position:absolute;top:16px;left:50%;right:-50%;height:2px;background:var(--gray-200);z-index:0}
+.status-step:last-child::before{display:none}
+.status-dot{width:32px;height:32px;border-radius:50%;margin:0 auto 8px;display:flex;align-items:center;justify-content:center;font-size:14px;position:relative;z-index:1;border:2px solid var(--gray-200);background:#fff}
+.status-dot.done{background:var(--green);border-color:var(--green);color:#fff}
+.status-dot.active{background:var(--blue);border-color:var(--blue);color:#fff;box-shadow:0 0 0 4px rgba(37,99,235,.2)}
+.status-dot.alert{background:var(--amber);border-color:var(--amber);color:#fff}
+.status-label{font-size:11px;font-weight:600;color:var(--gray-600)}
+.status-label.active{color:var(--blue)}
+.status-label.alert{color:var(--amber)}
+
+/* STATUS HERO — prominent top card */
+.status-hero-card{background:#fff;border:1px solid var(--gray-200);border-radius:var(--radius);padding:20px 22px;margin-bottom:16px;box-shadow:var(--shadow)}
+.status-hero-app{font-size:22px;font-weight:700;color:var(--navy);margin-bottom:10px;line-height:1.2}
+.status-hero-row{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.status-hero-ref{font-family:monospace;font-size:13px;font-weight:700;color:var(--navy)}
+.status-hero-date{font-size:12px;color:var(--gray-400)}
+.status-hero-sla-wrap{display:flex;flex-direction:column}
+.status-hero-sla-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--gray-400)}
+.status-hero-sla{font-size:13px;font-weight:600;color:var(--gray-800)}
+
+/* REFERENCE */
+.ref-box{background:var(--navy);color:#fff;border-radius:var(--radius);padding:24px;text-align:center;margin-bottom:20px}
+.ref-box .ref-label{font-size:11px;opacity:.6;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
+.ref-box .ref-num{font-size:28px;font-weight:700;letter-spacing:2px;font-family:monospace}
+
+/* DETAIL TABLE */
+.detail-table{width:100%;border-collapse:collapse;font-size:13px}
+.detail-table td{padding:9px 12px;border-bottom:1px solid var(--gray-200);vertical-align:top}
+.detail-table td:first-child{color:var(--gray-600);font-weight:500;width:40%;background:var(--gray-50)}
+.detail-table tr:last-child td{border-bottom:none}
+
+/* OBLIGATION TABLE */
+.ob-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:12px}
+.ob-table th{text-align:left;padding:8px 12px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--gray-400);border-bottom:1px solid var(--gray-200)}
+.ob-table td{padding:12px;border-bottom:1px solid var(--gray-200);vertical-align:top}
+.ob-table tr:last-child td{border-bottom:none}
+.ob-name{font-weight:600;color:var(--gray-800);margin-bottom:3px}
+.ob-detail{font-size:12px;color:var(--gray-600)}
+
+/* RFI */
+.rfi-box{background:#fff;border:2px solid var(--amber);border-radius:var(--radius);padding:20px;margin-top:16px}
+.rfi-from{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--amber);margin-bottom:6px}
+.rfi-q{font-size:14px;font-weight:500;margin-bottom:12px}
+.rfi-deadline{font-size:12px;color:var(--gray-600);margin-bottom:16px}
+
+/* DECISION */
+.decision-banner{border-radius:var(--radius);padding:24px;text-align:center;margin-bottom:20px}
+.decision-approved{background:var(--green-bg);border:1px solid var(--green-bd)}
+.decision-rejected{background:var(--red-bg);border:1px solid var(--red-bd)}
+.decision-icon{font-size:36px;margin-bottom:10px}
+.decision-title{font-size:22px;font-weight:700;margin-bottom:4px}
+.decision-approved .decision-title{color:var(--green)}
+.decision-rejected .decision-title{color:var(--red)}
+
+/* DECISION — home bar and inline request */
+.decision-nav-bar{display:flex;align-items:center;gap:10px;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--gray-200)}
+.decision-home-btn{display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border:1px solid var(--gray-200);border-radius:5px;background:#fff;color:var(--gray-600);font-size:12px;cursor:pointer;font-family:inherit;font-weight:500}
+.decision-home-btn:hover{border-color:var(--blue);color:var(--blue)}
+.decision-crumb{font-size:12px;color:var(--gray-400)}
+.decision-req-block{background:var(--gray-50);border:1px solid var(--gray-200);border-radius:var(--radius);padding:14px 16px;margin-bottom:16px}
+.decision-req-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--gray-400);margin-bottom:8px}
+.decision-req-item{display:flex;align-items:center;gap:12px;font-size:13px;flex-wrap:wrap}
+.decision-req-ref{font-family:monospace;font-size:11px;color:var(--navy);font-weight:700}
+.decision-req-name{font-weight:600;flex:1}
+
+/* PROTOTYPE BANNER */
+.proto-banner{background:#1e1b4b;color:#c7d2fe;font-size:11px;padding:6px 16px;text-align:center;letter-spacing:.3px}
+.proto-banner strong{color:#a5b4fc}
+
+/* DIVIDER */
+.divider{border:none;border-top:1px solid var(--gray-200);margin:24px 0}
+
+/* FEATURED SECTION */
+.home-cta{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:24px}
+@media(max-width:600px){.home-cta{grid-template-columns:1fr}}
+.cta-card{background:#fff;border:1px solid var(--gray-200);border-radius:var(--radius);padding:20px;cursor:pointer;transition:all .15s;box-shadow:var(--shadow)}
+.cta-card:hover{border-color:var(--blue);box-shadow:var(--shadow-md)}
+.cta-card-icon{font-size:24px;margin-bottom:10px}
+.cta-card-title{font-size:15px;font-weight:600;margin-bottom:4px}
+.cta-card-desc{font-size:12px;color:var(--gray-600)}
+
+/* APP DETAIL */
+.app-detail-header{background:#fff;border-bottom:1px solid var(--gray-200);padding:24px}
+.app-detail-cat{font-size:11px;color:var(--gray-400);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.app-detail-name{font-size:24px;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:12px}
+.app-detail-reviewed{font-size:12px;color:var(--gray-400)}
+.next-step-box{background:var(--blue-light);border:1px solid var(--blue-mid);border-radius:var(--radius);padding:18px;margin-top:16px}
+.next-step-box .ns-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--blue);margin-bottom:8px}
+.next-step-box p{font-size:13px;color:#1e40af;margin-bottom:8px}
+.next-step-box p:last-child{margin-bottom:0}
+
+/* PILL NAV */
+.pill-nav{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.pill{padding:6px 14px;border-radius:20px;font-size:12px;font-weight:500;cursor:pointer;border:1px solid var(--gray-200);background:#fff;color:var(--gray-600)}
+.pill:hover,.pill.active{background:var(--blue);color:#fff;border-color:var(--blue)}
+
+/* LOADING */
+.loading-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:300px;gap:16px}
+.spinner{width:40px;height:40px;border:3px solid var(--gray-200);border-top-color:var(--blue);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* MY REQUESTS */
+.request-row{background:#fff;border:1px solid var(--gray-200);border-radius:var(--radius);padding:16px;display:flex;align-items:center;gap:16px;margin-bottom:8px;cursor:pointer}
+.request-row:hover{border-color:var(--blue-mid)}
+.req-ref{font-size:12px;font-family:monospace;font-weight:700;color:var(--navy);min-width:90px}
+.req-name{font-size:14px;font-weight:500;flex:1}
+.req-date{font-size:12px;color:var(--gray-400)}
+
+/* ═══ TESTING HARNESS ═══ */
+#harness-intro{position:fixed;inset:0;background:rgba(15,23,42,.82);z-index:10000;display:flex;align-items:center;justify-content:center;padding:20px}
+.hi-modal{background:#fff;border-radius:12px;max-width:560px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.35);overflow:hidden}
+.hi-header{background:var(--navy);color:#fff;padding:22px 26px}
+.hi-header h2{font-size:17px;font-weight:600;margin-bottom:3px}
+.hi-header p{font-size:12px;opacity:.65;margin:0}
+.hi-body{padding:20px 26px}
+.hi-body>p{font-size:13px;color:var(--gray-600);margin-bottom:14px}
+#hi-task-list{list-style:none;display:flex;flex-direction:column;gap:8px;margin:0 0 8px;padding:0}
+.hi-task-item{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;background:var(--gray-50);border:1px solid var(--gray-200);border-radius:6px}
+.hi-task-num{background:var(--navy);color:#fff;min-width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;margin-top:1px;flex-shrink:0}
+.hi-task-name{font-weight:600;color:var(--gray-800);margin-bottom:2px;font-size:13px}
+.hi-task-scene{color:var(--gray-600);font-size:12px;line-height:1.5}
+.hi-note{font-size:11px;color:var(--gray-400);padding-top:10px;border-top:1px solid var(--gray-200);margin-top:4px}
+.hi-footer{padding:14px 26px;border-top:1px solid var(--gray-200);display:flex;justify-content:flex-end;gap:10px}
+#harness-bar{position:fixed;top:0;left:0;right:0;z-index:9000;background:#0f172a;display:none;flex-direction:row;align-items:stretch;box-shadow:0 2px 10px rgba(0,0,0,.4);height:54px}
+#harness-bar.active{display:flex}
+.hb-inner{display:flex;align-items:center;gap:10px;padding:0 14px;width:100%;height:100%}
+.hb-task-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#64748b;white-space:nowrap}
+.hb-dots{display:flex;gap:4px;align-items:center}
+.hb-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.18);transition:all .2s}
+.hb-dot.done{background:#22c55e}
+.hb-dot.active{background:#60a5fa;transform:scale(1.4)}
+.hb-dot.fail-dot{background:#f87171}
+.hb-sep{width:1px;background:rgba(255,255,255,.1);height:24px;flex-shrink:0}
+.hb-instruction{flex:1;font-size:12px;color:#cbd5e1;line-height:1.4;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.hb-actions{display:flex;gap:5px;align-items:center;flex-shrink:0}
+.hb-btn{padding:5px 11px;border-radius:5px;font-size:11px;font-weight:700;cursor:pointer;border:none;letter-spacing:.02em;transition:opacity .15s}
+.hb-btn-ann{background:rgba(255,255,255,.08);color:#94a3b8;border:1px solid rgba(255,255,255,.12)}
+.hb-btn-ann:hover{background:rgba(234,179,8,.12);color:#fbbf24}
+.hb-btn-ann.ann-on{background:rgba(234,179,8,.18);color:#fbbf24;border-color:rgba(234,179,8,.3)}
+.hb-btn-pass{background:#16a34a;color:#fff}
+.hb-btn-pass:hover{opacity:.85}
+.hb-btn-fail{background:#dc2626;color:#fff}
+.hb-btn-fail:hover{opacity:.85}
+.hb-btn-summary{background:rgba(255,255,255,.1);color:#e2e8f0;border:1px solid rgba(255,255,255,.15)}
+.hb-btn-summary:hover{background:rgba(255,255,255,.2)}
+body.harness-active .proto-banner{margin-top:54px}
+body.harness-active .nav{top:54px}
+body.harness-active .cat-nav{top:106px}
+#ann-overlay{position:fixed;top:54px;left:0;right:0;bottom:0;z-index:8000;display:none;cursor:crosshair}
+#ann-overlay.active{display:block}
+.ann-pin{position:fixed;width:22px;height:22px;border-radius:50%;background:#b45309;color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;z-index:8400;box-shadow:0 2px 6px rgba(0,0,0,.3);transform:translate(-50%,-50%);border:2px solid #fff;pointer-events:none}
+.ann-pin.ann-pin-ghost{opacity:.55;border-style:dashed;background:#d97706}
+#pin-input{position:fixed;z-index:9500;background:#fff;border-radius:8px;box-shadow:0 8px 28px rgba(0,0,0,.22);padding:14px;width:274px;display:none;border:2px solid var(--amber)}
+#pin-input.open{display:block}
+.pi-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--amber);margin-bottom:8px}
+#pin-input textarea{width:100%;border:1px solid var(--gray-200);border-radius:5px;padding:8px;font-size:12px;font-family:inherit;resize:none;min-height:64px;outline:none;box-sizing:border-box}
+#pin-input textarea:focus{border-color:var(--amber)}
+.pi-actions{display:flex;gap:6px;margin-top:8px}
+.pi-save{background:var(--amber);color:#fff;border:none;border-radius:5px;padding:6px 14px;font-size:12px;font-weight:600;cursor:pointer}
+.pi-cancel{background:var(--gray-100);color:var(--gray-600);border:1px solid var(--gray-200);border-radius:5px;padding:6px 12px;font-size:12px;cursor:pointer}
+#summary-panel{position:fixed;inset:0;background:#fff;z-index:11000;display:none;flex-direction:column}
+#summary-panel.open{display:flex}
+.sp-header{background:var(--navy);color:#fff;padding:18px 26px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.sp-header h2{font-size:17px;font-weight:600}
+.sp-close-btn{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;padding:5px 14px;border-radius:5px;cursor:pointer;font-size:12px;font-weight:500}
+.sp-close-btn:hover{background:rgba(255,255,255,.2)}
+.sp-tabs{display:flex;border-bottom:2px solid var(--gray-200);background:#fff;flex-shrink:0}
+.sp-tab{padding:11px 20px;font-size:13px;font-weight:500;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;color:var(--gray-600);transition:color .15s}
+.sp-tab.active{border-color:var(--blue);color:var(--blue)}
+.sp-body{flex:1;overflow-y:auto;padding:22px 26px}
+.sp-task-block{background:#fff;border:1px solid var(--gray-200);border-radius:8px;margin-bottom:14px;overflow:hidden}
+.sp-task-hd{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--gray-50);border-bottom:1px solid var(--gray-200)}
+.sp-task-n{width:26px;height:26px;border-radius:50%;background:var(--navy);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sp-task-ttl{flex:1;font-weight:600;font-size:14px}
+.sp-verdict{padding:2px 9px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:.04em}
+.sp-pass{background:var(--green-bg);color:var(--green);border:1px solid var(--green-bd)}
+.sp-fail{background:var(--red-bg);color:var(--red);border:1px solid var(--red-bd)}
+.sp-pending{background:var(--gray-100);color:var(--gray-400);border:1px solid var(--gray-200)}
+.sp-task-bd{padding:12px 14px}
+.sp-hyp{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--blue);margin-bottom:4px}
+.sp-scene{font-size:12px;color:var(--gray-600);font-style:italic;margin-bottom:10px;line-height:1.5}
+.sp-anns-list{display:flex;flex-direction:column;gap:6px}
+.sp-ann-row{display:flex;gap:8px;align-items:flex-start}
+.sp-ann-num{width:20px;height:20px;border-radius:50%;background:var(--amber);color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.sp-ann-txt{flex:1;font-size:12px;color:#78350f;background:var(--amber-bg);border:1px solid var(--amber-bd);border-radius:4px;padding:5px 8px;line-height:1.5}
+.sp-footer{padding:14px 26px;border-top:1px solid var(--gray-200);display:flex;gap:10px;flex-shrink:0}
+.sp-name-input{flex:1;padding:8px 12px;border:1px solid var(--gray-200);border-radius:6px;font-size:13px;font-family:inherit;outline:none;min-width:0}
+.sp-name-input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+.sp-name-input::placeholder{color:var(--gray-400)}
+.sp-save-btn{background:var(--navy);color:#fff;border:none;padding:9px 16px;border-radius:6px;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:6px}
+.sp-save-btn:hover{background:var(--blue)}
+.sp-save-btn.saved{background:var(--green)}
+.sp-copy-btn{background:var(--blue);color:#fff;border:none;padding:9px 18px;border-radius:6px;font-size:13px;font-weight:500;cursor:pointer}
+.sp-copy-btn:hover{background:#1d4ed8}
+</style>
+</head>
+<body>
+
+<!-- TESTING HARNESS — INTRO -->
+<div id="harness-intro">
+  <div class="hi-modal">
+    <div class="hi-header">
+      <h2>App Onboarding Service — Testing session</h2>
+      <p>Facilitator guide &middot; 4 tasks &middot; approx. 30–45 min &middot; Experiments E4, E5, E6, E7</p>
+    </div>
+    <div class="hi-body">
+      <p>Read each scenario aloud to the participant before they interact with the prototype. Record Pass or Fail using the bar at the top. Use Annotate to pin observations to any screen.</p>
+      <ul id="hi-task-list"></ul>
+      <div class="hi-note">Pass / Fail criteria appear as tooltips on the buttons. Participants must not see these criteria before completing each task.</div>
+    </div>
+    <div class="hi-footer">
+      <button class="btn btn-secondary btn-sm" onclick="document.getElementById('harness-intro').style.display='none'">Open prototype only</button>
+      <button class="btn btn-primary" onclick="startSession()">Begin testing session &rarr;</button>
+    </div>
+  </div>
+</div>
+
+<!-- HARNESS BAR -->
+<div id="harness-bar"></div>
+
+<!-- ANNOTATION OVERLAY -->
+<div id="ann-overlay" onclick="handleAnnotateClick(event)"></div>
+
+<!-- PIN INPUT -->
+<div id="pin-input">
+  <div class="pi-label">&#128204; Annotation</div>
+  <textarea id="pin-text" placeholder="What did you observe at this moment?" onkeydown="if((event.ctrlKey||event.metaKey)&&event.key==='Enter')savePin()"></textarea>
+  <div class="pi-actions">
+    <button class="pi-save" onclick="savePin()">Save note</button>
+    <button class="pi-cancel" onclick="cancelPin()">Cancel</button>
+  </div>
+</div>
+
+<!-- SUMMARY PANEL -->
+<div id="summary-panel">
+  <div class="sp-header">
+    <h2>Session summary</h2>
+    <button class="sp-close-btn" onclick="hideSummary()">&larr; Back to prototype</button>
+  </div>
+  <div class="sp-tabs">
+    <div class="sp-tab active" data-tab="tasks" onclick="switchSummaryTab('tasks')">Task results</div>
+    <div class="sp-tab" data-tab="annotations" onclick="switchSummaryTab('annotations')">All annotations</div>
+  </div>
+  <div id="sp-body" class="sp-body"></div>
+  <div class="sp-footer">
+    <input type="text" id="session-name-input" class="sp-name-input" placeholder="Session name — e.g. Participant 1 · Finance team">
+    <button class="sp-save-btn" id="sp-save-btn" onclick="saveTestFeedback()">&#128190; Save test feedback</button>
+    <button class="sp-copy-btn" onclick="copyAsText()">Copy as text</button>
+  </div>
+</div>
+
+<!-- PROTOTYPE BANNER -->
+<div class="proto-banner">
+  <strong>PROTOTYPE</strong> — This is a test version of the App Onboarding Service. No data is saved. For facilitated testing only.
+</div>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-brand">App Onboarding Service <span>Test Organisation</span></div>
+  <button class="nav-btn" onclick="showMyRequests()">My Requests</button>
+  <span class="nav-tag">PROTOTYPE</span>
+</nav>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- SCREEN: HOME                                    -->
+<!-- ═══════════════════════════════════════════════ -->
+<div id="s-home" class="screen active">
+
+  <!-- Notification banner — shown when decision received -->
+  <div id="home-notif" class="home-notif-bar" style="display:none">
+    <span class="notif-icon">&#128276;</span>
+    <span><strong>Decision received</strong> — Your PeopleInsight request has been reviewed.</span>
+    <span class="home-notif-link" onclick="showScreen('s-decision-approved')">View decision &rarr;</span>
+  </div>
+
+  <!-- Hero search -->
+  <div class="hero">
+    <h1>Find or request a business application</h1>
+    <p>Check whether the tool you need is already approved before starting a new request.</p>
+    <div class="search-wrap">
+      <input type="text" id="home-search" placeholder="Search by name or function — e.g. 'video calls' or 'Zoom'" onkeydown="if(event.key==='Enter')doSearch()">
+      <button onclick="doSearch()">Search</button>
+    </div>
+    <div class="search-hint">Try: collaboration &nbsp;·&nbsp; project management &nbsp;·&nbsp; analytics &nbsp;·&nbsp; e-signature</div>
+  </div>
+
+  <!-- Category navigation -->
+  <div class="cat-nav">
+    <button class="cat-pill active" onclick="showCategory('',this)">All</button>
+    <button class="cat-pill" onclick="showCategory('Collaboration',this)">Collaboration</button>
+    <button class="cat-pill" onclick="showCategory('Project Management',this)">Project Management</button>
+    <button class="cat-pill" onclick="showCategory('Analytics',this)">Analytics</button>
+    <button class="cat-pill" onclick="showCategory('Document Management',this)">Document Management</button>
+    <button class="cat-pill" onclick="showCategory('Design',this)">Design</button>
+    <button class="cat-pill" onclick="showCategory('HR',this)">HR / Finance</button>
+  </div>
+
+  <!-- Main content -->
+  <div class="page-wide">
+    <div class="home-layout">
+
+      <!-- Left column: JTBD widget + featured apps -->
+      <div class="home-main">
+
+        <!-- JTBD Widget -->
+        <div class="jtbd-widget" style="margin-bottom:20px">
+          <div class="section-label">Recommended for your role</div>
+          <p style="font-size:13px;color:var(--gray-600);margin-top:-4px;margin-bottom:12px">Select your role to see apps commonly used in your area of work.</p>
+          <div class="jtbd-roles" id="jtbd-roles"></div>
+          <div class="jtbd-recs" id="jtbd-recs">
+            <div class="jtbd-rec-label">Apps used in this role</div>
+            <div class="jtbd-rec-grid" id="jtbd-rec-grid"></div>
+          </div>
+        </div>
+
+        <!-- Featured apps -->
+        <div class="section-label">Featured in the catalogue</div>
+        <div class="card-grid" id="featured-apps"></div>
+      </div>
+
+      <!-- Right sidebar: my requests + CTA -->
+      <div class="home-sidebar">
+
+        <!-- My requests -->
+        <div class="home-req-section">
+          <div class="home-req-hd">
+            <span class="home-req-hd-title">My requests</span>
+            <a href="#" style="font-size:11px;color:var(--blue)" onclick="showMyRequests();return false">View all</a>
+          </div>
+          <div id="home-requests"></div>
+          <div class="fac-links">
+            <div class="fac-links-label">&larr; Facilitator: simulate</div>
+            <div class="fac-links-row">
+              <button class="fac-link" onclick="showScreen('s-status-rfi')">? Cybersecurity question</button>
+              <button class="fac-link" onclick="showScreen('s-decision-approved')">&#10003; Approved</button>
+              <button class="fac-link" onclick="showScreen('s-decision-rejected')">&#10007; Rejected</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Request CTA -->
+        <div class="cta-card" onclick="startQualify()">
+          <div class="cta-card-icon">&#10133;</div>
+          <div class="cta-card-title">Request a new application</div>
+          <div class="cta-card-desc">The tool you need isn't in the catalogue yet. Start an onboarding request.</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- SCREEN: SEARCH RESULTS                          -->
+<!-- ═══════════════════════════════════════════════ -->
+<div id="s-search" class="screen">
+  <div class="page">
+    <div class="breadcrumb">
+      <a href="#" onclick="showScreen('s-home')">Home</a>
+      <span class="breadcrumb-sep">&rsaquo;</span>
+      <span>Search results</span>
+    </div>
+    <h2 class="page-title" id="search-heading">Results</h2>
+    <p class="page-subtitle" id="search-subheading"></p>
+    <div class="search-wrap" style="margin-bottom:24px">
+      <input type="text" id="results-search" placeholder="Refine your search…" onkeydown="if(event.key==='Enter')doSearch()">
+      <button onclick="doSearch()">Search</button>
+    </div>
+    <div id="search-results-grid"></div>
+    <div id="no-results" style="display:none" class="card">
+      <p style="color:var(--gray-600);margin-bottom:16px">No applications match your search.</p>
+      <button class="btn btn-primary" onclick="startQualify()">Request a new application</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- SCREEN: APP DETAIL                              -->
+<!-- ═══════════════════════════════════════════════ -->
+<div id="s-app" class="screen">
+  <div class="app-detail-header">
+    <div class="page" style="padding-top:0;padding-bottom:0">
+      <div class="breadcrumb">
+        <a href="#" onclick="showScreen('s-home')">Home</a>
+        <span class="breadcrumb-sep">&rsaquo;</span>
+        <a href="#" onclick="history.back()">Search results</a>
+        <span class="breadcrumb-sep">&rsaquo;</span>
+        <span id="app-breadcrumb"></span>
+      </div>
+      <div class="app-detail-cat" id="app-category"></div>
+      <div class="app-detail-name">
+        <span id="app-name"></span>
+        <span id="app-status-badge"></span>
+      </div>
+      <div class="app-detail-reviewed" id="app-reviewed"></div>
+    </div>
+  </div>
+  <div class="page" style="padding-top:24px">
+    <div style="display:grid;grid-template-columns:1fr 340px;gap:24px">
+      <div>
+        <div class="section-label">What it does</div>
+        <p id="app-desc" style="font-size:14px;color:var(--gray-600);line-height:1.7;margin-bottom:24px"></p>
+        <div class="section-label">Approved for</div>
+        <p id="app-for" style="font-size:13px;color:var(--gray-600);margin-bottom:24px"></p>
+        <div id="app-note-wrap" style="display:none">
+          <div class="section-label">Note</div>
+          <p id="app-note" style="font-size:13px;color:var(--gray-600)"></p>
+        </div>
+      </div>
+      <div><div id="app-next-step"></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- SCREEN: QUALIFYING QUESTIONS                    -->
+<!-- ═══════════════════════════════════════════════ -->
+<div id="s-qualify" class="screen">
+  <div class="page">
+    <div class="breadcrumb">
+      <a href="#" onclick="showScreen('s-home')">Home</a>
+      <span class="breadcrumb-sep">&rsaquo;</span>
+      <span>Request a new application</span>
+    </div>
+
+    <h2 class="page-title">Before you begin</h2>
+    <p class="page-subtitle">Three quick questions to help us route your request to the right teams. This takes under a minute.</p>
+
+    <div class="qual-progress">
+      <div class="qual-step-badge">1</div>
+      <div>
+        <div class="qual-step-text">Eligibility check</div>
+        <div class="qual-step-sub">Step 1 of 2 &nbsp;&middot;&nbsp; Step 2: Full request form</div>
+      </div>
+    </div>
+
+    <!-- Q1: Desktop app? -->
+    <div class="qual-card">
+      <div class="qual-card-num">Question 1</div>
+      <div class="qual-q">Is this a desktop application that needs to be installed on a computer?</div>
+      <div class="radio-group">
+        <label class="radio-row"><input type="radio" name="q1" value="yes"> Yes — it requires local installation</label>
+        <label class="radio-row"><input type="radio" name="q1" value="no"> No — it's web-based or cloud only</label>
+        <label class="radio-row"><input type="radio" name="q1" value="unsure"> I'm not sure</label>
+      </div>
+      <button class="qual-def-toggle" onclick="toggleQualDef(this)">&#9432; What counts as a desktop application?</button>
+      <div class="qual-def-text">A desktop application requires software to be downloaded and installed on a local computer before it can be used. Examples include standalone versions of Zoom, Adobe Acrobat, or Microsoft Office. Web-based tools that run entirely in a browser (like Google Docs or Miro) are not desktop applications.</div>
+    </div>
+
+    <!-- Q2: Sensitive data? -->
+    <div class="qual-card">
+      <div class="qual-card-num">Question 2</div>
+      <div class="qual-q">Will this application process or store sensitive data?</div>
+      <div class="radio-group">
+        <label class="radio-row"><input type="radio" name="q2" value="yes" id="q2-yes"> Yes</label>
+        <label class="radio-row"><input type="radio" name="q2" value="no"> No</label>
+        <label class="radio-row"><input type="radio" name="q2" value="unsure"> I'm not sure</label>
+      </div>
+      <button class="qual-def-toggle" onclick="toggleQualDef(this)">&#9432; What counts as sensitive data?</button>
+      <div class="qual-def-text">Sensitive data includes: personal information covered by data protection regulations (names, email addresses, HR records, staff performance data); financial data; health data; or anything your organisation classifies as confidential. If you are unsure whether your use case involves sensitive data, answer <strong>Yes</strong> — the review team will confirm the classification.</div>
+    </div>
+
+    <!-- Q3: Business critical? -->
+    <div class="qual-card">
+      <div class="qual-card-num">Question 3</div>
+      <div class="qual-q">Is this application part of a business-critical process?</div>
+      <div class="radio-group">
+        <label class="radio-row"><input type="radio" name="q3" value="yes"> Yes</label>
+        <label class="radio-row"><input type="radio" name="q3" value="no"> No</label>
+        <label class="radio-row"><input type="radio" name="q3" value="unsure"> I'm not sure</label>
+      </div>
+      <button class="qual-def-toggle" onclick="toggleQualDef(this)">&#9432; What counts as business critical?</button>
+      <div class="qual-def-text">Business-critical means your team's core work would be significantly disrupted if this application became unavailable, and there is no reasonable workaround. Examples: a CRM your team uses every day to manage client relationships; a compliance tool required for regulatory reporting. Applications used occasionally or for non-essential tasks are not business-critical.</div>
+    </div>
+
+    <div class="form-actions">
+      <button class="btn btn-primary btn-lg" onclick="submitQualify()">Continue to request form &rarr;</button>
+      <button class="btn btn-secondary" onclick="showScreen('s-home')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- SCREEN: INTAKE FORM                             -->
+<!-- ═══════════════════════════════════════════════ -->
+<div id="s-form" class="screen">
+  <div class="page">
+    <div class="breadcrumb">
+      <a href="#" onclick="showScreen('s-home')">Home</a>
+      <span class="breadcrumb-sep">&rsaquo;</span>
+      <a href="#" onclick="startQualify()">Eligibility check</a>
+      <span class="breadcrumb-sep">&rsaquo;</span>
+      <span>Request a new application</span>
+    </div>
+
+    <div class="qual-progress">
+      <div class="qual-step-badge">2</div>
+      <div>
+        <div class="qual-step-text">Request form</div>
+        <div class="qual-step-sub">Step 2 of 2</div>
+      </div>
+    </div>
+
+    <h2 class="page-title">Request a new application</h2>
+    <p class="page-subtitle">Complete all required fields. Your request will be sent to all relevant review teams automatically on submission.</p>
+
+    <div class="callout callout-blue" style="margin-bottom:24px">
+      <p><strong>Before you start:</strong> Have you checked the <a href="#" onclick="showScreen('s-home')">app catalogue</a>? If the tool you need is already approved, you can request access without starting this process.</p>
+    </div>
+
+    <div id="qualify-summary" style="display:none;margin-bottom:20px"></div>
+
+    <form id="request-form" onsubmit="submitForm(event)">
+
+      <div class="form-section">
+        <div class="form-section-label">About you</div>
+        <div class="field-row">
+          <div class="field">
+            <label>Your name, department, and team <span class="required">*</span></label>
+            <input type="text" id="f-requester" placeholder="e.g. Sam Clarke, Finance, FP&amp;A" required>
+            <div class="help">We use this to route your request and record accountability.</div>
+          </div>
+          <div class="field">
+            <label>Your line manager's name and email <span class="required">*</span></label>
+            <input type="text" id="f-manager" placeholder="e.g. Jo Patel, jo.patel@org.com" required>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="form-section-label">About the application</div>
+        <div class="field-row">
+          <div class="field">
+            <label>Application name and vendor <span class="required">*</span></label>
+            <input type="text" id="f-appname" placeholder="e.g. Figma — Figma Inc." required>
+          </div>
+          <div class="field">
+            <label>Vendor website <span class="required">*</span></label>
+            <input type="url" id="f-vendorurl" placeholder="https://…" required>
+          </div>
+        </div>
+        <div class="field">
+          <label>What problem does this application solve? <span class="required">*</span></label>
+          <textarea id="f-problem" placeholder="In 2–3 sentences, describe the business need this tool will address." required></textarea>
+        </div>
+        <div class="field">
+          <label>How many people will use this, and which teams? <span class="required">*</span></label>
+          <input type="text" id="f-users" placeholder="e.g. 12 people in the Finance team" required>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="form-section-label">Data and systems</div>
+        <div class="field">
+          <label>Will this application process or store personal data? <span class="required">*</span></label>
+          <select id="f-personal-data" onchange="toggleDataFields()" required>
+            <option value="">Select…</option>
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+            <option value="idk">I don't know</option>
+          </select>
+        </div>
+        <div class="field field-hidden" id="field-data-types">
+          <label>What type of personal data? <span class="required">*</span></label>
+          <div class="checkbox-group">
+            <label class="checkbox-row"><input type="checkbox" name="datatype" value="employee"> Employee data (names, contacts, HR records)</label>
+            <label class="checkbox-row"><input type="checkbox" name="datatype" value="customer"> Customer data</label>
+            <label class="checkbox-row"><input type="checkbox" name="datatype" value="financial"> Financial data</label>
+            <label class="checkbox-row"><input type="checkbox" name="datatype" value="health"> Health data</label>
+            <label class="checkbox-row"><input type="checkbox" name="datatype" value="other"> Other</label>
+          </div>
+        </div>
+        <div class="field">
+          <label>Will this application connect to other systems? <span class="required">*</span></label>
+          <select id="f-integrations" onchange="toggleIntegrationFields()" required>
+            <option value="">Select…</option>
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+            <option value="idk">I don't know</option>
+          </select>
+          <div class="help">e.g. HR systems, finance systems, SSO, or data warehouses.</div>
+        </div>
+        <div class="field field-hidden" id="field-systems-list">
+          <label>Which systems will it connect to? <span class="required">*</span></label>
+          <textarea id="f-systems" placeholder="List each system this application will need to connect to."></textarea>
+        </div>
+        <div class="field">
+          <label>Where will data be stored and processed? <span class="required">*</span></label>
+          <select id="f-hosting" required>
+            <option value="">Select…</option>
+            <option value="uk">UK only</option>
+            <option value="eu">EU (including UK)</option>
+            <option value="us">United States</option>
+            <option value="other">Other</option>
+            <option value="idk">I don't know</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="form-section-label">Commercial</div>
+        <div class="field-row">
+          <div class="field">
+            <label>Estimated annual licence cost <span class="required">*</span></label>
+            <select id="f-cost" required>
+              <option value="">Select…</option>
+              <option value="lt2k">Under £2,000</option>
+              <option value="2k5k">£2,000 – £5,000</option>
+              <option value="5k25k">£5,001 – £25,000</option>
+              <option value="gt25k">Over £25,000</option>
+              <option value="idk">I don't know</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>How will this be procured? <span class="required">*</span></label>
+            <select id="f-procurement" required>
+              <option value="">Select…</option>
+              <option value="new">New contract with vendor</option>
+              <option value="existing">Existing contract (expanding licences)</option>
+              <option value="opensource">Open source / free</option>
+              <option value="idk">I don't know</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="form-section-label">Vendor</div>
+        <div class="field">
+          <label>Is this vendor already used elsewhere in the organisation? <span class="required">*</span></label>
+          <select id="f-vendor-used" required>
+            <option value="">Select…</option>
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+            <option value="idk">I don't know</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Which security certifications does this vendor hold? <span class="required">*</span></label>
+          <div class="help" style="margin-bottom:8px">Check the vendor's security or trust page.</div>
+          <div class="checkbox-group">
+            <label class="checkbox-row"><input type="checkbox" name="cert" value="soc2"> SOC 2</label>
+            <label class="checkbox-row"><input type="checkbox" name="cert" value="iso27001"> ISO 27001</label>
+            <label class="checkbox-row"><input type="checkbox" name="cert" value="neither"> Neither</label>
+            <label class="checkbox-row"><input type="checkbox" name="cert" value="idk"> I don't know</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="form-section-label">Timeline</div>
+        <div class="field-row">
+          <div class="field">
+            <label>When do you need this application available? <span class="required">*</span></label>
+            <input type="date" id="f-date" required>
+          </div>
+          <div class="field">
+            <label>If urgent, why?</label>
+            <input type="text" id="f-urgency" placeholder="Leave blank if no specific deadline driver.">
+          </div>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary btn-lg">Submit request</button>
+        <button type="button" class="btn btn-secondary" onclick="showScreen('s-home')">Cancel</button>
+        <span style="font-size:12px;color:var(--gray-400);margin-left:auto">All fields marked * are required</span>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- SCREEN: TRIAGE (loading)                        -->
+<!-- ═══════════════════════════════════════════════ -->
+<div id="s-triage" class="screen">
+  <div class="page" style="padding-top:80px">
+    <div class="loading-screen">
+      <div class="spinner"></div>
+      <div style="text-align:center">
+        <div style="font-size:16px;font-weight:600;margin-bottom:6px">Submitting your request…</div>
+        <div style="font-size:13px;color:var(--gray-600)">Running duplicate check and routing to review teams</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- SCREEN: CONFIRMATION                            -->
+<!-- ═══════════════════════════════════════════════ -->
+<div id="s-confirm" class="screen">
+  <div class="page">
+    <div class="callout callout-green" style="margin-bottom:24px">
+      <p>&#10003; <strong>Request submitted successfully.</strong> A confirmation has been sent to your email address.</p>
+    </div>
+
+    <div class="ref-box">
+      <div class="ref-label">Your reference number</div>
+      <div class="ref-num" id="confirm-ref">AO-2026-0041</div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px">
+      <div class="card">
+        <div class="section-label">Application</div>
+        <p id="confirm-app" style="font-weight:600;font-size:15px"></p>
+      </div>
+      <div class="card">
+        <div class="section-label">Estimated timeframe</div>
+        <p id="confirm-sla" style="font-weight:600;font-size:15px"></p>
+        <p id="confirm-sla-note" style="font-size:12px;color:var(--gray-600);margin-top:4px"></p>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:16px">
+      <div class="section-label">Teams reviewing your request</div>
+      <div id="confirm-teams" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:4px"></div>
+    </div>
+
+    <div class="card" style="margin-bottom:16px">
+      <div class="section-label">What happens next</div>
+      <ol style="padding-left:18px;font-size:13px;color:var(--gray-600);line-height:2">
+        <li>Each reviewing team will assess your request in parallel — you don't need to contact them.</li>
+        <li>If any reviewer needs more information, you'll receive a notification from this portal.</li>
+        <li>When a decision is reached, you'll receive a notification with the outcome and next steps.</li>
+      </ol>
+    </div>
+
+    <div class="callout callout-blue" style="margin-bottom:24px">
+      <p>&#128196; <strong>Did you know?</strong> Many tools your team needs may already be approved. <a href="#" onclick="showScreen('s-home')" style="font-weight:600;color:#1e40af">Browse the app catalogue &rarr;</a> to check before submitting future requests.</p>
+    </div>
+
+    <div style="display:flex;gap:10px">
+      <button class="btn btn-primary" onclick="showScreen('s-status-review')">Track my request</button>
+      <button class="btn btn-secondary" onclick="showScreen('s-home')">Return home</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- SCREEN: STATUS — IN REVIEW                      -->
+<!-- ═══════════════════════════════════════════════ -->
+<div id="s-status-review" class="screen">
+  <div class="page">
+    <div class="breadcrumb">
+      <a href="#" onclick="showScreen('s-home')">Home</a>
+      <span class="breadcrumb-sep">&rsaquo;</span>
+      <span>My requests</span>
+    </div>
+
+    <!-- Prominent app name + ref + timeframe in one card -->
+    <div class="status-hero-card">
+      <div class="status-hero-app" id="status-appname">PeopleInsight</div>
+      <div class="status-hero-row">
+        <span class="status-hero-ref" id="status-ref">AO-2026-1083</span>
+        <span class="badge badge-review">In Review</span>
+        <div class="status-hero-sla-wrap">
+          <span class="status-hero-sla-label">Estimated timeframe</span>
+          <span class="status-hero-sla" id="status-sla">[PLACEHOLDER: 7–30 business days]</span>
+        </div>
+        <span class="status-hero-date">Submitted <span id="status-date">8 Apr 2026</span></span>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:16px">
+      <div class="section-label">Progress</div>
+      <div class="status-track">
+        <div class="status-step"><div class="status-dot done">&#10003;</div><div class="status-label">Submitted</div></div>
+        <div class="status-step"><div class="status-dot done">&#10003;</div><div class="status-label">Triaged</div></div>
+        <div class="status-step"><div class="status-dot active">&#9679;</div><div class="status-label active">In Review</div></div>
+        <div class="status-step"><div class="status-dot">4</div><div class="status-label">Decision</div></div>
+        <div class="status-step"><div class="status-dot">5</div><div class="status-label">Complete</div></div>
+      </div>
+      <div class="callout callout-blue" style="margin-top:16px">
+        <p>Your request is being reviewed by the teams listed below. You do not need to contact them. You'll be notified if anything is needed from you.</p>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:16px">
+      <div class="section-label">Reviewing teams</div>
+      <table class="detail-table">
+        <tr><td>App Packaging</td><td><span class="badge badge-review">In progress</span></td></tr>
+        <tr><td>Supplier Governance</td><td><span class="badge badge-review">In progress</span></td></tr>
+        <tr><td>Cybersecurity</td><td><span class="badge badge-review">In progress</span></td></tr>
+        <tr><td>Licence Management</td><td><span class="badge badge-review">In progress</span></td></tr>
+      </table>
+    </div>
+
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px">
+      <button class="btn btn-secondary btn-sm" onclick="showScreen('s-status-rfi')">Simulate: reviewer sends a question &rarr;</button>
+      <button class="btn btn-secondary btn-sm" onclick="showScreen('s-decision-approved')">Simulate: approved &rarr;</button>
+      <button class="btn btn-secondary btn-sm" onclick="showScreen('s-decision-rejected')">Simulate: rejected &rarr;</button>
+    </div>
+    <div style="margin-top:6px;font-size:11px;color:var(--gray-400)">&larr; Facilitator navigation — not visible in live service</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- SCREEN: STATUS — ACTION REQUIRED (RFI)          -->
+<!-- ═══════════════════════════════════════════════ -->
+<div id="s-status-rfi" class="screen">
+  <div class="page">
+    <div class="breadcrumb">
+      <a href="#" onclick="showScreen('s-home')">Home</a>
+      <span class="breadcrumb-sep">&rsaquo;</span>
+      <a href="#" onclick="showScreen('s-status-review')">My requests</a>
+      <span class="breadcrumb-sep">&rsaquo;</span>
+      <span>Action required</span>
+    </div>
+
+    <div class="callout callout-amber" style="margin-bottom:20px">
+      <p><strong>Action required.</strong> A reviewing team has asked a question about your request. Please respond by <strong>[PLACEHOLDER: 15 Apr 2026]</strong> to avoid a delay.</p>
+    </div>
+
+    <div class="status-hero-card" style="margin-bottom:16px">
+      <div class="status-hero-app" id="rfi-appname">PeopleInsight</div>
+      <div class="status-hero-row">
+        <span class="badge badge-review">Action required</span>
+      </div>
+      <div class="status-track" style="margin:16px 0 0">
+        <div class="status-step"><div class="status-dot done">&#10003;</div><div class="status-label">Submitted</div></div>
+        <div class="status-step"><div class="status-dot done">&#10003;</div><div class="status-label">Triaged</div></div>
+        <div class="status-step"><div class="status-dot done">&#10003;</div><div class="status-label">In Review</div></div>
+        <div class="status-step"><div class="status-dot alert">!</div><div class="status-label alert">Action needed</div></div>
+        <div class="status-step"><div class="status-dot">5</div><div class="status-label">Complete</div></div>
+      </div>
+    </div>
+
+    <div class="rfi-box">
+      <div class="rfi-from">Question from Cybersecurity</div>
+      <div class="rfi-q">Does this application process any data from your organisation's HR system — for example, employee records, payroll data, or workforce planning information?</div>
+      <div class="rfi-deadline">Please respond by <strong>[PLACEHOLDER: 15 Apr 2026]</strong>. Your request will remain paused until we receive your response.</div>
+      <div class="field">
+        <label style="font-weight:600;margin-bottom:8px;display:block">Your response</label>
+        <textarea placeholder="Type your response here. Be as specific as possible — this helps avoid a follow-up question."></textarea>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:4px">
+        <button class="btn btn-primary" onclick="showScreen('s-status-review')">Submit response</button>
+        <button class="btn btn-secondary" onclick="showScreen('s-status-review')">Save draft</button>
+      </div>
+    </div>
+
+    <div style="margin-top:16px;font-size:12px;color:var(--gray-400)">
+      &#9888; Do not contact the Cybersecurity team directly. All responses must be submitted through this portal so they are recorded against your request.
+    </div>
+    <div style="margin-top:16px">
+      <a href="#" onclick="showScreen('s-home')" style="font-size:13px;color:var(--blue)">&larr; Return to home</a>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- SCREEN: DECISION — APPROVED                     -->
+<!-- ═══════════════════════════════════════════════ -->
+<div id="s-decision-approved" class="screen">
+  <div class="page">
+
+    <!-- Home navigation bar -->
+    <div class="decision-nav-bar">
+      <button class="decision-home-btn" onclick="showScreen('s-home')">&larr; Home</button>
+      <span class="decision-crumb">&rsaquo;</span>
+      <span class="decision-crumb">Decision received</span>
+    </div>
+
+    <!-- App name as prominent h1 -->
+    <h1 class="app-h1" id="approved-app">—</h1>
+
+    <!-- Inline request summary -->
+    <div class="decision-req-block">
+      <div class="decision-req-label">This request</div>
+      <div class="decision-req-item">
+        <span class="decision-req-ref" id="approved-ref">AO-2026-1083</span>
+        <span class="decision-req-name">PeopleInsight</span>
+        <span class="badge badge-approved">&#10003; Approved</span>
+        <span style="font-size:12px;color:var(--gray-400)">8 April 2026</span>
+      </div>
+    </div>
+
+    <div class="decision-banner decision-approved">
+      <div class="decision-icon">&#9989;</div>
+      <div class="decision-title">Approved</div>
+      <div style="font-size:13px;color:var(--green);margin-top:4px">Your request has been approved. Access will be provisioned for your team.</div>
+    </div>
+
+    <div class="card" style="margin-bottom:16px">
+      <div class="section-label">Decision details</div>
+      <table class="detail-table">
+        <tr><td>Reference</td><td style="font-family:monospace;font-weight:600">AO-2026-1083</td></tr>
+        <tr><td>Decision date</td><td>8 April 2026</td></tr>
+        <tr><td>Decided by</td><td>App Packaging &middot; Supplier Governance &middot; Cybersecurity &middot; Licence Management</td></tr>
+      </table>
+    </div>
+
+    <div class="card" style="margin-bottom:16px">
+      <div class="section-label">What happens next</div>
+      <ol style="padding-left:18px;font-size:13px;color:var(--gray-600);line-height:2.2">
+        <li>The App Packaging team will build and deploy the application.</li>
+        <li>The SSO team will provision access for the users listed in your request.</li>
+        <li><strong>You will receive a separate notification when access is ready</strong> — estimated within <strong>[PLACEHOLDER: 5 business days]</strong>.</li>
+        <li>You do not need to contact any team to chase provisioning.</li>
+      </ol>
+    </div>
+
+    <div class="callout callout-blue" style="margin-bottom:24px">
+      <p>As the requester, you will be assigned as the <strong>app owner</strong> for this application. This means you are responsible for ensuring ongoing compliance obligations are met. You will receive a summary of these obligations when provisioning is complete.</p>
+    </div>
+
+    <div style="display:flex;gap:10px">
+      <button class="btn btn-success" onclick="showScreen('s-obligations')">View my obligations &rarr;</button>
+      <button class="btn btn-secondary" onclick="showScreen('s-home')">Return home</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- SCREEN: DECISION — REJECTED                     -->
+<!-- ═══════════════════════════════════════════════ -->
+<div id="s-decision-rejected" class="screen">
+  <div class="page">
+
+    <!-- Home navigation bar -->
+    <div class="decision-nav-bar">
+      <button class="decision-home-btn" onclick="showScreen('s-home')">&larr; Home</button>
+      <span class="decision-crumb">&rsaquo;</span>
+      <span class="decision-crumb">Decision received</span>
+    </div>
+
+    <!-- App name as prominent h1 -->
+    <h1 class="app-h1" id="rejected-app">—</h1>
+
+    <!-- Inline request summary -->
+    <div class="decision-req-block">
+      <div class="decision-req-label">This request</div>
+      <div class="decision-req-item">
+        <span class="decision-req-ref" id="rejected-ref">AO-2026-1083</span>
+        <span class="decision-req-name">PeopleInsight</span>
+        <span class="badge badge-rejected">&#10007; Not approved</span>
+        <span style="font-size:12px;color:var(--gray-400)">8 April 2026</span>
+      </div>
+    </div>
+
+    <div class="decision-banner decision-rejected">
+      <div class="decision-icon">&#10060;</div>
+      <div class="decision-title">Not approved</div>
+      <div style="font-size:13px;color:var(--red);margin-top:4px">Your request was reviewed and has not been approved at this time.</div>
+    </div>
+
+    <div class="card" style="margin-bottom:16px">
+      <div class="section-label">Why this decision was reached</div>
+      <p style="font-size:14px;color:var(--gray-600);line-height:1.7">This application processes personal data from the organisation's HR system. The review identified that the data processing scope exceeds what can be approved without additional Cybersecurity and Legal sign-off under current policy. A revised request with a restricted data scope may be considered.</p>
+    </div>
+
+    <div class="card" style="margin-bottom:16px">
+      <div class="section-label">Decision details</div>
+      <table class="detail-table">
+        <tr><td>Reference</td><td style="font-family:monospace;font-weight:600">AO-2026-1083</td></tr>
+        <tr><td>Decision date</td><td>8 April 2026</td></tr>
+      </table>
+    </div>
+
+    <div class="card" style="margin-bottom:16px">
+      <div class="section-label">What you can do now</div>
+      <ul style="padding-left:18px;font-size:13px;color:var(--gray-600);line-height:2.2">
+        <li><strong>Request reconsideration</strong> with a revised data scope. Contact the App Onboarding team within <strong>[PLACEHOLDER: 20 business days]</strong>.</li>
+        <li><strong>Consider an approved alternative.</strong> Check the <a href="#" onclick="showScreen('s-home')">app catalogue</a> for tools approved for analytics and reporting.</li>
+      </ul>
+    </div>
+
+    <div style="display:flex;gap:10px">
+      <button class="btn btn-secondary" onclick="showScreen('s-home')">Return home</button>
+      <button class="btn btn-secondary" onclick="showScreen('s-home')">Browse alternatives</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- SCREEN: OBLIGATIONS                             -->
+<!-- ═══════════════════════════════════════════════ -->
+<div id="s-obligations" class="screen">
+  <div class="page">
+    <div class="breadcrumb">
+      <a href="#" onclick="showScreen('s-home')">Home</a>
+      <span class="breadcrumb-sep">&rsaquo;</span>
+      <span>App ownership responsibilities</span>
+    </div>
+
+    <div class="callout callout-green" style="margin-bottom:20px">
+      <p>&#10003; <strong>Access has been provisioned.</strong> The users listed in your request should now have access to <strong id="ob-appname">—</strong>.</p>
+    </div>
+
+    <h2 class="page-title">Your app ownership responsibilities</h2>
+    <p class="page-subtitle">As the owner of this application, you are responsible for the obligations listed below. You will be notified in advance of each due date.</p>
+
+    <div class="card" style="margin-bottom:16px">
+      <div class="section-label">Obligations</div>
+      <table class="ob-table">
+        <thead><tr><th style="width:35%">Obligation</th><th style="width:25%">Due</th><th style="width:25%">Responsible</th><th style="width:15%">Status</th></tr></thead>
+        <tbody>
+          <tr><td><div class="ob-name">Annual security review</div><div class="ob-detail">Confirm with Cybersecurity that vendor certifications remain current.</div></td><td style="font-size:13px">[PLACEHOLDER: Apr 2027]</td><td style="font-size:13px">You</td><td><span class="badge badge-review">Upcoming</span></td></tr>
+          <tr><td><div class="ob-name">Supplier contract review</div><div class="ob-detail">Confirm with Supplier Governance that the vendor contract is active.</div></td><td style="font-size:13px">[PLACEHOLDER: 60 days before expiry]</td><td style="font-size:13px">You</td><td><span class="badge badge-review">Upcoming</span></td></tr>
+          <tr><td><div class="ob-name">Licence audit</div><div class="ob-detail">Provide Licence Management with a current count of active users.</div></td><td style="font-size:13px">[PLACEHOLDER: Apr 2027]</td><td style="font-size:13px">You</td><td><span class="badge badge-review">Upcoming</span></td></tr>
+          <tr><td><div class="ob-name">Data processing confirmation</div><div class="ob-detail">Confirm to Legal that data processing remains within approved scope.</div></td><td style="font-size:13px">[PLACEHOLDER: Annually]</td><td style="font-size:13px">You</td><td><span class="badge badge-review">Upcoming</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card" style="margin-bottom:24px">
+      <div class="section-label">Confirm your responsibilities</div>
+      <p style="font-size:13px;color:var(--gray-600);margin-bottom:16px">By confirming below, you acknowledge that you have read and understood your responsibilities as the owner of this application.</p>
+      <button class="btn btn-success btn-lg" onclick="confirmObligations()">I accept these responsibilities</button>
+    </div>
+  </div>
+</div>
+
+<!-- MY REQUESTS -->
+<div id="s-my-requests" class="screen">
+  <div class="page">
+    <div class="breadcrumb">
+      <a href="#" onclick="showScreen('s-home')">Home</a>
+      <span class="breadcrumb-sep">&rsaquo;</span>
+      <span>My requests</span>
+    </div>
+    <h2 class="page-title">My requests</h2>
+    <p class="page-subtitle">Your submitted application onboarding requests.</p>
+    <div id="my-requests-list">
+      <div class="callout callout-blue"><p>No requests submitted yet in this session. <a href="#" onclick="startQualify()">Request a new application &rarr;</a></p></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════ APP DATA ═══════════
+const APPS = [
+  {id:'zoom',name:'Zoom',status:'approved',category:'Collaboration',
+   desc:'Video conferencing and webinar platform for internal meetings, external client calls, and all-hands presentations. Works on desktop and mobile.',
+   for:'All teams',reviewed:'January 2026',note:null,
+   keywords:'video calls meetings conferencing webinar zoom'},
+  {id:'slack',name:'Slack',status:'approved',category:'Collaboration',
+   desc:'Team messaging and file sharing. Connects with most common business tools. Used for day-to-day communication and project channels.',
+   for:'All teams',reviewed:'November 2025',note:null,
+   keywords:'messaging chat slack team communication'},
+  {id:'monday',name:'Monday.com',status:'approved',category:'Project Management',
+   desc:'Project and work management platform. Track, plan, and report on work across teams. Particularly suited to non-technical project managers.',
+   for:'All teams (standard). Finance and HR teams: contact service team before requesting — restricted use.',
+   reviewed:'February 2026',
+   note:'Does not process personal or financial data in standard configuration.',
+   keywords:'project management tasks planning tracking monday'},
+  {id:'miro',name:'Miro',status:'approved',category:'Collaboration',
+   desc:'Online whiteboard for collaborative workshops, diagramming, and planning sessions. No personal data storage. Data hosted in EU.',
+   for:'All teams',reviewed:'December 2025',note:null,
+   keywords:'whiteboard collaboration design workshops diagram miro'},
+  {id:'adobe',name:'Adobe Acrobat Pro',status:'approved',category:'Document Management',
+   desc:'PDF creation, editing, and e-signature. Standard tool for document-heavy teams. Licences are limited — confirm availability before requesting.',
+   for:'All teams (licence availability permitting)',reviewed:'October 2025',
+   note:'Contact Licence Management to confirm availability before requesting.',
+   keywords:'pdf documents acrobat adobe sign'},
+  {id:'tableau',name:'Tableau',status:'approved',category:'Analytics',
+   desc:'Data visualisation and business intelligence. Connects to internal databases and data warehouses. Requires IT integration setup — allow additional time.',
+   for:'Analytics, Finance, and Operations teams only.',reviewed:'March 2026',
+   note:'Integration with data warehouse requires a separate technical onboarding with App Packaging.',
+   keywords:'analytics data visualisation dashboard reports tableau business intelligence'},
+  {id:'docusign',name:'DocuSign',status:'review',category:'Document Management',
+   desc:'Electronic signature platform for contracts, NDAs, and approvals.',
+   for:'Under review',reviewed:null,note:null,
+   keywords:'e-signature contracts sign documents docusign'},
+  {id:'notion',name:'Notion',status:'rejected',category:'Productivity',
+   desc:'Notes, wikis, and project management tool.',
+   for:'Not approved',reviewed:'January 2026',
+   note:'Alternative: Confluence is approved for team wikis and documentation.',
+   keywords:'notes wiki pages notion knowledge'},
+  {id:'workday',name:'Workday',status:'approved',category:'HR / Finance',
+   desc:'HR and payroll management platform. Processes employee personal data, compensation records, and performance data.',
+   for:'HR and People Operations only.',reviewed:'January 2026',
+   note:'This application processes sensitive employee data. Any expansion of access beyond HR requires a new onboarding request with full Cybersecurity and Legal review.',
+   keywords:'hr payroll people hr workday human resources'},
+  {id:'canva',name:'Canva',status:'approved',category:'Design / Marketing',
+   desc:'Online design tool for presentations, social media graphics, and internal communications. No personal data stored. EU-hosted. SOC 2 certified.',
+   for:'All teams',reviewed:'February 2026',note:null,
+   keywords:'design graphics canva presentations marketing social media'}
+];
+
+// ═══════════ JTBD ROLES ═══════════
+const JTBD_ROLES = [
+  {id:'project',label:'Projects & team management',apps:['monday','miro','slack']},
+  {id:'data',label:'Data & reporting',apps:['tableau','canva','monday']},
+  {id:'docs',label:'Documents & contracts',apps:['adobe','docusign','canva']},
+  {id:'comms',label:'Communication & meetings',apps:['zoom','slack','miro']},
+  {id:'creative',label:'Creative & marketing',apps:['canva','miro','adobe']},
+  {id:'hr',label:'HR & people operations',apps:['workday','monday','slack']}
+];
+
+// ═══════════ STATE ═══════════
+let state = {
+  screen:'s-home',
+  currentApp:null,
+  formData:{},
+  qualifyAnswers:{},
+  triage:null,
+  ref:null,
+  requests:[],
+  pendingDecision:false,
+  selectedRole:null
+};
+
+const DEMO_REQ = {ref:'AO-2026-1083',app:'PeopleInsight',date:'8 Apr 2026'};
+
+function genRef(){
+  return 'AO-2026-' + String(Math.floor(1000+Math.random()*8999));
+}
+
+// ═══════════ NAVIGATION ═══════════
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  state.screen=id;
+  window.scrollTo(0,0);
+  if(id==='s-home') renderHomeRequests();
+  if(harnessState && harnessState.active) renderPins();
+}
+
+function showMyRequests(){
+  const list = document.getElementById('my-requests-list');
+  const allReqs = [DEMO_REQ, ...state.requests];
+  if(allReqs.length===0){
+    list.innerHTML='<div class="callout callout-blue"><p>No requests submitted yet. <a href="#" onclick="startQualify()">Request a new application &rarr;</a></p></div>';
+  } else {
+    list.innerHTML = allReqs.map(r=>`
+      <div class="request-row" onclick="showScreen('s-status-review')">
+        <div class="req-ref">${r.ref}</div>
+        <div class="req-name">${r.app}</div>
+        <span class="badge badge-review">In Review</span>
+        <div class="req-date">${r.date}</div>
+      </div>`).join('');
+  }
+  showScreen('s-my-requests');
+}
+
+// ═══════════ HOME — REQUESTS SIDEBAR ═══════════
+function renderHomeRequests(){
+  const container = document.getElementById('home-requests');
+  if(!container) return;
+  const status = state.pendingDecision ? 'decision' : 'review';
+  const badgeHtml = status==='decision'
+    ? '<span class="badge badge-decision">&#128276; Decision received</span>'
+    : '<span class="badge badge-review">In Review</span>';
+  const onclick = status==='decision' ? "showScreen('s-decision-approved')" : "showScreen('s-status-review')";
+  let rows = `<div class="home-req-row" onclick="${onclick}">
+    <div class="home-req-app">${DEMO_REQ.app}</div>
+    <div class="home-req-meta"><span style="font-family:monospace">${DEMO_REQ.ref}</span>${badgeHtml}<span>${DEMO_REQ.date}</span></div>
+  </div>`;
+  // Add any form-submitted requests
+  state.requests.forEach(r=>{
+    if(r.ref !== DEMO_REQ.ref){
+      rows += `<div class="home-req-row" onclick="showScreen('s-status-review')">
+        <div class="home-req-app">${r.app}</div>
+        <div class="home-req-meta"><span style="font-family:monospace">${r.ref}</span><span class="badge badge-review">In Review</span><span>${r.date}</span></div>
+      </div>`;
+    }
+  });
+  container.innerHTML = rows;
+}
+
+// ═══════════ CATEGORY NAVIGATION ═══════════
+function showCategory(cat, btn){
+  document.querySelectorAll('.cat-pill').forEach(p=>p.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  if(!cat){
+    renderFeatured();
+    document.querySelector('.section-label').textContent='Featured in the catalogue';
+  } else {
+    const results = APPS.filter(a=>a.category.toLowerCase().includes(cat.toLowerCase())||a.keywords.toLowerCase().includes(cat.toLowerCase()));
+    document.getElementById('featured-apps').innerHTML = results.map(a=>`
+      <div class="app-card" onclick="showApp('${a.id}')">
+        <div class="app-card-cat">${a.category}</div>
+        <div class="app-card-name">${a.name}</div>
+        <div class="app-card-desc">${a.desc.substring(0,80)}…</div>
+        <div class="app-card-foot">${badgeFor(a.status)}<span style="font-size:11px;color:var(--blue)">View →</span></div>
+      </div>`).join('') || '<p style="color:var(--gray-400);font-size:13px">No apps in this category yet.</p>';
+    document.querySelector('.section-label').textContent = cat+' apps';
+  }
+}
+
+// ═══════════ JTBD WIDGET ═══════════
+function renderJTBD(){
+  const container = document.getElementById('jtbd-roles');
+  if(!container) return;
+  container.innerHTML = JTBD_ROLES.map(r=>`
+    <button class="jtbd-role${state.selectedRole===r.id?' active':''}" onclick="selectRole('${r.id}')">${r.label}</button>`
+  ).join('');
+}
+
+function selectRole(roleId){
+  state.selectedRole = roleId;
+  const role = JTBD_ROLES.find(r=>r.id===roleId);
+  renderJTBD();
+  const grid = document.getElementById('jtbd-rec-grid');
+  const recs = document.getElementById('jtbd-recs');
+  if(!role){recs.classList.remove('visible');return;}
+  const apps = role.apps.map(id=>APPS.find(a=>a.id===id)).filter(Boolean);
+  grid.innerHTML = apps.map(a=>`
+    <div class="jtbd-rec-card" onclick="showApp('${a.id}')">
+      <div class="jtbd-rec-name">${a.name}</div>
+      <div class="jtbd-rec-cat">${a.category}</div>
+      <div class="jtbd-rec-status">${badgeFor(a.status)}</div>
+    </div>`).join('');
+  recs.classList.add('visible');
+}
+
+// ═══════════ QUALIFYING SCREEN ═══════════
+function toggleQualDef(btn){
+  const def = btn.nextElementSibling;
+  def.classList.toggle('open');
+  btn.textContent = def.classList.contains('open')
+    ? '\u25B2 Hide definition'
+    : '\u24D8 ' + btn.textContent.replace('▲ Hide definition','').replace('ℹ ','').trim();
+}
+
+function startQualify(){
+  showScreen('s-qualify');
+}
+
+function submitQualify(){
+  const q1 = document.querySelector('input[name=q1]:checked');
+  const q2 = document.querySelector('input[name=q2]:checked');
+  const q3 = document.querySelector('input[name=q3]:checked');
+  state.qualifyAnswers = {
+    desktopApp: q1?.value || null,
+    sensitiveData: q2?.value || null,
+    businessCritical: q3?.value || null
+  };
+  // Pre-fill personal data field if answered
+  if(state.qualifyAnswers.sensitiveData==='yes'){
+    setTimeout(()=>{ const el=document.getElementById('f-personal-data'); if(el)el.value='yes'; toggleDataFields(); },100);
+  } else if(state.qualifyAnswers.sensitiveData==='no'){
+    setTimeout(()=>{ const el=document.getElementById('f-personal-data'); if(el)el.value='no'; },100);
+  }
+  // Show qualifying summary on form
+  const answers = [];
+  if(q1) answers.push((q1.value==='yes'?'Desktop app':'Web-based app'));
+  if(q2) answers.push((q2.value==='yes'?'Processes sensitive data':'No sensitive data'));
+  if(q3) answers.push((q3.value==='yes'?'Business-critical':'Not business-critical'));
+  const summary = document.getElementById('qualify-summary');
+  if(summary && answers.length){
+    summary.style.display='block';
+    summary.innerHTML = `<div class="callout callout-blue"><p><strong>Eligibility check: </strong>${answers.join(' &middot; ')}</p></div>`;
+  }
+  showScreen('s-form');
+}
+
+// ═══════════ SEARCH ═══════════
+function doSearch(){
+  const q=(document.getElementById('home-search')?.value||document.getElementById('results-search')?.value||'').toLowerCase().trim();
+  if(!q) return;
+  document.getElementById('results-search').value=q;
+  document.getElementById('home-search').value=q;
+  const results=APPS.filter(a=>a.name.toLowerCase().includes(q)||a.desc.toLowerCase().includes(q)||a.category.toLowerCase().includes(q)||a.keywords.toLowerCase().includes(q));
+  document.getElementById('search-heading').textContent=results.length?`${results.length} result${results.length!==1?'s':''} for "${q}"`:  `No results for "${q}"`;
+  document.getElementById('search-subheading').textContent=results.length?'Select an application to see its status and next steps.':'';
+  const grid=document.getElementById('search-results-grid');
+  const noRes=document.getElementById('no-results');
+  if(results.length===0){
+    grid.innerHTML='';
+    noRes.style.display='block';
+    noRes.innerHTML=`<p style="color:var(--gray-600);margin-bottom:16px">"<strong>${q}</strong>" doesn't match any approved application. If you need this tool, you can request it through onboarding.</p><button class="btn btn-primary" onclick="startQualify()">Request a new application</button>`;
+  } else {
+    noRes.style.display='none';
+    grid.innerHTML=results.map(a=>`
+      <div class="app-card" onclick="showApp('${a.id}')">
+        <div class="app-card-cat">${a.category}</div>
+        <div class="app-card-name">${a.name}</div>
+        <div class="app-card-desc">${a.desc.substring(0,90)}…</div>
+        <div class="app-card-foot">${badgeFor(a.status)}<span style="font-size:11px;color:var(--blue)">View →</span></div>
+      </div>`).join('');
+  }
+  showScreen('s-search');
+}
+
+// ═══════════ APP DETAIL ═══════════
+function badgeFor(status){
+  const map={approved:'<span class="badge badge-approved">&#10003; Approved</span>',
+    review:'<span class="badge badge-review">In Review</span>',
+    rejected:'<span class="badge badge-rejected">Not Approved</span>',
+    retired:'<span class="badge badge-retired">Retired</span>'};
+  return map[status]||'';
+}
+
+function nextStepHTML(app){
+  if(app.status==='approved'){
+    return `<div class="next-step-box">
+      <div class="ns-title">What to do next</div>
+      <p>This application is <strong>already approved</strong>. You don't need to submit an onboarding request.</p>
+      <p>To get access, contact your IT helpdesk or use the access request form:</p>
+      <button class="btn btn-primary btn-sm" style="margin-top:4px" onclick="showScreen('s-home')">Request access →</button>
+    </div>`;
+  }
+  if(app.status==='review'){
+    return `<div class="next-step-box" style="background:var(--amber-bg);border-color:var(--amber-bd)">
+      <div class="ns-title" style="color:var(--amber)">Application in progress</div>
+      <p style="color:#78350f">An onboarding request for ${app.name} is already under review. <strong>Do not submit a new request.</strong></p>
+      <p style="color:#78350f">Contact the service team: <strong>[placeholder service email]</strong></p>
+    </div>`;
+  }
+  if(app.status==='rejected'){
+    return `<div class="next-step-box" style="background:var(--red-bg);border-color:var(--red-bd)">
+      <div class="ns-title" style="color:var(--red)">Not approved</div>
+      <p style="color:#991b1b">This application was reviewed and not approved.</p>
+      ${app.note?`<p style="color:#991b1b">${app.note}</p>`:''}
+      <p style="color:#991b1b">If your use case is different, contact: <strong>[placeholder service email]</strong></p>
+    </div>`;
+  }
+  return '';
+}
+
+function showApp(id){
+  const app=APPS.find(a=>a.id===id);
+  if(!app) return;
+  state.currentApp=app;
+  document.getElementById('app-breadcrumb').textContent=app.name;
+  document.getElementById('app-category').textContent=app.category;
+  document.getElementById('app-name').textContent=app.name;
+  document.getElementById('app-status-badge').innerHTML=badgeFor(app.status);
+  document.getElementById('app-reviewed').textContent=app.reviewed?`Last reviewed: ${app.reviewed}`:'';
+  document.getElementById('app-desc').textContent=app.desc;
+  document.getElementById('app-for').textContent=app.for;
+  const noteWrap=document.getElementById('app-note-wrap');
+  if(app.note){noteWrap.style.display='block';document.getElementById('app-note').textContent=app.note;}
+  else{noteWrap.style.display='none';}
+  document.getElementById('app-next-step').innerHTML=nextStepHTML(app);
+  showScreen('s-app');
+}
+
+// ═══════════ FORM ═══════════
+function gotoForm(){startQualify();}
+
+function toggleDataFields(){
+  const val=document.getElementById('f-personal-data').value;
+  document.getElementById('field-data-types').className=val==='yes'?'field':'field field-hidden';
+}
+
+function toggleIntegrationFields(){
+  const val=document.getElementById('f-integrations').value;
+  document.getElementById('field-systems-list').className=val==='yes'?'field':'field field-hidden';
+}
+
+// ═══════════ TRIAGE ═══════════
+function runTriage(f){
+  const c1=f.vendorUsed==='yes';
+  const c2=f.integrations==='no';
+  const c3=f.personalData==='no';
+  const c4=f.certs.includes('soc2')||f.certs.includes('iso27001');
+  const c5=f.cost==='lt2k'||f.cost==='2k5k';
+  return(c1&&c2&&c3&&c4&&c5)?'fast-track':'standard';
+}
+
+function submitForm(e){
+  e.preventDefault();
+  const certs=[...document.querySelectorAll('input[name=cert]:checked')].map(i=>i.value);
+  state.formData={
+    appName:document.getElementById('f-appname').value,
+    personalData:document.getElementById('f-personal-data').value,
+    integrations:document.getElementById('f-integrations').value,
+    vendorUsed:document.getElementById('f-vendor-used').value,
+    certs,
+    cost:document.getElementById('f-cost').value
+  };
+  state.ref=genRef();
+  state.triage=runTriage(state.formData);
+  state.requests.push({
+    ref:state.ref,
+    app:state.formData.appName,
+    date:new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}),
+    status:'review'
+  });
+  showScreen('s-triage');
+  setTimeout(()=>showConfirmation(),2000);
+}
+
+function showConfirmation(){
+  const isFast=state.triage==='fast-track';
+  document.getElementById('confirm-ref').textContent=state.ref;
+  document.getElementById('confirm-app').textContent=state.formData.appName;
+  document.getElementById('confirm-sla').textContent=isFast?'[PLACEHOLDER: 7–10 business days]':'[PLACEHOLDER: 7–30 business days]';
+  document.getElementById('confirm-sla-note').textContent=isFast?'Your request has been assessed as straightforward, subject to review.':'Estimated timeframe depending on complexity of review.';
+  const teams=['App Packaging','Supplier Governance','Cybersecurity','Licence Management'];
+  document.getElementById('confirm-teams').innerHTML=teams.map(t=>`<span class="badge badge-review">${t}</span>`).join('');
+  document.getElementById('status-ref').textContent=state.ref;
+  document.getElementById('status-appname').textContent=state.formData.appName;
+  document.getElementById('status-sla').textContent=isFast?'[PLACEHOLDER: 7–10 business days]':'[PLACEHOLDER: 7–30 business days]';
+  document.getElementById('rfi-appname').textContent=state.formData.appName;
+  document.getElementById('approved-app').textContent=state.formData.appName;
+  document.getElementById('approved-ref').textContent=state.ref;
+  document.getElementById('rejected-app').textContent=state.formData.appName;
+  document.getElementById('rejected-ref').textContent=state.ref;
+  document.getElementById('ob-appname').textContent=state.formData.appName;
+  showScreen('s-confirm');
+}
+
+// ═══════════ OBLIGATIONS ═══════════
+function confirmObligations(){
+  const btn=event.target;
+  btn.textContent='✓ Responsibilities confirmed';
+  btn.className='btn btn-secondary btn-lg';
+  btn.disabled=true;
+  const note=document.createElement('p');
+  note.textContent='Your acknowledgement has been recorded. You will receive email reminders before each obligation is due.';
+  note.style.cssText='font-size:13px;color:var(--green);margin-top:12px;font-weight:500';
+  btn.parentNode.appendChild(note);
+}
+
+// ═══════════ FEATURED APPS ═══════════
+function renderFeatured(){
+  const featured=APPS.filter(a=>['zoom','slack','monday','miro','tableau','canva'].includes(a.id));
+  document.getElementById('featured-apps').innerHTML=featured.map(a=>`
+    <div class="app-card" onclick="showApp('${a.id}')">
+      <div class="app-card-cat">${a.category}</div>
+      <div class="app-card-name">${a.name}</div>
+      <div class="app-card-desc">${a.desc.substring(0,80)}…</div>
+      <div class="app-card-foot">${badgeFor(a.status)}<span style="font-size:11px;color:var(--blue)">View →</span></div>
+    </div>`).join('');
+}
+
+// ═══════════ TESTING HARNESS ═══════════
+const TASKS=[
+  {
+    id:'T1',
+    title:'Check what\'s already available',
+    hypothesis:'E5 \u2014 H1 App Discovery',
+    scenario:'Your team would like to start using Miro for remote workshops. You\'ve been told there\'s a new IT portal for app requests. This is it.',
+    instruction:'Use the service as you naturally would. There are no right or wrong actions.',
+    passCriteria:'Participant navigated to app catalogue and searched before going to the intake form',
+    failCriteria:'Went directly to the intake form without checking the catalogue first',
+    autoNavigate:null
+  },
+  {
+    id:'T2',
+    title:'Submit a request for a new application',
+    hypothesis:'E4 \u2014 H4 Adversarial Triage + E6 \u2014 H2 Intake Completeness',
+    scenario:'Your team wants to use PeopleInsight \u2014 a workforce analytics tool that generates headcount and absence reports by pulling data from the company\'s HR system. It\'s not in the catalogue.',
+    instruction:'Submit a request to get PeopleInsight approved. Complete the form as you would in real life.',
+    passCriteria:'Form completed with sufficient detail for reviewer to act without RFI; confirmation shows 7\u201330 day SLA (correct standard route for HR data scenario)',
+    failCriteria:'Key fields missing or vague \u2014 OR \u2014 confirmation shows 7\u201310 day SLA (fast-tracked despite HR/personal data in scenario \u2014 triage risk E4 confirmed)',
+    autoNavigate:null
+  },
+  {
+    id:'T3',
+    title:'Review your submission confirmation',
+    hypothesis:'E7 \u2014 H3 Status-Chasing Intent',
+    scenario:'You\'ve just submitted the PeopleInsight request. This is the confirmation screen.',
+    instruction:'Look at this screen. What would you do next? How long would you wait before following up with anyone?',
+    passCriteria:'States they would wait at least one week without contacting reviewer, manager, or IT',
+    failCriteria:'Would contact a reviewer within the first week; or describes the 7\u201330 day SLA range as too vague to trust',
+    autoNavigate:'s-confirm'
+  },
+  {
+    id:'T4',
+    title:'Understand the decision on your request',
+    hypothesis:'TD-04 \u2014 Decision Notification',
+    scenario:'Two weeks have passed. You\'ve received a notification that a decision has been made on your PeopleInsight request.',
+    instruction:'Review the decision. What does it mean for your team? What would you do next?',
+    passCriteria:'Understands outcome clearly and describes next steps without prompting',
+    failCriteria:'Confused about outcome; or would contact IT to find out what happens now',
+    autoNavigate:'s-home-notif'
+  }
+];
+
+let harnessState={
+  active:false,taskIndex:0,results:[],
+  annotations:[],annotateMode:false,
+  pendingPin:null,nextPinId:1,summaryTab:'tasks'
+};
+let _ghostPin=null;
+
+function startSession(){
+  document.getElementById('harness-intro').style.display='none';
+  harnessState.active=true;
+  document.body.classList.add('harness-active');
+  document.getElementById('harness-bar').classList.add('active');
+  renderHarness();
+}
+
+function renderHarness(){
+  if(!harnessState.active) return;
+  const ti=harnessState.taskIndex;
+  const task=TASKS[ti];
+  const total=TASKS.length;
+  const dots=TASKS.map((_,i)=>{
+    const r=harnessState.results[i];
+    let cls='hb-dot';
+    if(r) cls+=r.verdict==='pass'?' done':' fail-dot';
+    else if(i===ti) cls+=' active';
+    return '<div class="'+cls+'"></div>';
+  }).join('');
+  document.getElementById('harness-bar').innerHTML=`<div class="hb-inner">
+    <span class="hb-task-label">Task ${ti+1}/${total}</span>
+    <div class="hb-dots">${dots}</div>
+    <div class="hb-sep"></div>
+    <div class="hb-instruction">${task.scenario}</div>
+    <div class="hb-actions">
+      <button class="hb-btn hb-btn-ann${harnessState.annotateMode?' ann-on':''}" onclick="toggleAnnotate()" title="Click anywhere on the prototype to pin an observation">&#128204; ${harnessState.annotateMode?'Annotating':'Annotate'}</button>
+      <button class="hb-btn hb-btn-fail" onclick="recordResult('fail')" title="FAIL: ${task.failCriteria}">&times; Fail</button>
+      <button class="hb-btn hb-btn-pass" onclick="recordResult('pass')" title="PASS: ${task.passCriteria}">&#10003; Pass</button>
+    </div>
+  </div>`;
+}
+
+function toggleAnnotate(){
+  harnessState.annotateMode=!harnessState.annotateMode;
+  document.getElementById('ann-overlay').className=harnessState.annotateMode?'active':'';
+  renderHarness();
+}
+
+function handleAnnotateClick(e){
+  if(!harnessState.annotateMode) return;
+  harnessState.pendingPin={x:e.clientX,y:e.clientY+window.scrollY};
+  openPinInput(e.clientX,e.clientY);
+  e.stopPropagation();
+}
+
+function openPinInput(cx,cy){
+  const pi=document.getElementById('pin-input');
+  let left=cx+18,top=cy-16;
+  if(left+290>window.innerWidth) left=cx-292;
+  if(top+150>window.innerHeight) top=window.innerHeight-160;
+  if(top<60) top=60;
+  pi.style.left=left+'px';
+  pi.style.top=top+'px';
+  pi.classList.add('open');
+  document.getElementById('pin-text').value='';
+  document.getElementById('pin-text').focus();
+  if(_ghostPin) _ghostPin.remove();
+  _ghostPin=document.createElement('div');
+  _ghostPin.className='ann-pin ann-pin-ghost';
+  _ghostPin.style.left=cx+'px';
+  _ghostPin.style.top=cy+'px';
+  _ghostPin.textContent=harnessState.nextPinId;
+  document.body.appendChild(_ghostPin);
+}
+
+function savePin(){
+  const text=document.getElementById('pin-text').value.trim();
+  if(!text){cancelPin();return;}
+  harnessState.annotations.push({id:harnessState.nextPinId++,x:harnessState.pendingPin.x,y:harnessState.pendingPin.y,screen:state.screen,taskIndex:harnessState.taskIndex,text});
+  if(_ghostPin){_ghostPin.remove();_ghostPin=null;}
+  document.getElementById('pin-input').classList.remove('open');
+  harnessState.pendingPin=null;
+  renderPins();
+}
+
+function cancelPin(){
+  if(_ghostPin){_ghostPin.remove();_ghostPin=null;}
+  document.getElementById('pin-input').classList.remove('open');
+  harnessState.pendingPin=null;
+}
+
+function renderPins(){
+  if(!harnessState.active) return;
+  document.querySelectorAll('.ann-pin:not(.ann-pin-ghost)').forEach(p=>p.remove());
+  harnessState.annotations.filter(a=>a.screen===state.screen).forEach(pin=>{
+    const el=document.createElement('div');
+    el.className='ann-pin';
+    el.style.left=pin.x+'px';
+    el.style.top=(pin.y-window.scrollY)+'px';
+    el.textContent=pin.id;
+    el.title=pin.text;
+    document.body.appendChild(el);
+  });
+}
+
+function recordResult(verdict){
+  const task=TASKS[harnessState.taskIndex];
+  harnessState.results[harnessState.taskIndex]={taskId:task.id,verdict,taskTitle:task.title,annotations:harnessState.annotations.filter(a=>a.taskIndex===harnessState.taskIndex)};
+  if(harnessState.annotateMode){harnessState.annotateMode=false;document.getElementById('ann-overlay').className='';}
+  if(harnessState.taskIndex<TASKS.length-1){
+    harnessState.taskIndex++;
+    renderHarness();
+    renderPins();
+    const next=TASKS[harnessState.taskIndex];
+    if(next.autoNavigate==='s-home-notif'){
+      // Task 4: show home with decision notification
+      state.pendingDecision=true;
+      if(!state.ref){
+        state.ref=DEMO_REQ.ref;
+        state.formData={appName:DEMO_REQ.app};
+        document.getElementById('approved-app').textContent=DEMO_REQ.app;
+        document.getElementById('approved-ref').textContent=DEMO_REQ.ref;
+        document.getElementById('rejected-app').textContent=DEMO_REQ.app;
+        document.getElementById('rejected-ref').textContent=DEMO_REQ.ref;
+        document.getElementById('ob-appname').textContent=DEMO_REQ.app;
+      }
+      document.getElementById('home-notif').style.display='flex';
+      renderHomeRequests();
+      showScreen('s-home');
+    } else if(next.autoNavigate==='s-confirm'){
+      // Task 3: navigate to confirmation screen, pre-populate if needed
+      if(!state.ref){
+        state.ref=DEMO_REQ.ref;
+        state.formData={appName:DEMO_REQ.app};
+        state.triage='standard';
+        showConfirmation();
+      } else {
+        showScreen('s-confirm');
+      }
+    } else if(next.autoNavigate){
+      showScreen(next.autoNavigate);
+    }
+  } else {
+    endSession();
+  }
+}
+
+function endSession(){
+  const passed=harnessState.results.filter(r=>r?.verdict==='pass').length;
+  const dots=TASKS.map((_,i)=>{const r=harnessState.results[i];return '<div class="hb-dot'+(r?.verdict==='pass'?' done':' fail-dot')+'"></div>';}).join('');
+  document.getElementById('harness-bar').innerHTML=`<div class="hb-inner">
+    <span class="hb-task-label" style="color:#4ade80">&#10003; Session complete</span>
+    <div class="hb-dots">${dots}</div>
+    <div class="hb-sep"></div>
+    <div class="hb-instruction" style="color:#94a3b8">${passed} of ${TASKS.length} tasks passed &middot; ${harnessState.annotations.length} annotation${harnessState.annotations.length!==1?'s':''} recorded</div>
+    <div class="hb-actions">
+      <button class="hb-btn hb-btn-summary" onclick="showSummary()">View summary &rarr;</button>
+    </div>
+  </div>`;
+}
+
+function showSummary(){
+  harnessState.summaryTab='tasks';
+  document.querySelectorAll('.sp-tab').forEach(t=>t.classList.toggle('active',t.dataset.tab==='tasks'));
+  renderSummaryBody();
+  document.getElementById('summary-panel').classList.add('open');
+}
+
+function hideSummary(){document.getElementById('summary-panel').classList.remove('open');}
+
+function switchSummaryTab(tab){
+  harnessState.summaryTab=tab;
+  document.querySelectorAll('.sp-tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===tab));
+  renderSummaryBody();
+}
+
+function renderSummaryBody(){
+  const body=document.getElementById('sp-body');
+  if(harnessState.summaryTab==='tasks'){
+    body.innerHTML=TASKS.map((task,i)=>{
+      const r=harnessState.results[i];
+      const v=r?.verdict;
+      const taskAnns=harnessState.annotations.filter(a=>a.taskIndex===i);
+      const verdictHtml=v==='pass'?'<span class="sp-verdict sp-pass">PASS</span>':v==='fail'?'<span class="sp-verdict sp-fail">FAIL</span>':'<span class="sp-verdict sp-pending">&mdash;</span>';
+      const annsHtml=taskAnns.length
+        ?'<div class="section-label" style="margin:8px 0 6px">Annotations</div><div class="sp-anns-list">'+taskAnns.map(a=>`<div class="sp-ann-row"><div class="sp-ann-num">${a.id}</div><div class="sp-ann-txt">${a.text}</div></div>`).join('')+'</div>'
+        :'<div style="font-size:12px;color:var(--gray-400)">No annotations recorded for this task.</div>';
+      return `<div class="sp-task-block"><div class="sp-task-hd"><div class="sp-task-n">${i+1}</div><div class="sp-task-ttl">${task.title}</div>${verdictHtml}</div><div class="sp-task-bd"><div class="sp-hyp">${task.hypothesis}</div><div class="sp-scene">${task.scenario}</div>${annsHtml}</div></div>`;
+    }).join('');
+  } else {
+    const all=harnessState.annotations;
+    body.innerHTML=all.length===0
+      ?'<div class="callout callout-blue"><p>No annotations recorded in this session.</p></div>'
+      :'<div class="section-label" style="margin-bottom:12px">All annotations &mdash; '+all.length+' total</div>'+
+        all.map(a=>`<div class="sp-ann-row" style="margin-bottom:10px"><div class="sp-ann-num">${a.id}</div><div><div style="font-size:11px;color:var(--gray-400);margin-bottom:4px">Task ${a.taskIndex+1} &mdash; ${TASKS[a.taskIndex].title}</div><div class="sp-ann-txt">${a.text}</div></div></div>`).join('');
+  }
+}
+
+function generateSummaryMarkdown(sessionName){
+  const d=new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'long',year:'numeric'});
+  const passed=harnessState.results.filter(r=>r?.verdict==='pass').length;
+  const failed=harnessState.results.filter(r=>r?.verdict==='fail').length;
+  const lines=[`# ${sessionName} \u2014 Prototype Test Summary`,`**App Onboarding Service** \u00b7 ${d}`,'','## Session overview','','| | |','|---|---|',`| Tasks completed | ${harnessState.results.filter(r=>r).length} / ${TASKS.length} |`,`| Pass | ${passed} |`,`| Fail | ${failed} |`,`| Annotations | ${harnessState.annotations.length} |`,'','---','','## Task results',''];
+  TASKS.forEach((task,i)=>{
+    const r=harnessState.results[i];
+    const v=r?.verdict?.toUpperCase()||'NOT RECORDED';
+    const taskAnns=harnessState.annotations.filter(a=>a.taskIndex===i);
+    lines.push(`### Task ${i+1}: ${task.title}`,'',`**Hypothesis:** ${task.hypothesis}`,`**Scenario:** ${task.scenario}`,`**Result:** ${v}`,'');
+    if(taskAnns.length){lines.push('**Annotations:**','');taskAnns.forEach(a=>lines.push(`- **[${a.id}]** ${a.text}`));lines.push('');}
+    lines.push('---','');
+  });
+  if(harnessState.annotations.length){
+    lines.push('## Design implications','','| Annotation | Task | Finding |','|---|---|---|');
+    harnessState.annotations.forEach(a=>lines.push(`| [${a.id}] | Task ${a.taskIndex+1} \u2014 ${TASKS[a.taskIndex].title} | ${a.text} |`));
+    lines.push('','---','');
+  }
+  lines.push(`*Generated from App Onboarding Prototype \u2014 Testing Harness*`);
+  return lines.join('\n');
+}
+
+async function saveTestFeedback(){
+  const nameInput=document.getElementById('session-name-input');
+  const sessionName=nameInput.value.trim();
+  if(!sessionName){
+    nameInput.focus();nameInput.style.borderColor='var(--red)';
+    nameInput.placeholder='Enter a session name first';
+    setTimeout(()=>{nameInput.style.borderColor='';nameInput.placeholder='Session name \u2014 e.g. Participant 1 \u00b7 Finance team';},2500);
+    return;
+  }
+  const content=generateSummaryMarkdown(sessionName);
+  const filename=sessionName+' \u2014 Prototype Test Summary.md';
+  const btn=document.getElementById('sp-save-btn');
+  try{
+    const fh=await window.showSaveFilePicker({suggestedName:filename,types:[{description:'Markdown document',accept:{'text/markdown':['.md']}}]});
+    const writable=await fh.createWritable();
+    await writable.write(content);
+    await writable.close();
+    btn.textContent='\u2713 Saved';btn.classList.add('saved');
+    setTimeout(()=>{btn.innerHTML='&#128190; Save test feedback';btn.classList.remove('saved');},3000);
+  } catch(err){
+    if(err.name==='AbortError') return;
+    const blob=new Blob([content],{type:'text/markdown'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');a.href=url;a.download=filename;a.click();
+    URL.revokeObjectURL(url);
+    btn.textContent='\u2713 Downloaded';btn.classList.add('saved');
+    setTimeout(()=>{btn.innerHTML='&#128190; Save test feedback';btn.classList.remove('saved');},3000);
+  }
+}
+
+function copyAsText(){
+  const d=new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'long',year:'numeric'});
+  const sep='\u2500'.repeat(50);
+  const lines=['PROTOTYPE TESTING SESSION SUMMARY','App Onboarding Service \u2014 '+d,sep,''];
+  TASKS.forEach((t,i)=>{
+    const r=harnessState.results[i];
+    const v=r?.verdict?.toUpperCase()||'NOT RECORDED';
+    lines.push('TASK '+(i+1)+': '+t.title.toUpperCase(),'Hypothesis: '+t.hypothesis,'Scenario: '+t.scenario,'Result: '+v);
+    const anns=harnessState.annotations.filter(a=>a.taskIndex===i);
+    if(anns.length){lines.push('Annotations:');anns.forEach(a=>lines.push('  ['+a.id+'] '+a.text));}
+    lines.push('');
+  });
+  const passed=harnessState.results.filter(r=>r?.verdict==='pass').length;
+  const failed=harnessState.results.filter(r=>r?.verdict==='fail').length;
+  lines.push(sep,'PASS: '+passed+' / '+TASKS.length,'FAIL: '+failed+' / '+TASKS.length,'Total annotations: '+harnessState.annotations.length);
+  const txt=lines.join('\n');
+  const btn=document.querySelector('.sp-copy-btn');
+  if(navigator.clipboard){navigator.clipboard.writeText(txt).then(()=>{btn.textContent='\u2713 Copied!';setTimeout(()=>btn.textContent='Copy as text',2000);});}
+  else{prompt('Copy this text:',txt);}
+}
+
+// ═══════════ INIT ═══════════
+renderFeatured();
+renderJTBD();
+renderHomeRequests();
+document.getElementById('hi-task-list').innerHTML=TASKS.map((t,i)=>`
+  <li class="hi-task-item">
+    <div class="hi-task-num">${i+1}</div>
+    <div><div class="hi-task-name">${t.title}</div><div class="hi-task-scene">${t.scenario}</div></div>
+  </li>`).join('');
+window.addEventListener('scroll',()=>{if(harnessState.active) renderPins();});
+</script>
+</body>
+</html>

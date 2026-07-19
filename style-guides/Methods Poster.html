@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Methods & Tools by Competency · A3 Poster</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --ink: #111111;
+    --paper: #FAFAF7;
+    --muted: #6B6B66;
+    --line: rgba(0,0,0,0.18);
+    --ember: #E8503A;
+    --cobalt: #1F44E8;
+    --lime: #C8F23A;
+    --lime-ink: #5a7000;
+  }
+  html, body { margin: 0; padding: 0; background: #1a1a1a; font-family: 'Inter', sans-serif; }
+  * { box-sizing: border-box; }
+
+  /* Auto-scale the A3 sheet to fit the viewport */
+  .stage {
+    position: fixed; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    overflow: auto;
+  }
+  .sheet {
+    /* A3 portrait at 150dpi: 1240 × 1754 */
+    width: 1240px; height: 1754px;
+    background: var(--paper); color: var(--ink);
+    position: relative;
+    transform-origin: center center;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+    padding: 56px 56px 64px;
+    display: flex; flex-direction: column;
+  }
+
+  /* Print rules — single page A3 */
+  @page { size: A3 portrait; margin: 0; }
+  @media print {
+    html, body { background: white; }
+    .stage { position: static; display: block; overflow: visible; }
+    .sheet { box-shadow: none; transform: none !important; margin: 0; }
+  }
+
+  /* Type */
+  .mono { font-family: 'JetBrains Mono', monospace; letter-spacing: 0.14em; text-transform: uppercase; }
+  .archivo { font-family: 'Archivo', sans-serif; letter-spacing: -0.015em; }
+  .pretty { text-wrap: pretty; }
+
+  /* Header */
+  .header { display: flex; justify-content: space-between; align-items: flex-start; padding-bottom: 18px; border-bottom: 2px solid var(--ink); }
+  .header .left .eyebrow { font-size: 11px; color: var(--ink); opacity: 0.7; }
+  .header h1 {
+    font-family: 'Archivo', sans-serif; font-weight: 900;
+    font-size: 86px; line-height: 0.92; letter-spacing: -0.025em;
+    margin: 14px 0 0;
+  }
+  .header h1 em { font-style: italic; font-weight: 900; }
+  .header .right { text-align: right; font-size: 11px; color: var(--ink); opacity: 0.7; line-height: 1.5; }
+  .header .dot { display: inline-block; width: 11px; height: 11px; border-radius: 999px; background: var(--ember); margin-right: 8px; vertical-align: -1px; }
+
+  .lede {
+    margin-top: 18px;
+    display: grid; grid-template-columns: 1.6fr 1fr 1fr; gap: 32px;
+    padding: 16px 0 22px; border-bottom: 1.5px solid var(--ink);
+  }
+  .lede p { font-size: 14px; line-height: 1.4; margin: 0; color: var(--ink); }
+  .lede .legend { font-size: 10px; }
+  .lede .legend .row { display: flex; align-items: center; gap: 8px; padding: 4px 0; }
+  .lede .legend .sw { width: 12px; height: 12px; }
+
+  /* Grid of competency cards */
+  .grid {
+    margin-top: 22px;
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: minmax(0, 1fr);
+    gap: 16px;
+  }
+  .card {
+    border: 1.5px solid var(--ink);
+    background: #fff;
+    padding: 18px 20px 16px;
+    display: flex; flex-direction: column;
+    gap: 12px;
+    position: relative;
+  }
+  .card .top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+  .card .num { font-size: 11px; }
+  .card .area { font-family: 'Archivo', sans-serif; font-weight: 800; font-size: 26px; line-height: 1; letter-spacing: -0.02em; }
+  .card .area em { font-style: italic; }
+  .card .topics { display: flex; flex-direction: column; gap: 9px; margin-top: 2px; }
+  .topic {
+    display: grid; grid-template-columns: 56px 1fr; gap: 12px;
+    align-items: flex-start;
+    padding-top: 9px;
+    border-top: 1px solid rgba(0,0,0,0.15);
+  }
+  .topic:first-child { border-top: 1.5px solid var(--ink); }
+  .topic .icon {
+    width: 56px; height: 56px;
+    display: flex; align-items: center; justify-content: center;
+    border: 1.25px solid var(--ink);
+    background: var(--paper);
+  }
+  .topic .icon svg { width: 100%; height: 100%; }
+  .topic .body .name { font-family: 'Archivo', sans-serif; font-weight: 700; font-size: 13.5px; letter-spacing: -0.005em; line-height: 1.05; margin: 1px 0 4px; }
+  .topic .body .label { font-size: 9px; color: var(--lime-ink); margin-bottom: 3px; }
+  .topic .body .tools { font-size: 10.5px; line-height: 1.42; color: #2a2a2a; }
+  .topic .body .tools .sep { color: var(--muted); padding: 0 2px; }
+
+  /* Card accent variants */
+  .accent-ember .num, .accent-ember .label { color: var(--ember); }
+  .accent-cobalt .num, .accent-cobalt .label { color: var(--cobalt); }
+  .accent-lime   .num                       { color: var(--lime-ink); }
+  .accent-lime   .label                     { color: var(--lime-ink); }
+
+  /* Feature card — lime background, ink text. High legibility at small size. */
+  .card.feature { background: var(--lime); border-color: var(--ink); }
+  .card.feature .topic { border-top-color: rgba(0,0,0,0.25); }
+  .card.feature .topic:first-child { border-top: 1.5px solid var(--ink); }
+  .card.feature .topic .icon { background: var(--paper); border-color: var(--ink); }
+  .card.feature .num,
+  .card.feature .label { color: var(--ink); }
+  .card.feature .top::after {
+    content: 'FEATURE';
+    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    letter-spacing: 0.18em; color: var(--ink);
+    background: var(--ink); color: var(--lime);
+    padding: 3px 7px; align-self: flex-start;
+  }
+
+  /* Footer */
+  .footer {
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 2px solid var(--ink);
+    display: flex; justify-content: space-between; align-items: flex-end;
+    font-size: 10px;
+  }
+  .footer .meta { color: var(--muted); }
+  .footer .swatches { display: flex; gap: 6px; }
+  .footer .sw { width: 26px; height: 14px; border: 1px solid var(--ink); }
+
+  /* Sketch icon stroke style */
+  .sk { stroke: #111; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+  .sk-fill-ember { fill: var(--ember); stroke: var(--ink); stroke-width: 1.5; }
+  .sk-fill-cobalt { fill: var(--cobalt); stroke: var(--ink); stroke-width: 1.5; }
+  .sk-fill-lime { fill: var(--lime); stroke: var(--ink); stroke-width: 1.5; }
+  .sk-fill-paper { fill: var(--paper); stroke: var(--ink); stroke-width: 1.5; }
+  /* Feature card icons go monochrome — keep stroke ink, drop coloured fills */
+  .card.feature .sk { stroke: var(--ink); fill: none; }
+  .card.feature .sk-fill-ember,
+  .card.feature .sk-fill-cobalt,
+  .card.feature .sk-fill-lime,
+  .card.feature .sk-fill-paper { fill: var(--paper); stroke: var(--ink); }
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="sheet" id="sheet">
+
+    <div class="header">
+      <div class="left">
+        <div class="mono eyebrow"><span class="dot"></span>Design Research Curriculum · Reference</div>
+        <h1>Methods <em>&amp;</em> Tools<br/>by competency<span style="color:var(--ember)">.</span></h1>
+      </div>
+      <div class="right mono">
+        Table 01<br/>
+        A3 · Print or pin up<br/>
+        v1 · 2026
+      </div>
+    </div>
+
+    <div class="lede">
+      <p class="pretty">A working map of the curriculum. Eight competency areas, each with the topics we cover and the methods we actually use. Read it left to right, top to bottom — or grab one card at a time.</p>
+      <div>
+        <div class="mono" style="font-size:10px; color:var(--ink); margin-bottom:8px;">How to read it</div>
+        <p style="font-size:11px; line-height:1.4; margin:0; color:#333;">Each card is one competency. Inside, every topic gets a metaphor — the icon — and the tools we reach for. Sketches, not screenshots: the metaphor is the point.</p>
+      </div>
+      <div class="legend mono" style="font-size:10px;">
+        <div class="row"><span class="sw" style="background:var(--ember)"></span><span>Action — make · ship</span></div>
+        <div class="row"><span class="sw" style="background:var(--cobalt)"></span><span>Analysis — think · frame</span></div>
+        <div class="row"><span class="sw" style="background:var(--lime)"></span><span>People — listen · empathise</span></div>
+      </div>
+    </div>
+
+    <div class="grid" id="grid"></div>
+
+    <div class="footer">
+      <div class="mono meta">Design Research · Methods &amp; tools reference · A3 portrait</div>
+      <div class="swatches">
+        <div class="sw" style="background:var(--ember)"></div>
+        <div class="sw" style="background:var(--cobalt)"></div>
+        <div class="sw" style="background:var(--lime)"></div>
+        <div class="sw" style="background:var(--ink)"></div>
+      </div>
+      <div class="mono meta">01 / 01 · Pin it up</div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // Auto-scale the sheet to fit the viewport (preview only; print uses @page)
+  function fit() {
+    const sheet = document.getElementById('sheet');
+    const w = window.innerWidth, h = window.innerHeight;
+    const pad = 40;
+    const s = Math.min((w - pad) / 1240, (h - pad) / 1754, 1);
+    sheet.style.transform = `scale(${s})`;
+  }
+  window.addEventListener('resize', fit);
+  fit();
+</script>
+<script src="poster-content.js"></script>
+</body>
+</html>

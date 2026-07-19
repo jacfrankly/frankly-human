@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Double Diamond — Project Methodology</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    --font-mono: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+    --color-bg: #ffffff;
+    --color-text-primary: #1a1a1a;
+    --color-text-secondary: #555;
+    --color-text-tertiary: #999;
+    --color-border: rgba(0,0,0,0.1);
+    --color-border-light: rgba(0,0,0,0.06);
+    --radius-md: 8px;
+    --radius-lg: 12px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-bg: #1a1a1a;
+      --color-text-primary: #f0f0f0;
+      --color-text-secondary: #aaa;
+      --color-text-tertiary: #666;
+      --color-border: rgba(255,255,255,0.12);
+      --color-border-light: rgba(255,255,255,0.06);
+    }
+    .dD { background:#0c2d4a !important; color:#85b7eb !important; }
+    .dP { background:#1e1a40 !important; color:#afa9ec !important; }
+    .dE { background:#1e1e1a !important; color:#b4b2a9 !important; }
+    .ta { background:#0a2218 !important; color:#5dcaa5 !important; }
+    .ts { background:#0c1f38 !important; color:#85b7eb !important; }
+    .th { background:#2a2a2a !important; color:#aaa !important; border-color:rgba(255,255,255,0.15) !important; }
+    .gate { background:#2a2200 !important; }
+  }
+  body {
+    font-family: var(--font-sans);
+    background: var(--color-bg);
+    color: var(--color-text-primary);
+    padding: 2.5rem 2rem;
+    max-width: 960px;
+    margin: 0 auto;
+    line-height: 1.5;
+  }
+  .header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 0.5px solid var(--color-border); }
+  .doc-title { font-size: 14px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 4px; }
+  .doc-sub { font-size: 12px; color: var(--color-text-tertiary); font-family: var(--font-mono); margin-bottom: 1.25rem; }
+  .stats { display: flex; gap: 2rem; margin-bottom: 1.25rem; flex-wrap: wrap; }
+  .sn { font-size: 22px; font-weight: 500; color: var(--color-text-primary); display: block; line-height: 1; }
+  .sl { font-size: 12px; color: var(--color-text-secondary); display: block; margin-top: 2px; }
+  .legend { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+  .legend-label { font-size: 12px; color: var(--color-text-secondary); margin-right: 4px; }
+  .divider { width: 1px; height: 20px; background: var(--color-border); margin: 0 4px; }
+  .tag { font-size: 11px; font-weight: 500; padding: 3px 8px; border-radius: 100px; white-space: nowrap; display: inline-block; }
+  .ta { background: #e1f5ee; color: #0f6e56; }
+  .ts { background: #e6f1fb; color: #185fa5; }
+  .th { background: #f5f5f5; color: #555; border: 0.5px solid #ddd; }
+  .dD { background: #e6f1fb; color: #185fa5; }
+  .dP { background: #eeedfe; color: #534ab7; }
+  .dE { background: #f1efe8; color: #444441; }
+  .diamond-nav { display: flex; margin-bottom: 2.5rem; border: 0.5px solid var(--color-border); border-radius: var(--radius-lg); overflow: hidden; }
+  .dn { flex: 1; padding: 10px 14px; border-right: 0.5px solid var(--color-border); }
+  .dn:last-child { border-right: none; }
+  .dn-num { font-family: var(--font-mono); font-size: 10px; color: var(--color-text-tertiary); margin-bottom: 2px; }
+  .dn-name { font-size: 13px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 2px; }
+  .dn-mode { font-size: 11px; color: var(--color-text-tertiary); }
+  .dn-bar { height: 2px; border-radius: 1px; margin-top: 10px; opacity: 0.35; }
+  .stage { margin-bottom: 3.5rem; }
+  .stage-hd { padding: 0 0 1rem 1.25rem; margin-bottom: 0; }
+  .stage-num { font-family: var(--font-mono); font-size: 11px; color: var(--color-text-tertiary); margin-bottom: 3px; }
+  .stage-name { font-size: 22px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 5px; }
+  .stage-purpose { font-size: 13px; color: var(--color-text-secondary); line-height: 1.65; }
+  .acts { margin-top: 1.25rem; }
+  .act { display: grid; grid-template-columns: 200px 1fr auto; gap: 14px; padding: 11px 0; border-bottom: 0.5px solid var(--color-border-light); align-items: start; }
+  .act:first-child { border-top: 0.5px solid var(--color-border-light); }
+  .an { font-size: 13px; font-weight: 500; color: var(--color-text-primary); line-height: 1.4; }
+  .aa { font-size: 11px; color: var(--color-text-tertiary); margin-top: 3px; font-family: var(--font-mono); line-height: 1.4; }
+  .ad { font-size: 13px; color: var(--color-text-secondary); line-height: 1.6; }
+  .atags { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; min-width: 100px; }
+  .dtags { display: flex; gap: 3px; flex-wrap: wrap; justify-content: flex-end; }
+  .gate { padding: 10px 14px; border-radius: 0 var(--radius-md) var(--radius-md) 0; margin: 8px 0; display: grid; grid-template-columns: 180px 1fr; gap: 12px; align-items: start; background: #fef9ee; }
+  .gn { font-family: var(--font-mono); font-size: 11px; font-weight: 500; line-height: 1.4; margin-bottom: 3px; }
+  .go { font-size: 11px; color: var(--color-text-secondary); margin-top: 2px; }
+  .gc { font-size: 12px; color: var(--color-text-secondary); line-height: 1.6; }
+  .footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 0.5px solid var(--color-border); font-size: 11px; color: var(--color-text-tertiary); font-family: var(--font-mono); }
+  @media (max-width: 640px) {
+    body { padding: 1.5rem 1rem; }
+    .act { grid-template-columns: 1fr; }
+    .atags { align-items: flex-start; flex-direction: row; flex-wrap: wrap; }
+    .gate { grid-template-columns: 1fr; }
+    .diamond-nav { flex-direction: column; }
+    .dn { border-right: none; border-bottom: 0.5px solid var(--color-border); }
+    .dn:last-child { border-bottom: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="doc-title">Project methodology — double diamond</div>
+  <div class="doc-sub">Service design · Blueprint · Prototype · Testing — Design Lead framework</div>
+  <div class="stats" id="stats"></div>
+  <div class="legend">
+    <span class="legend-label">Discipline</span>
+    <span class="tag dD">Design</span>
+    <span class="tag dP">Product</span>
+    <span class="tag dE">Engineering</span>
+    <div class="divider"></div>
+    <span class="tag ta">Agent-led</span>
+    <span class="tag ts">Stakeholder input</span>
+    <span class="tag th">Human work</span>
+  </div>
+</div>
+
+<div class="diamond-nav" id="dnav"></div>
+<div id="content"></div>
+
+<div class="footer">DL = Design Lead &nbsp;·&nbsp; PO = Product Owner &nbsp;·&nbsp; Gates must be passed before the next stage begins &nbsp;·&nbsp; Blueprint Studio and HTML Prototype open in Chrome / Edge — no install &nbsp;·&nbsp; Prototypes ship with the testing harness pre-wired</div>
+
+<script>
+const STAGES=[
+  {color:'#1D9E75',code:'01',name:'Discover',mode:'Diverge — open up',
+   purpose:'Research the users, market, and service landscape. Gather evidence before synthesising anything. The quality of brief intake here determines every agent output downstream.',
+   items:[
+    {type:'act',n:'Brief intake',a:'DL + stakeholder',d:'Answer six questions before any agent runs: what is the service, what is broken, who are the users, what is success, what are the constraints, what is out of scope.',disc:['Design','Product'],tag:'human'},
+    {type:'act',n:'Stakeholder alignment',a:'DL + stakeholder',d:'Agree scope, success criteria, and what is explicitly out of scope. Surface what is unknown and flag as research questions.',disc:['Design','Product'],tag:'stakeholder'},
+    {type:'act',n:'Market Researcher',a:'market-researcher',d:'Competitive landscape, market context, and analogous products. All estimates labelled as estimates.',disc:['Product'],tag:'agent'},
+    {type:'act',n:'User Researcher',a:'user-researcher',d:'JTBD framing and service design lens. Findings labelled RESEARCHED / INFERRED / ASSUMED.',disc:['Product'],tag:'agent'},
+    {type:'act',n:'Service Researcher',a:'service-researcher',d:'Ecosystem map, actor and stakeholder map, contextual research synthesis, and technical landscape scan.',disc:['Design'],tag:'agent'},
+    {type:'act',n:'Stakeholder discovery sessions',a:'DL + stakeholder',d:'Capture institutional knowledge, business context, and constraints directly from stakeholders.',disc:['Design','Product'],tag:'stakeholder'},
+    {type:'gate',n:'Gate 1 — Research',check:'Research gaps named honestly. Ecosystem complete. No unexplained inferences. Correct handoff note before Journey Architect runs.',owner:'DL'}
+  ]},
+  {color:'#7F77DD',code:'02',name:'Define',mode:'Converge — synthesise',
+   purpose:'Turn research into strategy, validated opportunities, and service architecture. This stage ends when the blueprint is signed off and touchpoint briefs are ready — the handoff that starts design. The Blueprint Studio is the stakeholder-facing artefact that closes this stage.',
+   items:[
+    {type:'act',n:'Business Analyst',a:'business-analyst',d:'Business case, ROI model, and strategic alignment map with challengeable financial assumptions.',disc:['Product'],tag:'agent'},
+    {type:'act',n:'Strategy Architect',a:'strategy-architect',d:'Product vision, North Star metric, OKR alignment, and product principles that rule things out.',disc:['Product'],tag:'agent'},
+    {type:'gate',n:'Strategy gate',check:'North Star is about user value, not a proxy. Principles rule things out. Tensions between user need and business viability named. Do not proceed to discovery with a weak strategy.',owner:'DL + PO'},
+    {type:'act',n:'Opportunity Mapper',a:'opportunity-mapper',d:'Opportunity Solution Tree at multiple levels of abstraction. No solutions generated yet — opportunities only.',disc:['Product'],tag:'agent'},
+    {type:'act',n:'Risk Assessor',a:'risk-assessor',d:'Risk register, critical assumption list, and a direct go/no-go recommendation.',disc:['Product'],tag:'agent'},
+    {type:'act',n:'Experiment Designer',a:'experiment-designer',d:'Minimum experiment to test the most critical assumption. Specific pass/fail criteria required.',disc:['Product'],tag:'agent'},
+    {type:'gate',n:'Validation gate',check:'Minimum test — not a prototype waiting to become a product. Pass/fail criteria specific enough to evaluate. Riskiest assumption first.',owner:'DL + PO'},
+    {type:'act',n:'Experiment execution',a:'DL + team',d:'Run approved experiments — human-led or stakeholder-facilitated. Results update and validate the opportunity map.',disc:['Product','Design'],tag:'human'},
+    {type:'act',n:'Journey Architect',a:'journey-architect',d:'As-is and future-state journeys. Touchpoint inventory. Channel matrix.',disc:['Design'],tag:'agent'},
+    {type:'gate',n:'Gate 2 — Journey',check:'Most critical gate. Future-state reflects stakeholder intent. Channel transitions realistic. If the journey is wrong, the blueprint will be wrong.',owner:'DL'},
+    {type:'act',n:'Service Blueprinter',a:'service-blueprinter',d:'Service blueprint plus one touchpoint brief per digital surface. Frontstage / backstage / support processes.',disc:['Design'],tag:'agent'},
+    {type:'gate',n:'Gate 3 — Blueprint',check:'Each touchpoint brief has enough backstage context. No unconfirmed dependencies that block design. Briefs form a coherent service, not isolated tasks.',owner:'DL'},
+    {type:'act',n:'Policy Reviewer',a:'policy-reviewer',d:'Blueprint deliverability check. Verdict per gap: design fix / backstage fix / re-blueprint.',disc:['Design','Engineering'],tag:'agent'},
+    {type:'gate',n:'Gate 4 — Policy',check:'No re-blueprint items remain. Backstage fix items tracked with stakeholder. Design fix items noted in touchpoint briefs.',owner:'DL'},
+    {type:'act',n:'Blueprint Studio',a:'DL + Claude Code',d:'HTML service blueprint viewer generated from the blueprinter output. All lanes, stages, and backstage processes pre-loaded and editable in-browser. Shared with stakeholders for live walkthrough and sign-off. Opens in Chrome or Edge — no install required.',disc:['Design'],tag:'agent'},
+    {type:'act',n:'Prioritisation Lead',a:'prioritisation-lead',d:'RICE scores with explicit assumptions. MoSCoW analysis. Trade-off analysis.',disc:['Product'],tag:'agent'},
+    {type:'act',n:'Roadmap Architect',a:'roadmap-architect',d:'Now/Next/Later roadmap, release plan, and dependency map. Sequencing logic must be explicit and challengeable.',disc:['Product'],tag:'agent'},
+    {type:'gate',n:'Roadmap gate',check:'Sequencing logic explicit. Dependencies that could block multiple downstream items are visible.',owner:'DL + PO'}
+  ]},
+  {color:'#378ADD',code:'03',name:'Design',mode:'Diverge then converge',
+   purpose:'Develop and validate the solution — from strategy and references through to production-ready layouts, content, and build specs. Includes a clickable HTML prototype tested with real participants before formal review. Findings feed back into the opportunity map before anything ships.',
+   items:[
+    {type:'act',n:'Requirements Writer',a:'requirements-writer',d:'User stories with acceptance criteria, PRD, and the touchpoint brief the design team receives.',disc:['Product'],tag:'agent'},
+    {type:'act',n:'Design Strategist',a:'design-strategist',d:'Design strategy: positioning, principles, and the specific problems this design must solve.',disc:['Design'],tag:'agent'},
+    {type:'act',n:'Design Scout',a:'design-scout',d:'Competitive audit, pattern library, and benchmark analysis. Research foundation for the design.',disc:['Design'],tag:'agent'},
+    {type:'act',n:'Inspiration Scout',a:'inspiration-scout',d:'References, aesthetic directions, and precedents matched to the design strategy.',disc:['Design'],tag:'agent'},
+    {type:'gate',n:'Taste gate',check:'Aesthetic direction confirmed. Taste profile loaded or set. Mismatches caught here are free — after build they cost rework.',owner:'DL'},
+    {type:'act',n:'Design Lead',a:'design-lead',d:'IA, flows, component decisions, visual direction, and annotated layouts. The central design output of the pipeline.',disc:['Design'],tag:'agent'},
+    {type:'act',n:'Motion Designer',a:'motion-designer',d:'Animation principles, micro-interaction patterns, and transition logic.',disc:['Design'],tag:'agent'},
+    {type:'act',n:'Content Writer',a:'content-writer',d:'Copy, microcopy, error states, and content hierarchy across all interaction states.',disc:['Design'],tag:'agent'},
+    {type:'act',n:'Design Builder',a:'design-builder',d:'Component-level build specifications and design tokens. Production-ready engineering handoff.',disc:['Design','Engineering'],tag:'agent'},
+    {type:'act',n:'Metrics Definer',a:'metrics-definer',d:'Success metrics, leading indicators, guardrail metrics, and instrumentation requirements.',disc:['Product'],tag:'agent'},
+    {type:'act',n:'Product Critic',a:'product-critic',d:'Does each requirement trace to a validated user need? Verdict: rethink / revise / proceed with note / proceed.',disc:['Product'],tag:'agent'},
+    {type:'gate',n:'Taste check',check:'Intermediate design output reviewed mid-build. Last low-cost correction point before review agents run.',owner:'DL'},
+    {type:'act',n:'HTML Prototype',a:'DL + Claude Code',d:'Self-contained clickable prototype covering all touchpoints from the touchpoint briefs. Built from design specs — no dev environment required. Ships with the testing harness pre-wired: intro overlay, harness bar, pin annotation system, session summary export.',disc:['Design'],tag:'agent'},
+    {type:'gate',n:'Testing gate',check:'TASKS array derived from Experiment Designer output — not invented. Pass/fail criteria are observable behaviours, not design opinions. Adversarial scenarios must not reveal what is being tested. Participants confirmed: 3–5 requesters + 2 real reviewers from the actual target teams.',owner:'DL'},
+    {type:'act',n:'Prototype testing',a:'DL + participants',d:'Facilitated sessions using the built-in testing harness. Facilitator records Pass/Fail per task and pins timestamped observations to any screen. Each session saved as a named test summary doc to outputs/test-summaries/.',disc:['Design','Product'],tag:'human'},
+    {type:'act',n:'Design fix loop',a:'DL + Claude Code',d:'Annotation findings classified as design fixes (prototype iteration) or service-level gaps (blueprint revision). Design fixes implemented immediately in the prototype HTML. Re-test until findings converge or the build decision is reached.',disc:['Design'],tag:'human'},
+    {type:'act',n:'Testing synthesis',a:'opportunity-mapper + prioritisation-lead',d:'All session summaries re-run through the opportunity mapper. Hypotheses updated as validated or invalidated with evidence citations. Findings sequenced into the delivery backlog by the prioritisation lead.',disc:['Product'],tag:'agent'},
+    {type:'act',n:'Accessibility Reviewer',a:'accessibility-reviewer',d:'WCAG and inclusive design standards. Specific pass/fail findings, not general recommendations.',disc:['Design','Engineering'],tag:'agent'},
+    {type:'act',n:'Design Critic',a:'design-critic',d:'Design vs brief, strategy, and user needs. Is the right problem actually being solved?',disc:['Design'],tag:'agent'},
+    {type:'act',n:'Heuristic Evaluator',a:'heuristic-evaluator',d:'UX heuristics applied. Interaction and usability issues that other reviewers may not surface.',disc:['Design'],tag:'agent'},
+    {type:'gate',n:'Ship gate',check:'Final DL approval. All reviewer findings addressed or documented as known trade-offs. Nothing ships without this.',owner:'DL'}
+  ]},
+  {color:'#BA7517',code:'04',name:'Deliver',mode:'Converge — ship and learn',
+   purpose:'Launch, measure against the plan, and close the loop. The retrospective brief feeds back into the next Discover cycle.',
+   items:[
+    {type:'act',n:'Launch Planner',a:'launch-planner',d:'GTM plan, staged rollout strategy, adoption metrics, communication plan, and change management brief.',disc:['Product'],tag:'agent'},
+    {type:'gate',n:'Launch gate',check:'Internal readiness confirmed. Rollback criteria defined. Staged rollout approach approved before anything ships.',owner:'DL + PO'},
+    {type:'act',n:'Build & QA',a:'Dev team',d:'Engineering builds from the Design Builder specs and touchpoint brief. DL available for QA review of component and interaction fidelity.',disc:['Engineering'],tag:'human'},
+    {type:'act',n:'Metrics monitoring',a:'retrospective-lead + metrics',d:'Track usage, performance, and user feedback against the metrics plan. Agent-led, ongoing post-launch.',disc:['Product','Engineering'],tag:'agent'},
+    {type:'act',n:'Retrospective Lead',a:'retrospective-lead',d:'Actual outcomes vs expected metrics. Opportunity map updated. Next cycle brief produced.',disc:['Product'],tag:'agent'},
+    {type:'gate',n:'Learning gate',check:'Outcomes reviewed. Strategy revised or confirmed. Next cycle brief feeds back to User Researcher to begin the next discovery cycle.',owner:'DL + PO'}
+  ]}
+];
+
+const tagLabels={agent:'Agent-led',stakeholder:'Stakeholder input',human:'Human work'};
+const tagCls={agent:'ta',stakeholder:'ts',human:'th'};
+const discCls={Design:'dD',Product:'dP',Engineering:'dE'};
+
+const allActs=STAGES.flatMap(s=>s.items.filter(i=>i.type==='act'));
+const allGates=STAGES.flatMap(s=>s.items.filter(i=>i.type==='gate'));
+const agentCount=allActs.filter(a=>a.tag==='agent').length;
+
+document.getElementById('stats').innerHTML=
+  `<div><span class="sn">4</span><span class="sl">diamond stages</span></div>`+
+  `<div><span class="sn">${allActs.length}</span><span class="sl">activities</span></div>`+
+  `<div><span class="sn">${agentCount}</span><span class="sl">agent-led</span></div>`+
+  `<div><span class="sn">${allGates.length}</span><span class="sl">review gates</span></div>`;
+
+document.getElementById('dnav').innerHTML=STAGES.map(s=>
+  `<div class="dn">
+    <div class="dn-num">${s.code}</div>
+    <div class="dn-name">${s.name}</div>
+    <div class="dn-mode">${s.mode}</div>
+    <div class="dn-bar" style="background:${s.color}"></div>
+  </div>`
+).join('');
+
+document.getElementById('content').innerHTML=STAGES.map(s=>`
+  <div class="stage">
+    <div class="stage-hd" style="border-left:3px solid ${s.color}">
+      <div class="stage-num">${s.code} — ${s.mode}</div>
+      <div class="stage-name">${s.name}</div>
+      <div class="stage-purpose">${s.purpose}</div>
+    </div>
+    <div class="acts">${s.items.map((item,i)=>{
+      if(item.type==='gate'){
+        return `<div class="gate" style="border-left:2px solid ${s.color}">
+          <div>
+            <div class="gn" style="color:${s.color}">${item.n}</div>
+            <div class="go">Reviewer: ${item.owner}</div>
+          </div>
+          <div class="gc">${item.check}</div>
+        </div>`;
+      }
+      const isFirst=i===0||s.items[i-1].type==='gate';
+      return `<div class="act" style="${isFirst?'border-top:0.5px solid var(--color-border-light)':''}">
+        <div>
+          <div class="an">${item.n}</div>
+          <div class="aa">${item.a}</div>
+        </div>
+        <div class="ad">${item.d}</div>
+        <div class="atags">
+          <div class="dtags">${item.disc.map(d=>`<span class="tag ${discCls[d]}">${d}</span>`).join('')}</div>
+          <span class="tag ${tagCls[item.tag]}">${tagLabels[item.tag]}</span>
+        </div>
+      </div>`;
+    }).join('')}</div>
+  </div>
+`).join('');
+</script>
+</body>
+</html>

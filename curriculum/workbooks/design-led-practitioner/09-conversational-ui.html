@@ -1,0 +1,757 @@
+<!doctype html>
+<html lang="en" data-mode="participant">
+<head>
+<meta charset="utf-8" />
+<title>Design-Led · Module 09 · Conversational UI — Practitioner</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..900,0..100;1,9..144,300..900,0..100&family=Inter:wght@400;500;600&family=Allura&family=Patrick+Hand&display=swap" rel="stylesheet">
+<style>
+/* =====================================================================
+   Design-Led: Practitioner · Module 09 · Conversational UI
+   Dual mode: Presenter (scroll-snap) + Workbook (interactive)
+   Same architecture as Module 01 — Palette: Ink · Paper · Teal · Pink · Yellow · Plum
+   ===================================================================== */
+
+:root {
+  --ink:      #100000;
+  --charcoal: #423B3B;
+  --paper:    #FBF7EE;
+  --paper-2:  #F4EFE2;
+  --sand:     #E0D2B5;
+  --teal:     #47ACA4;
+  --pink:     #FF3990;
+  --yellow:   #FFBD59;
+  --plum:     #7A1F4A;
+  --muted:    #5E584F;
+  --teal-text: #1F6E67;
+  --pink-text: #C40060;
+  --bar-h:    56px;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: 'Inter', sans-serif;
+  font-size: 16px; line-height: 1.55;
+  background: var(--paper); color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* TOPBAR */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0;
+  height: var(--bar-h);
+  background: var(--paper);
+  border-bottom: 1px solid rgba(16,0,0,0.12);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 32px;
+  z-index: 200;
+  gap: 16px;
+}
+.topbar-left { display: flex; align-items: center; gap: 18px; flex-shrink: 0; }
+.topbar-brand {
+  font-family: 'DM Serif Display', serif;
+  font-size: 18px; letter-spacing: -0.01em;
+  color: var(--ink); text-decoration: none;
+  white-space: nowrap;
+}
+.topbar-brand em { font-style: italic; color: var(--pink-text); }
+.topbar-divider { width: 1px; height: 18px; background: var(--sand); flex-shrink: 0; }
+.topbar-module {
+  font-family: 'Inter'; font-size: 10px;
+  letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted);
+  white-space: nowrap;
+}
+.topbar-center {
+  font-family: 'Inter'; font-size: 10px;
+  letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted);
+  flex: 1; text-align: center;
+}
+.topbar-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.mode-toggle { display: flex; align-items: stretch; border: 1px solid var(--ink); overflow: hidden; height: 30px; }
+.mode-btn {
+  padding: 0 14px;
+  font-family: 'Inter'; font-size: 10px;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--muted); background: none; border: none;
+  cursor: pointer; transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+.mode-sep { width: 1px; background: var(--ink); flex-shrink: 0; }
+html[data-mode="presenter"] .mode-btn.btn-presenter,
+html[data-mode="participant"] .mode-btn.btn-participant {
+  background: var(--ink); color: var(--paper);
+}
+.topbar-btn {
+  height: 30px; padding: 0 14px;
+  font-family: 'Inter'; font-size: 10px;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--muted); background: none;
+  border: 1px solid var(--ink); cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+.topbar-btn:hover { background: var(--ink); color: var(--paper); }
+.topbar-nav { display: flex; align-items: center; gap: 2px; }
+.nav-btn {
+  height: 30px; padding: 0 10px;
+  font-family: 'Inter'; font-size: 11px;
+  color: var(--muted); background: none; border: none;
+  cursor: pointer; transition: color 0.15s;
+  text-decoration: none; display: flex; align-items: center;
+}
+.nav-btn:hover { color: var(--ink); }
+.nav-btn.disabled { opacity: 0.3; cursor: default; }
+
+/* PROGRESS BAR */
+.progress-wrap {
+  position: fixed; top: var(--bar-h); left: 0; right: 0;
+  height: 3px; background: var(--sand); z-index: 199;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.25s;
+}
+html[data-mode="participant"] .progress-wrap { opacity: 1; pointer-events: auto; }
+.progress-fill { height: 100%; width: 0%; background: var(--pink-text); transition: width 0.5s ease; }
+
+/* SLIDES CONTAINER */
+html[data-mode="presenter"] body { overflow: hidden; }
+html[data-mode="presenter"] .slides-wrap {
+  position: fixed; top: var(--bar-h); left: 0; right: 0; bottom: 0;
+  overflow-y: scroll; overscroll-behavior: contain;
+}
+@media (prefers-reduced-motion: no-preference) {
+  html[data-mode="presenter"] .slides-wrap { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+}
+html[data-mode="participant"] body { overflow-y: auto; padding-top: calc(var(--bar-h) + 3px); }
+
+/* SLIDE base */
+.slide { position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: center; padding: 80px 72px 64px; }
+html[data-mode="presenter"] .slide { min-height: calc(100vh - var(--bar-h)); scroll-snap-align: start; }
+html[data-mode="participant"] .slide { min-height: unset; padding: 56px 72px; scroll-snap-align: unset; justify-content: flex-start; }
+
+.slide-paper  { background: var(--paper); }
+.slide-paper2 { background: var(--paper-2); }
+.slide-ink    { background: var(--ink); color: var(--paper); }
+.slide-teal   { background: var(--teal); }
+.slide-pink   { background: var(--pink); color: var(--paper); }
+.slide-plum   { background: var(--plum); color: var(--paper); }
+.slide-yellow { background: var(--yellow); }
+.slide-sand   { background: var(--sand); }
+
+.content { position: relative; z-index: 1; }
+
+/* WORKBOOK overrides */
+html[data-mode="participant"] .slide[data-type="title"] { min-height: 280px; padding: 56px 72px; justify-content: center; }
+html[data-mode="participant"] .slide[data-type="context"] { padding: 0; border-bottom: 1px solid rgba(16,0,0,0.1); min-height: unset; justify-content: flex-start; }
+html[data-mode="participant"] .slide[data-type="quick-hit"] { padding: 36px 72px; }
+html[data-mode="participant"] .slide[data-type="activity"] { padding: 56px 72px; border-top: 3px solid var(--ink); border-bottom: 3px solid var(--ink); margin: 20px 0; }
+html[data-mode="participant"] .slide[data-type="debrief"] { padding: 40px 72px; border-bottom: 1px solid rgba(16,0,0,0.1); }
+html[data-mode="participant"] .slide[data-type="break"] { display: none; }
+html[data-mode="participant"] .slide[data-type="close"] { min-height: unset; padding: 56px 72px; }
+
+/* CONTEXT ACCORDION */
+.ctx-header {
+  display: none; align-items: center; justify-content: space-between;
+  padding: 18px 72px; cursor: pointer; user-select: none;
+  border-bottom: 1px solid rgba(16,0,0,0.08); transition: background 0.15s; gap: 16px;
+  background: none; border-left: none; border-right: none; border-top: none;
+  width: 100%; font: inherit; text-align: left; color: inherit;
+}
+.ctx-header:hover { background: rgba(16,0,0,0.025); }
+html[data-mode="participant"] .slide[data-type="context"] .ctx-header { display: flex; }
+.ctx-header-left { display: flex; align-items: baseline; gap: 20px; }
+.ctx-eyebrow { font-family: 'Inter'; font-size: 9px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--muted); flex-shrink: 0; }
+.ctx-title { font-family: 'DM Serif Display', serif; font-size: 19px; letter-spacing: -0.01em; color: var(--charcoal); }
+.ctx-icon { font-family: 'Inter'; font-size: 20px; line-height: 1; color: var(--muted); flex-shrink: 0; transition: transform 0.25s; }
+[aria-expanded="true"] .ctx-icon { transform: rotate(45deg); }
+.slide-teaching {}
+html[data-mode="presenter"] .slide-teaching { flex: 1; display: flex; flex-direction: column; justify-content: center; max-height: none !important; overflow: visible !important; padding: 0 !important; }
+html[data-mode="participant"] .slide[data-type="context"] .slide-teaching { overflow: hidden; max-height: 0; padding: 0 72px; transition: max-height 0.4s ease, padding 0.4s ease; }
+html[data-mode="participant"] .slide[data-type="context"].is-open .slide-teaching { max-height: 1600px; padding: 40px 72px 52px; }
+html[data-mode="presenter"] .ctx-header { display: none !important; }
+
+/* FACILITATOR NOTES */
+.fac-note {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  background: rgba(16,0,0,0.88); color: rgba(251,247,238,0.82);
+  padding: 13px 72px; font-family: 'Inter'; font-size: 11.5px; line-height: 1.6; z-index: 10;
+}
+.fac-note strong { color: var(--yellow); font-weight: 600; }
+.fac-note em { font-style: italic; color: rgba(251,247,238,0.65); }
+html[data-mode="participant"] .fac-note { display: none; }
+
+/* PARTICIPANT INPUTS */
+html[data-mode="presenter"] .p-input { pointer-events: none; opacity: 0.18; }
+html[data-mode="participant"] .p-input { pointer-events: auto; opacity: 1; }
+.field-group { margin-bottom: 24px; }
+.field-label { display: block; margin-bottom: 8px; font-family: 'Patrick Hand', cursive; font-size: 14px; color: var(--charcoal); }
+.field-num { font-family: 'Inter'; font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-right: 8px; }
+.field-ta {
+  width: 100%; min-height: 80px; padding: 14px 16px;
+  font-family: 'Fraunces', serif; font-size: 15px; line-height: 1.6;
+  font-variation-settings: "SOFT" 50, "opsz" 144;
+  color: var(--ink); background: var(--paper);
+  border: 1px solid rgba(16,0,0,0.12); border-bottom: 2px solid var(--charcoal);
+  outline: none; resize: vertical; transition: border-color 0.15s;
+}
+.field-ta:focus { border-color: var(--pink-text); border-bottom-color: var(--pink-text); }
+.field-ta::placeholder { color: rgba(16,0,0,0.48); font-style: italic; }
+.field-ta-light { background: rgba(251,247,238,0.07); border-color: rgba(251,247,238,0.15); border-bottom-color: rgba(251,247,238,0.4); color: var(--paper); }
+.field-ta-light::placeholder { color: rgba(251,247,238,0.3); }
+.field-ta-light:focus { border-bottom-color: var(--yellow); }
+.field-label-light { color: rgba(251,247,238,0.65); }
+.field-label-light .field-num { color: rgba(251,247,238,0.35); }
+
+.save-toast {
+  position: fixed; bottom: 28px; right: 32px;
+  background: var(--ink); color: var(--paper);
+  font-family: 'Inter'; font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase;
+  padding: 8px 18px; z-index: 300; opacity: 0; pointer-events: none; transition: opacity 0.3s;
+}
+html[data-mode="participant"] .save-toast.visible { opacity: 1; }
+
+/* TYPOGRAPHY */
+.eyebrow {
+  font-family: 'Inter'; font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--charcoal);
+  display: inline-flex; align-items: center; gap: 14px; margin-bottom: 22px;
+}
+.eyebrow::before { content: ''; width: 28px; height: 1px; background: currentColor; opacity: 0.35; flex-shrink: 0; }
+.slide-plum .eyebrow, .slide-ink .eyebrow { color: rgba(251,247,238,0.6); }
+.slide-pink .eyebrow, .slide-teal .eyebrow, .slide-yellow .eyebrow { color: rgba(16,0,0,0.8); }
+
+.serif { font-family: 'DM Serif Display', serif; font-weight: 400; letter-spacing: -0.015em; line-height: 0.95; }
+.serif em { font-style: italic; color: var(--pink-text); }
+.slide-plum .serif em, .slide-ink .serif em { color: var(--yellow); }
+.slide-pink .serif em { color: var(--yellow); }
+.slide-teal .serif em, .slide-yellow .serif em { color: var(--plum); }
+
+.h1 { font-size: clamp(64px, 11vw, 152px); margin: 0 0 24px; }
+.h2 { font-size: clamp(40px, 6vw, 80px); margin: 0 0 22px; max-width: 900px; }
+.h3 { font-size: clamp(28px, 4vw, 52px); margin: 0 0 18px; max-width: 760px; }
+
+.fran { font-family: 'Fraunces', serif; font-weight: 400; line-height: 1.55; font-variation-settings: "SOFT" 50, "opsz" 144; }
+.fran em { font-style: italic; color: var(--pink-text); }
+.slide-plum .fran, .slide-ink .fran { color: rgba(251,247,238,0.85); }
+.slide-plum .fran em, .slide-ink .fran em { color: var(--yellow); }
+.slide-pink .fran { color: rgba(251,247,238,0.85); }
+
+.body-lg { font-size: clamp(17px, 2.2vw, 24px); max-width: 660px; margin: 0 0 18px; }
+.body-md { font-size: clamp(15px, 1.8vw, 20px); max-width: 640px; margin: 0 0 14px; }
+.body-sm { font-size: 14px; max-width: 580px; margin: 0 0 10px; color: var(--muted); }
+
+.sig { font-family: 'Allura', cursive; color: var(--pink-text); line-height: 1; display: block; transform: rotate(-3deg); transform-origin: left; }
+.slide-plum .sig, .slide-ink .sig { color: var(--yellow); }
+
+/* DECORATIVE */
+.stripe-bar-deco {
+  position: absolute; top: 0; left: 0; right: 0; height: 5px;
+  background: linear-gradient(90deg, var(--teal) 0 25%, var(--pink) 25% 50%, var(--yellow) 50% 75%, var(--plum) 75% 100%);
+}
+.bg-num {
+  position: absolute; bottom: -24px; right: 52px;
+  font-family: 'DM Serif Display', serif; font-size: clamp(140px, 22vw, 280px);
+  line-height: 0.85; letter-spacing: -0.04em;
+  pointer-events: none; user-select: none; opacity: 0.05; font-style: italic; color: inherit; z-index: 0;
+}
+html[data-mode="participant"] .slide[data-type="context"] .bg-num { display: none; }
+
+.mark-hi { background: linear-gradient(180deg, transparent 50%, rgba(255,189,89,0.55) 50%, rgba(255,189,89,0.55) 92%, transparent 92%); padding: 0 3px; }
+
+/* LISTS */
+.clean-list { list-style: none; padding: 0; margin: 12px 0 0; }
+.clean-list li {
+  display: flex; gap: 14px; align-items: baseline; padding: 9px 0; border-bottom: 1px solid rgba(16,0,0,0.07);
+  font-family: 'Fraunces', serif; font-size: clamp(14px, 1.7vw, 18px); line-height: 1.45;
+  font-variation-settings: "SOFT" 50, "opsz" 144; color: var(--charcoal);
+}
+.clean-list li:last-child { border-bottom: none; }
+.clean-list li::before { content: '—'; font-family: 'Inter'; font-size: 11px; color: var(--pink-text); flex-shrink: 0; }
+.slide-plum .clean-list li, .slide-ink .clean-list li { color: rgba(251,247,238,0.82); border-bottom-color: rgba(255,255,255,0.1); }
+.slide-plum .clean-list li::before, .slide-ink .clean-list li::before { color: var(--yellow); }
+
+/* ACTIVITY BLOCK */
+.act-block { border: 1px solid var(--ink); max-width: 900px; overflow: hidden; margin: 20px 0 28px; }
+.act-head { display: flex; align-items: center; justify-content: space-between; padding: 11px 22px; background: var(--ink); color: var(--paper); }
+.act-label { font-family: 'Inter'; font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; opacity: 0.55; }
+.act-time { font-family: 'Inter'; font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; background: var(--yellow); color: var(--ink); padding: 3px 10px; font-weight: 600; }
+.act-body { padding: 26px 26px 22px; background: var(--paper-2); }
+.act-instruction { font-family: 'DM Serif Display', serif; font-size: clamp(18px, 2.6vw, 26px); line-height: 1.18; letter-spacing: -0.01em; margin: 0 0 18px; }
+.act-instruction em { font-style: italic; color: var(--pink-text); }
+.act-rules { list-style: none; padding: 0; margin: 0; counter-reset: rules; }
+.act-rules li {
+  counter-increment: rules; display: flex; gap: 14px; align-items: baseline; padding: 9px 0; border-top: 1px solid rgba(16,0,0,0.08);
+  font-family: 'Fraunces', serif; font-size: 14px; line-height: 1.45; font-variation-settings: "SOFT" 50, "opsz" 144; color: var(--charcoal);
+}
+.act-rules li::before { content: counter(rules, decimal-leading-zero); font-family: 'Inter'; font-size: 9px; letter-spacing: 0.12em; color: var(--pink-text); flex-shrink: 0; padding-top: 1px; }
+
+/* DEBRIEF */
+.debrief-qs { margin: 16px 0 0; }
+.debrief-q {
+  font-family: 'DM Serif Display', serif; font-style: italic; font-size: clamp(19px, 2.5vw, 28px);
+  line-height: 1.2; color: var(--charcoal); padding: 15px 0; border-bottom: 1px solid rgba(16,0,0,0.1);
+}
+.debrief-q:last-child { border-bottom: none; }
+html[data-mode="presenter"] .reflection-field { display: none; }
+html[data-mode="participant"] .reflection-field { display: block; margin-top: 16px; }
+
+/* PULL QUOTE */
+.pull-quote { position: relative; padding: 0 0 0 6px; max-width: 820px; margin: 20px 0; }
+.pull-glyph { font-family: 'DM Serif Display', serif; font-size: 110px; line-height: 0.6; color: var(--pink-text); opacity: 0.85; display: block; margin-bottom: -18px; user-select: none; font-style: normal; }
+.slide-plum .pull-glyph, .slide-ink .pull-glyph { color: var(--yellow); opacity: 0.45; }
+.pull-q { font-family: 'DM Serif Display', serif; font-style: italic; font-size: clamp(20px, 3.2vw, 36px); line-height: 1.15; color: var(--ink); position: relative; z-index: 1; }
+.slide-plum .pull-q, .slide-ink .pull-q { color: var(--paper); }
+
+/* MODULE CTA */
+.module-cta {
+  display: inline-flex; align-items: center; gap: 16px; margin-top: 32px; text-decoration: none;
+  border: 1.5px solid rgba(251,247,238,0.4); padding: 13px 26px;
+  font-family: 'Inter'; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: rgba(251,247,238,0.75); transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+.module-cta:hover { background: rgba(251,247,238,0.1); border-color: rgba(251,247,238,0.7); color: var(--paper); }
+
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: start; max-width: 1100px; }
+
+html[data-mode="participant"] .section-divider {
+  display: flex; align-items: center; gap: 16px; padding: 28px 72px 0;
+  font-family: 'Inter'; font-size: 9px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--muted);
+}
+html[data-mode="presenter"] .section-divider { display: none; }
+.section-divider::before, .section-divider::after { content: ''; flex: 1; height: 1px; background: var(--sand); }
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .slide { padding: 80px 36px 64px; }
+  html[data-mode="participant"] .slide { padding: 40px 28px; }
+  html[data-mode="participant"] .slide[data-type="context"] .ctx-header { padding: 16px 28px; }
+  html[data-mode="participant"] .slide[data-type="context"] .slide-teaching { padding: 0 28px; }
+  html[data-mode="participant"] .slide[data-type="context"].is-open .slide-teaching { padding: 32px 28px 40px; }
+  html[data-mode="participant"] .section-divider { padding: 20px 28px 0; }
+  .fac-note { padding: 12px 36px; }
+  .two-col { grid-template-columns: 1fr; gap: 32px; }
+  .topbar { padding: 0 16px; gap: 8px; }
+  .topbar-center, .topbar-module { display: none; }
+}
+
+/* PRINT */
+@media print {
+  @page { size: A4 portrait; margin: 18mm 16mm; }
+  html[data-mode="presenter"] * { display: none !important; }
+  html[data-mode="participant"] body { padding-top: 0; }
+  .topbar, .progress-wrap, .ctx-icon, .fac-note, .mode-toggle, .topbar-btn, .topbar-nav, .section-divider, .save-toast { display: none !important; }
+  .slides-wrap { display: block; }
+  .slide { break-inside: avoid; padding: 24px 0 20px; }
+  html[data-mode="participant"] .slide[data-type="break"] { display: none !important; }
+  html[data-mode="participant"] .slide[data-type="title"] { min-height: 100px; padding: 20px 0; }
+  .slide-plum, .slide-ink { background: #100000 !important; -webkit-print-color-adjust: exact; color-adjust: exact; }
+  .slide-yellow { background: #FFBD59 !important; -webkit-print-color-adjust: exact; color-adjust: exact; }
+  .slide-sand { background: #E0D2B5 !important; -webkit-print-color-adjust: exact; color-adjust: exact; }
+  html[data-mode="participant"] .slide[data-type="context"] .ctx-header { display: flex !important; border: none; cursor: default; }
+  html[data-mode="participant"] .slide[data-type="context"] .slide-teaching { max-height: none !important; padding: 16px 0 24px !important; overflow: visible !important; }
+  .field-ta { border: none; border-bottom: 1px solid rgba(16,0,0,0.2); resize: none; min-height: 56px; background: transparent; }
+  .act-block { border: 1px solid rgba(16,0,0,0.3); }
+  .act-head { background: #100000 !important; -webkit-print-color-adjust: exact; color-adjust: exact; }
+  .reflection-field { display: block !important; }
+  html[data-mode="participant"] .p-input { opacity: 1 !important; pointer-events: auto !important; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-left">
+    <a href="../../../index.html" class="topbar-brand">design‑led: <em>practitioner</em></a>
+    <div class="topbar-divider"></div>
+    <span class="topbar-module">Module 09 · Conversational UI</span>
+  </div>
+  <div class="topbar-center">Half day · one break</div>
+  <div class="topbar-right">
+    <div class="topbar-nav">
+      <a href="08-information-architecture.html" class="nav-btn">← Prev</a>
+      <a href="10-ai-era-design.html" class="nav-btn">Next →</a>
+    </div>
+    <div class="mode-toggle">
+      <button class="mode-btn btn-presenter" onclick="setMode('presenter')">Present</button>
+      <div class="mode-sep"></div>
+      <button class="mode-btn btn-participant" onclick="setMode('participant')">Workbook</button>
+    </div>
+    <a href="09-conversational-ui-canvas.html" class="topbar-btn" target="_blank">A3 Canvas</a>
+    <button class="topbar-btn" onclick="window.print()">Print</button>
+  </div>
+</div>
+
+<div class="progress-wrap"><div class="progress-fill" id="progressFill"></div></div>
+<div class="save-toast" id="saveToast">Saved</div>
+
+<div class="slides-wrap" id="slidesWrap">
+
+  <!-- SLIDE 01 · TITLE -->
+  <section class="slide slide-ink" data-type="title" data-slide="1">
+    <div class="stripe-bar-deco"></div>
+    <div class="content">
+      <span class="sig" style="font-size:26px;margin-bottom:14px;">Design-Led · Module 09</span>
+      <h1 class="serif h1">Conversational <em>UI</em></h1>
+      <p class="fran body-lg">When there's no button to press,<br>language is the design.</p>
+    </div>
+    <div class="fac-note">
+      <strong>Before you start:</strong> Have the Luma Health scenario ready to read aloud — technically correct, emotionally off, 60% drop-off after message two. | <em>Open:</em> "Have you ever texted with a chatbot and forgotten it wasn't a person? What did that?" Take 2–3 answers, keep it moving.
+    </div>
+  </section>
+
+  <!-- SLIDE 02 · OVERVIEW -->
+  <section class="slide slide-paper2" data-type="context" data-slide="2">
+    <button type="button" class="ctx-header" onclick="toggleContext(this)" aria-expanded="false">
+      <div class="ctx-header-left"><span class="ctx-eyebrow">Overview</span><span class="ctx-title">What this module is about</span></div>
+      <span class="ctx-icon">+</span>
+    </button>
+    <div class="slide-teaching">
+      <div class="content" style="max-width:860px;">
+        <div class="eyebrow">This module</div>
+        <h2 class="serif h2">What we're doing<br><em>today</em></h2>
+        <ul class="clean-list">
+          <li>Conversation UI as a design discipline, not a chat window</li>
+          <li>When dialogue is the right interface — and when it isn't</li>
+          <li>The five levers of dialogue design</li>
+          <li>Designing flow: happy path, branches, fallbacks</li>
+          <li>Persona, voice, and disclosure</li>
+          <li>Writing error states that don't blame the user</li>
+        </ul>
+        <div class="bg-num">02</div>
+      </div>
+    </div>
+    <div class="fac-note"><strong>Overview (5 min):</strong> Move fast — this sets up the rest of the day.</div>
+  </section>
+
+  <!-- SLIDE 03 · OPENING STORY -->
+  <section class="slide slide-paper" data-type="context" data-slide="3">
+    <button type="button" class="ctx-header" onclick="toggleContext(this)" aria-expanded="false">
+      <div class="ctx-header-left"><span class="ctx-eyebrow">Story</span><span class="ctx-title">Luma Health</span></div>
+      <span class="ctx-icon">+</span>
+    </button>
+    <div class="slide-teaching">
+      <div class="content" style="max-width:860px;">
+        <div class="eyebrow">Opening story</div>
+        <h2 class="serif h2">Luma Health shipped a<br><em>chatbot.</em></h2>
+        <ul class="clean-list">
+          <li>Technically correct</li>
+          <li>Every answer accurate</li>
+          <li>Emotionally off</li>
+          <li>60% drop-off after the second response</li>
+          <li>Nobody had tested how it sounded</li>
+        </ul>
+        <p class="fran body-md" style="margin-top:20px;font-style:italic;">Language is the interface. Get the words wrong and the logic underneath doesn't matter.</p>
+        <div class="bg-num">03</div>
+      </div>
+    </div>
+    <div class="fac-note"><strong>Story (5 min):</strong> Read it flat, let the 60% land. Don't editorialise yet.</div>
+  </section>
+
+  <!-- SLIDE 04 · CONCEPT: WHEN CONVERSATION UI WORKS -->
+  <section class="slide slide-paper2" data-type="context" data-slide="4">
+    <button type="button" class="ctx-header" onclick="toggleContext(this)" aria-expanded="false">
+      <div class="ctx-header-left"><span class="ctx-eyebrow">Concept</span><span class="ctx-title">When conversation UI works</span></div>
+      <span class="ctx-icon">+</span>
+    </button>
+    <div class="slide-teaching">
+      <div class="content" style="max-width:860px;">
+        <div class="eyebrow">When conversation UI works</div>
+        <h2 class="serif h2">Four things have to be<br>true at <em>once.</em></h2>
+        <ul class="clean-list">
+          <li><strong>High ambiguity</strong> — the user doesn't have the right words yet</li>
+          <li><strong>High emotion</strong> — the moment carries weight</li>
+          <li><strong>High context</strong> — the system needs to remember what was just said</li>
+          <li><strong>Low complexity</strong> — one thing to resolve, not a dashboard</li>
+        </ul>
+        <p class="fran body-md" style="margin-top:20px;font-style:italic;">Miss one and you don't need a conversation. You need a form.</p>
+        <div class="bg-num">04</div>
+      </div>
+    </div>
+    <div class="fac-note"><strong>Concept (8 min):</strong> This is the gate — most conversational UI fails because someone skipped this test entirely.</div>
+  </section>
+
+  <!-- SLIDE 05 · CONCEPT: DIALOGUE DESIGN PRINCIPLES -->
+  <section class="slide slide-paper" data-type="context" data-slide="5">
+    <button type="button" class="ctx-header" onclick="toggleContext(this)" aria-expanded="false">
+      <div class="ctx-header-left"><span class="ctx-eyebrow">Concept</span><span class="ctx-title">Dialogue design principles</span></div>
+      <span class="ctx-icon">+</span>
+    </button>
+    <div class="slide-teaching">
+      <div class="content" style="max-width:860px;">
+        <div class="eyebrow">Dialogue design principles</div>
+        <h2 class="serif h2">Five levers, one<br><em>interface.</em></h2>
+        <ul class="clean-list">
+          <li><strong>Turn-taking</strong> — who speaks first, who speaks next, no dead air</li>
+          <li><strong>Response length</strong> — say the smallest true thing</li>
+          <li><strong>Reading level</strong> — write for someone's worst day, not their best</li>
+          <li><strong>Persona</strong> — one character, consistently, not a mood</li>
+          <li><strong>Predictability</strong> — the same input gets the same kind of answer</li>
+        </ul>
+        <p class="fran body-md" style="margin-top:20px;font-style:italic;">Pull one lever and the whole conversation shifts.</p>
+        <div class="bg-num">05</div>
+      </div>
+    </div>
+    <div class="fac-note"><strong>Concept (8 min):</strong> Worth writing down verbatim — this is the checklist for every activity today.</div>
+  </section>
+
+  <!-- SLIDE 06 · QUICK HIT 01 -->
+  <section class="slide slide-yellow" data-type="quick-hit" data-slide="6">
+    <div class="content" style="max-width:860px;">
+      <div class="eyebrow">Quick hit · 5 min</div>
+      <div class="pull-quote" style="margin-bottom:4px;">
+        <span class="pull-glyph" style="color:var(--plum);opacity:0.4;">"</span>
+        <p class="pull-q" style="color:var(--ink);">Have you ever spoken to an AI<br>that felt natural? What made it<br>feel that way?</p>
+      </div>
+      <p class="fran body-md" style="margin-top:20px;">Listen for pacing, brevity, and whether it admitted what it didn't know.</p>
+      <div class="p-input field-group" style="margin-top:24px;max-width:580px;">
+        <textarea class="field-ta" data-field="dlp_m09_quick_hit_1" rows="3" placeholder="What made it feel natural…"></textarea>
+      </div>
+    </div>
+    <div class="fac-note"><strong>Quick Hit 01 (5 min):</strong> Collect 3–4 answers. Common patterns: it didn't over-explain, it used contractions, it didn't pretend to be a person.</div>
+  </section>
+
+  <!-- SLIDE 07 · CONCEPT: CONVERSATION FLOW DESIGN -->
+  <section class="slide slide-paper2" data-type="context" data-slide="7">
+    <button type="button" class="ctx-header" onclick="toggleContext(this)" aria-expanded="false">
+      <div class="ctx-header-left"><span class="ctx-eyebrow">Concept</span><span class="ctx-title">Conversation flow design</span></div>
+      <span class="ctx-icon">+</span>
+    </button>
+    <div class="slide-teaching">
+      <div class="content" style="max-width:860px;">
+        <div class="eyebrow">Conversation flow design</div>
+        <h2 class="serif h2">The happy path is<br>the easy <em>20%.</em></h2>
+        <ul class="clean-list">
+          <li><strong>Happy path</strong> — the case that goes exactly to plan</li>
+          <li><strong>Branching</strong> — the real forks a person actually takes</li>
+          <li><strong>Unexpected input</strong> — what happens off-script</li>
+          <li><strong>Error recovery</strong> — how the conversation gets back on track</li>
+          <li><strong>Fallback</strong> — the honest exit when nothing else works</li>
+        </ul>
+        <p class="fran body-md" style="margin-top:20px;font-style:italic;">Most teams design the happy path and call it finished. The flow is the other four.</p>
+        <div class="bg-num">07</div>
+      </div>
+    </div>
+    <div class="fac-note"><strong>Concept (7 min):</strong> This sets up Activity 01 directly — make sure "fallback" lands as different from "error recovery."</div>
+  </section>
+
+  <!-- SLIDE 08 · ACTIVITY 01 -->
+  <section class="slide slide-paper" data-type="activity" data-slide="8">
+    <div class="content" style="max-width:940px;">
+      <div class="eyebrow">Activity 01 · 15 min</div>
+      <h2 class="serif h2">Write a <em>Flow</em></h2>
+      <div class="act-block p-input">
+        <div class="act-head"><span class="act-label">Activity 01</span><span class="act-time">15 min</span></div>
+        <div class="act-body">
+          <p class="act-instruction">A patient messages your chatbot asking about their medication dose.</p>
+          <ol class="act-rules">
+            <li>Write the happy path — the bot answers clearly and confirms understanding</li>
+            <li>Write one branch — a question the bot shouldn't answer alone</li>
+            <li>Write one fallback — how the bot hands off without leaving the patient stranded</li>
+          </ol>
+        </div>
+      </div>
+      <div class="p-input" style="margin-top:8px;">
+        <div class="field-group"><label class="field-label"><span class="field-num">01</span>Happy path</label><textarea class="field-ta" data-field="dlp_m09_flow_happy" rows="3" placeholder="Patient asks, bot answers…"></textarea></div>
+        <div class="field-group"><label class="field-label"><span class="field-num">02</span>The branch</label><textarea class="field-ta" data-field="dlp_m09_flow_branch" rows="3" placeholder="A question the bot shouldn't answer alone…"></textarea></div>
+        <div class="field-group"><label class="field-label"><span class="field-num">03</span>The fallback</label><textarea class="field-ta" data-field="dlp_m09_flow_fallback" rows="3" placeholder="How the bot hands off…"></textarea></div>
+      </div>
+    </div>
+    <div class="fac-note"><strong>Activity 01 (15 min):</strong> Watch for scripts that stay clinical instead of human — press: "would you say it that way to your own mother?"</div>
+  </section>
+
+  <!-- SLIDE 09 · DEBRIEF: WHERE IT BROKE -->
+  <section class="slide slide-sand" data-type="debrief" data-slide="9">
+    <div class="content" style="max-width:820px;">
+      <div class="eyebrow">Debrief · 5 min</div>
+      <h3 class="serif h3">Where it <em>broke.</em></h3>
+      <div class="debrief-qs">
+        <div class="debrief-q">Where did your dialogue break — and how did you design your way out?</div>
+      </div>
+      <div class="reflection-field p-input">
+        <textarea class="field-ta" data-field="dlp_m09_flow_debrief" rows="3" style="background:var(--paper);" placeholder="Where it broke, and what I did…"></textarea>
+      </div>
+    </div>
+    <div class="fac-note"><strong>Debrief (5 min):</strong> This is the whole point of the activity — the break is more instructive than the happy path. Have 2–3 pairs share.</div>
+  </section>
+
+  <!-- SLIDE 10 · CONCEPT: PERSONA DESIGN -->
+  <section class="slide slide-paper2" data-type="context" data-slide="10">
+    <button type="button" class="ctx-header" onclick="toggleContext(this)" aria-expanded="false">
+      <div class="ctx-header-left"><span class="ctx-eyebrow">Concept</span><span class="ctx-title">Persona design</span></div>
+      <span class="ctx-icon">+</span>
+    </button>
+    <div class="slide-teaching">
+      <div class="content" style="max-width:860px;">
+        <div class="eyebrow">Persona design</div>
+        <h2 class="serif h2">A persona is a<br><em>boundary,</em> not a personality.</h2>
+        <ul class="clean-list">
+          <li><strong>Voice</strong> — the words it would and wouldn't use</li>
+          <li><strong>Tone</strong> — how it adjusts to the moment without losing itself</li>
+          <li><strong>Character</strong> — consistent across every interaction, not just the happy ones</li>
+          <li><strong>Boundaries</strong> — what it will never claim, promise, or pretend</li>
+          <li><strong>Disclosure</strong> — when and how it says what it is</li>
+        </ul>
+        <p class="fran body-md" style="margin-top:20px;font-style:italic;">Personality is decoration. Persona is the interface's integrity.</p>
+        <div class="bg-num">10</div>
+      </div>
+    </div>
+    <div class="fac-note"><strong>Concept (8 min):</strong> Land hard on disclosure — it's the thread the next quick hit pulls on.</div>
+  </section>
+
+  <!-- SLIDE 11 · QUICK HIT 02 -->
+  <section class="slide slide-yellow" data-type="quick-hit" data-slide="11">
+    <div class="content" style="max-width:860px;">
+      <div class="eyebrow">Quick hit · 5 min</div>
+      <div class="pull-quote" style="margin-bottom:4px;">
+        <span class="pull-glyph" style="color:var(--plum);opacity:0.4;">"</span>
+        <p class="pull-q" style="color:var(--ink);">When should a bot disclose<br>it's AI — and how should<br>it say it?</p>
+      </div>
+      <p class="fran body-md" style="margin-top:20px;">Expect disagreement — "always, upfront" vs. "only if asked." Both have real trade-offs.</p>
+      <div class="p-input field-group" style="margin-top:24px;max-width:580px;">
+        <textarea class="field-ta" data-field="dlp_m09_quick_hit_2" rows="3" placeholder="When and how it should disclose…"></textarea>
+      </div>
+    </div>
+    <div class="fac-note"><strong>Quick Hit 02 (5 min):</strong> Take 3–4 answers. Flag this for the debrief — it resurfaces in Module 10 (AI-Era Design).</div>
+  </section>
+
+  <!-- SLIDE 12 · ACTIVITY 02 -->
+  <section class="slide slide-paper" data-type="activity" data-slide="12">
+    <div class="content" style="max-width:940px;">
+      <div class="eyebrow">Activity 02 · 15 min</div>
+      <h2 class="serif h2">Design the <em>Failure</em></h2>
+      <div class="act-block p-input">
+        <div class="act-head"><span class="act-label">Activity 02</span><span class="act-time">15 min</span></div>
+        <div class="act-body">
+          <p class="act-instruction">Design three error states your conversational interface will hit — and the recovery response for each.</p>
+          <ol class="act-rules">
+            <li>Clear — the person understands what went wrong, in one sentence</li>
+            <li>Human, non-defensive — never "you entered invalid data"</li>
+            <li>Actionable — it tells them exactly what to do next</li>
+          </ol>
+        </div>
+      </div>
+      <div class="p-input" style="margin-top:8px;">
+        <div class="field-group"><label class="field-label"><span class="field-num">01</span>Error state 1 + recovery</label><textarea class="field-ta" data-field="dlp_m09_error_1" rows="3" placeholder="What went wrong, and what the bot says…"></textarea></div>
+        <div class="field-group"><label class="field-label"><span class="field-num">02</span>Error state 2 + recovery</label><textarea class="field-ta" data-field="dlp_m09_error_2" rows="3" placeholder="What went wrong, and what the bot says…"></textarea></div>
+        <div class="field-group"><label class="field-label"><span class="field-num">03</span>Error state 3 + recovery</label><textarea class="field-ta" data-field="dlp_m09_error_3" rows="3" placeholder="What went wrong, and what the bot says…"></textarea></div>
+      </div>
+    </div>
+    <div class="fac-note"><strong>Activity 02 (15 min) — Watch for:</strong> recovery copy that blames the user ("invalid input," "you must") — push back to what the system will do next, not what the person did wrong.</div>
+  </section>
+
+  <!-- SLIDE 13 · SYNTHESIS -->
+  <section class="slide slide-sand" data-type="debrief" data-slide="13">
+    <div class="content" style="max-width:820px;">
+      <div class="eyebrow">Synthesis · 10 min</div>
+      <h3 class="serif h3">Tone isn't optional. It's the<br><em>interface.</em></h3>
+      <div class="debrief-qs">
+        <div class="debrief-q">Dialogue design is IA, copywriting, and interaction design collapsed into one.</div>
+        <div class="debrief-q">There's no layout to hide behind — every word is a decision.</div>
+        <div class="debrief-q">An error message is a trust test. Most bots fail it on the first line.</div>
+      </div>
+      <div class="reflection-field p-input">
+        <textarea class="field-ta" data-field="dlp_m09_synthesis" rows="3" style="background:var(--paper);" placeholder="What I noticed…"></textarea>
+      </div>
+    </div>
+    <div class="fac-note"><strong>Synthesis (10 min):</strong> This is the bridge into Module 10 — AI-era interfaces don't remove this discipline, they raise the stakes on it.</div>
+  </section>
+
+  <!-- SLIDE 14 · CLOSE -->
+  <section class="slide slide-ink" data-type="close" data-slide="14">
+    <div class="stripe-bar-deco"></div>
+    <div class="content" style="max-width:880px;">
+      <div class="eyebrow">Close · 10 min</div>
+      <h2 class="serif h2">One takeaway.<br>One question <em>still open.</em></h2>
+      <div class="p-input" style="margin-top:32px;max-width:600px;">
+        <label class="field-label field-label-light"><span class="field-num">Takeaway</span>What landed for you</label>
+        <textarea class="field-ta field-ta-light" data-field="dlp_m09_takeaway" rows="2" placeholder="What landed…"></textarea>
+      </div>
+      <div class="p-input" style="margin-top:20px;max-width:600px;">
+        <label class="field-label field-label-light"><span class="field-num">Open</span>What's still unclear</label>
+        <textarea class="field-ta field-ta-light" data-field="dlp_m09_open_question" rows="2" placeholder="What's still unclear…"></textarea>
+      </div>
+      <div style="margin-top:44px;padding-top:36px;border-top:1px solid rgba(251,247,238,0.18);">
+        <p class="fran body-sm" style="color:rgba(251,247,238,0.55);margin-bottom:6px;">Next module</p>
+        <p class="fran body-lg" style="margin:0 0 4px;">AI-ERA DESIGN</p>
+        <p class="fran body-md" style="margin:0;"><em>AI changes what we build. It doesn't change why.</em></p>
+        <a href="10-ai-era-design.html" class="module-cta">Module 10 → AI-Era Design</a>
+      </div>
+    </div>
+    <div class="fac-note">
+      <strong>Close (10 min):</strong> One takeaway, one open question — don't resolve it, just capture it. | <strong>Further reading (facilitator):</strong> <em>Designing Voice User Interfaces</em> — Cathy Pearl · <em>Conversational Design</em> — Erika Hall · Google "Principles of Bot Design" · Erika Hall — "Designing for Conversation" · Voicebot.ai podcast.
+    </div>
+  </section>
+
+</div>
+
+<script>
+(function () {
+  'use strict';
+  var ROOT = document.documentElement;
+  var STORAGE_PREFIX = 'dlp_m09_';
+  var saveTimer;
+
+  function setMode(mode) {
+    ROOT.dataset.mode = mode;
+    localStorage.setItem('dlp_mode_global', mode);
+    if (mode === 'participant') { window.scrollTo(0, 0); }
+    else { var wrap = document.getElementById('slidesWrap'); if (wrap) wrap.scrollTo(0, 0); }
+  }
+  window.setMode = setMode;
+
+  function toggleContext(header) {
+    var expanded = header.getAttribute('aria-expanded') === 'true';
+    header.setAttribute('aria-expanded', String(!expanded));
+    var section = header.closest('section');
+    if (section) section.classList.toggle('is-open', !expanded);
+    var icon = header.querySelector('.ctx-icon');
+    if (icon) icon.textContent = !expanded ? '−' : '+';
+  }
+  window.toggleContext = toggleContext;
+
+  function initFields() {
+    document.querySelectorAll('[data-field]').forEach(function (el) {
+      var key = el.dataset.field.indexOf(STORAGE_PREFIX) === 0 ? el.dataset.field : STORAGE_PREFIX + el.dataset.field;
+      var saved = localStorage.getItem(key);
+      if (saved) el.value = saved;
+      el.addEventListener('input', function () {
+        localStorage.setItem(key, el.value);
+        updateProgress();
+        triggerSaveToast();
+      });
+    });
+    updateProgress();
+  }
+
+  function updateProgress() {
+    var fields = document.querySelectorAll('[data-field]');
+    var filled = 0;
+    fields.forEach(function (f) { if (f.value.trim().length > 8) filled++; });
+    var pct = fields.length ? (filled / fields.length) * 100 : 0;
+    var fill = document.getElementById('progressFill');
+    if (fill) fill.style.width = pct.toFixed(1) + '%';
+  }
+
+  function triggerSaveToast() {
+    var toast = document.getElementById('saveToast');
+    if (!toast) return;
+    toast.classList.add('visible');
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(function () { toast.classList.remove('visible'); }, 1800);
+  }
+
+  function init() {
+    var params = new URLSearchParams(window.location.search);
+    var urlMode = params.get('mode');
+    var savedMode = localStorage.getItem('dlp_mode_global');
+    var mode = urlMode || savedMode || 'participant';
+    ROOT.dataset.mode = mode;
+    initFields();
+  }
+
+  if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', init); } else { init(); }
+})();
+</script>
+</body>
+</html>

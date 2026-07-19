@@ -1,0 +1,764 @@
+<!doctype html>
+<html lang="en" data-mode="participant">
+<head>
+<meta charset="utf-8" />
+<title>Design-Led · Module 05 · Product — Practitioner</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..900,0..100;1,9..144,300..900,0..100&family=Inter:wght@400;500;600&family=Allura&family=Patrick+Hand&display=swap" rel="stylesheet">
+<style>
+/* =====================================================================
+   Design-Led: Practitioner · Module 05 · Product
+   Dual mode: Presenter (scroll-snap) + Workbook (interactive)
+   Same architecture as D2M — Palette: Ink · Paper · Teal · Pink · Yellow · Plum
+   ===================================================================== */
+
+:root {
+  --ink:      #100000;
+  --charcoal: #423B3B;
+  --paper:    #FBF7EE;
+  --paper-2:  #F4EFE2;
+  --sand:     #E0D2B5;
+  --teal:     #47ACA4;
+  --pink:     #FF3990;
+  --yellow:   #FFBD59;
+  --plum:     #7A1F4A;
+  --muted:    #5E584F;
+  --teal-text: #1F6E67;
+  --pink-text: #C40060;
+  --bar-h:    56px;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: 'Inter', sans-serif;
+  font-size: 16px; line-height: 1.55;
+  background: var(--paper); color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* TOPBAR */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0;
+  height: var(--bar-h);
+  background: var(--paper);
+  border-bottom: 1px solid rgba(16,0,0,0.12);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 32px;
+  z-index: 200;
+  gap: 16px;
+}
+.topbar-left { display: flex; align-items: center; gap: 18px; flex-shrink: 0; }
+.topbar-brand {
+  font-family: 'DM Serif Display', serif;
+  font-size: 18px; letter-spacing: -0.01em;
+  color: var(--ink); text-decoration: none;
+  white-space: nowrap;
+}
+.topbar-brand em { font-style: italic; color: var(--pink-text); }
+.topbar-divider { width: 1px; height: 18px; background: var(--sand); flex-shrink: 0; }
+.topbar-module {
+  font-family: 'Inter'; font-size: 10px;
+  letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted);
+  white-space: nowrap;
+}
+.topbar-center {
+  font-family: 'Inter'; font-size: 10px;
+  letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted);
+  flex: 1; text-align: center;
+}
+.topbar-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.mode-toggle { display: flex; align-items: stretch; border: 1px solid var(--ink); overflow: hidden; height: 30px; }
+.mode-btn {
+  padding: 0 14px;
+  font-family: 'Inter'; font-size: 10px;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--muted); background: none; border: none;
+  cursor: pointer; transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+.mode-sep { width: 1px; background: var(--ink); flex-shrink: 0; }
+html[data-mode="presenter"] .mode-btn.btn-presenter,
+html[data-mode="participant"] .mode-btn.btn-participant {
+  background: var(--ink); color: var(--paper);
+}
+.topbar-btn {
+  height: 30px; padding: 0 14px;
+  font-family: 'Inter'; font-size: 10px;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--muted); background: none;
+  border: 1px solid var(--ink); cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+.topbar-btn:hover { background: var(--ink); color: var(--paper); }
+.topbar-nav { display: flex; align-items: center; gap: 2px; }
+.nav-btn {
+  height: 30px; padding: 0 10px;
+  font-family: 'Inter'; font-size: 11px;
+  color: var(--muted); background: none; border: none;
+  cursor: pointer; transition: color 0.15s;
+  text-decoration: none; display: flex; align-items: center;
+}
+.nav-btn:hover { color: var(--ink); }
+.nav-btn.disabled { opacity: 0.3; cursor: default; }
+
+/* PROGRESS BAR */
+.progress-wrap {
+  position: fixed; top: var(--bar-h); left: 0; right: 0;
+  height: 3px; background: var(--sand); z-index: 199;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.25s;
+}
+html[data-mode="participant"] .progress-wrap { opacity: 1; pointer-events: auto; }
+.progress-fill { height: 100%; width: 0%; background: var(--pink-text); transition: width 0.5s ease; }
+
+/* SLIDES CONTAINER */
+html[data-mode="presenter"] body { overflow: hidden; }
+html[data-mode="presenter"] .slides-wrap {
+  position: fixed; top: var(--bar-h); left: 0; right: 0; bottom: 0;
+  overflow-y: scroll; overscroll-behavior: contain;
+}
+@media (prefers-reduced-motion: no-preference) {
+  html[data-mode="presenter"] .slides-wrap { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+}
+html[data-mode="participant"] body { overflow-y: auto; padding-top: calc(var(--bar-h) + 3px); }
+
+/* SLIDE base */
+.slide { position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: center; padding: 80px 72px 64px; }
+html[data-mode="presenter"] .slide { min-height: calc(100vh - var(--bar-h)); scroll-snap-align: start; }
+html[data-mode="participant"] .slide { min-height: unset; padding: 56px 72px; scroll-snap-align: unset; justify-content: flex-start; }
+
+.slide-paper  { background: var(--paper); }
+.slide-paper2 { background: var(--paper-2); }
+.slide-ink    { background: var(--ink); color: var(--paper); }
+.slide-teal   { background: var(--teal); }
+.slide-pink   { background: var(--pink); color: var(--paper); }
+.slide-plum   { background: var(--plum); color: var(--paper); }
+.slide-yellow { background: var(--yellow); }
+.slide-sand   { background: var(--sand); }
+
+.content { position: relative; z-index: 1; }
+
+/* WORKBOOK overrides */
+html[data-mode="participant"] .slide[data-type="title"] { min-height: 280px; padding: 56px 72px; justify-content: center; }
+html[data-mode="participant"] .slide[data-type="context"] { padding: 0; border-bottom: 1px solid rgba(16,0,0,0.1); min-height: unset; justify-content: flex-start; }
+html[data-mode="participant"] .slide[data-type="quick-hit"] { padding: 36px 72px; }
+html[data-mode="participant"] .slide[data-type="activity"] { padding: 56px 72px; border-top: 3px solid var(--ink); border-bottom: 3px solid var(--ink); margin: 20px 0; }
+html[data-mode="participant"] .slide[data-type="debrief"] { padding: 40px 72px; border-bottom: 1px solid rgba(16,0,0,0.1); }
+html[data-mode="participant"] .slide[data-type="break"] { display: none; }
+html[data-mode="participant"] .slide[data-type="close"] { min-height: unset; padding: 56px 72px; }
+
+/* CONTEXT ACCORDION */
+.ctx-header {
+  display: none; align-items: center; justify-content: space-between;
+  padding: 18px 72px; cursor: pointer; user-select: none;
+  border-bottom: 1px solid rgba(16,0,0,0.08); transition: background 0.15s; gap: 16px;
+  background: none; border-left: none; border-right: none; border-top: none;
+  width: 100%; font: inherit; text-align: left; color: inherit;
+}
+.ctx-header:hover { background: rgba(16,0,0,0.025); }
+html[data-mode="participant"] .slide[data-type="context"] .ctx-header { display: flex; }
+.ctx-header-left { display: flex; align-items: baseline; gap: 20px; }
+.ctx-eyebrow { font-family: 'Inter'; font-size: 9px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--muted); flex-shrink: 0; }
+.ctx-title { font-family: 'DM Serif Display', serif; font-size: 19px; letter-spacing: -0.01em; color: var(--charcoal); }
+.ctx-icon { font-family: 'Inter'; font-size: 20px; line-height: 1; color: var(--muted); flex-shrink: 0; transition: transform 0.25s; }
+[aria-expanded="true"] .ctx-icon { transform: rotate(45deg); }
+.slide-teaching {}
+html[data-mode="presenter"] .slide-teaching { flex: 1; display: flex; flex-direction: column; justify-content: center; max-height: none !important; overflow: visible !important; padding: 0 !important; }
+html[data-mode="participant"] .slide[data-type="context"] .slide-teaching { overflow: hidden; max-height: 0; padding: 0 72px; transition: max-height 0.4s ease, padding 0.4s ease; }
+html[data-mode="participant"] .slide[data-type="context"].is-open .slide-teaching { max-height: 1600px; padding: 40px 72px 52px; }
+html[data-mode="presenter"] .ctx-header { display: none !important; }
+
+/* FACILITATOR NOTES */
+.fac-note {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  background: rgba(16,0,0,0.88); color: rgba(251,247,238,0.82);
+  padding: 13px 72px; font-family: 'Inter'; font-size: 11.5px; line-height: 1.6; z-index: 10;
+}
+.fac-note strong { color: var(--yellow); font-weight: 600; }
+.fac-note em { font-style: italic; color: rgba(251,247,238,0.65); }
+html[data-mode="participant"] .fac-note { display: none; }
+
+/* PARTICIPANT INPUTS */
+html[data-mode="presenter"] .p-input { pointer-events: none; opacity: 0.18; }
+html[data-mode="participant"] .p-input { pointer-events: auto; opacity: 1; }
+.field-group { margin-bottom: 24px; }
+.field-label { display: block; margin-bottom: 8px; font-family: 'Patrick Hand', cursive; font-size: 14px; color: var(--charcoal); }
+.field-num { font-family: 'Inter'; font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-right: 8px; }
+.field-ta {
+  width: 100%; min-height: 80px; padding: 14px 16px;
+  font-family: 'Fraunces', serif; font-size: 15px; line-height: 1.6;
+  font-variation-settings: "SOFT" 50, "opsz" 144;
+  color: var(--ink); background: var(--paper);
+  border: 1px solid rgba(16,0,0,0.12); border-bottom: 2px solid var(--charcoal);
+  outline: none; resize: vertical; transition: border-color 0.15s;
+}
+.field-ta:focus { border-color: var(--pink-text); border-bottom-color: var(--pink-text); }
+.field-ta::placeholder { color: rgba(16,0,0,0.48); font-style: italic; }
+.field-ta-light { background: rgba(251,247,238,0.07); border-color: rgba(251,247,238,0.15); border-bottom-color: rgba(251,247,238,0.4); color: var(--paper); }
+.field-ta-light::placeholder { color: rgba(251,247,238,0.3); }
+.field-ta-light:focus { border-bottom-color: var(--yellow); }
+.field-label-light { color: rgba(251,247,238,0.65); }
+.field-label-light .field-num { color: rgba(251,247,238,0.35); }
+
+.save-toast {
+  position: fixed; bottom: 28px; right: 32px;
+  background: var(--ink); color: var(--paper);
+  font-family: 'Inter'; font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase;
+  padding: 8px 18px; z-index: 300; opacity: 0; pointer-events: none; transition: opacity 0.3s;
+}
+html[data-mode="participant"] .save-toast.visible { opacity: 1; }
+
+/* TYPOGRAPHY */
+.eyebrow {
+  font-family: 'Inter'; font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--charcoal);
+  display: inline-flex; align-items: center; gap: 14px; margin-bottom: 22px;
+}
+.eyebrow::before { content: ''; width: 28px; height: 1px; background: currentColor; opacity: 0.35; flex-shrink: 0; }
+.slide-plum .eyebrow, .slide-ink .eyebrow { color: rgba(251,247,238,0.6); }
+.slide-pink .eyebrow, .slide-teal .eyebrow, .slide-yellow .eyebrow { color: rgba(16,0,0,0.8); }
+
+.serif { font-family: 'DM Serif Display', serif; font-weight: 400; letter-spacing: -0.015em; line-height: 0.95; }
+.serif em { font-style: italic; color: var(--pink-text); }
+.slide-plum .serif em, .slide-ink .serif em { color: var(--yellow); }
+.slide-pink .serif em { color: var(--yellow); }
+.slide-teal .serif em, .slide-yellow .serif em { color: var(--plum); }
+
+.h1 { font-size: clamp(64px, 11vw, 152px); margin: 0 0 24px; }
+.h2 { font-size: clamp(40px, 6vw, 80px); margin: 0 0 22px; max-width: 900px; }
+.h3 { font-size: clamp(28px, 4vw, 52px); margin: 0 0 18px; max-width: 760px; }
+
+.fran { font-family: 'Fraunces', serif; font-weight: 400; line-height: 1.55; font-variation-settings: "SOFT" 50, "opsz" 144; }
+.fran em { font-style: italic; color: var(--pink-text); }
+.slide-plum .fran, .slide-ink .fran { color: rgba(251,247,238,0.85); }
+.slide-plum .fran em, .slide-ink .fran em { color: var(--yellow); }
+.slide-pink .fran { color: rgba(251,247,238,0.85); }
+
+.body-lg { font-size: clamp(17px, 2.2vw, 24px); max-width: 660px; margin: 0 0 18px; }
+.body-md { font-size: clamp(15px, 1.8vw, 20px); max-width: 640px; margin: 0 0 14px; }
+.body-sm { font-size: 14px; max-width: 580px; margin: 0 0 10px; color: var(--muted); }
+
+.sig { font-family: 'Allura', cursive; color: var(--pink-text); line-height: 1; display: block; transform: rotate(-3deg); transform-origin: left; }
+.slide-plum .sig, .slide-ink .sig { color: var(--yellow); }
+
+/* DECORATIVE */
+.stripe-bar-deco {
+  position: absolute; top: 0; left: 0; right: 0; height: 5px;
+  background: linear-gradient(90deg, var(--teal) 0 25%, var(--pink) 25% 50%, var(--yellow) 50% 75%, var(--plum) 75% 100%);
+}
+.bg-num {
+  position: absolute; bottom: -24px; right: 52px;
+  font-family: 'DM Serif Display', serif; font-size: clamp(140px, 22vw, 280px);
+  line-height: 0.85; letter-spacing: -0.04em;
+  pointer-events: none; user-select: none; opacity: 0.05; font-style: italic; color: inherit; z-index: 0;
+}
+html[data-mode="participant"] .slide[data-type="context"] .bg-num { display: none; }
+
+.mark-hi { background: linear-gradient(180deg, transparent 50%, rgba(255,189,89,0.55) 50%, rgba(255,189,89,0.55) 92%, transparent 92%); padding: 0 3px; }
+
+/* LISTS */
+.clean-list { list-style: none; padding: 0; margin: 12px 0 0; }
+.clean-list li {
+  display: flex; gap: 14px; align-items: baseline; padding: 9px 0; border-bottom: 1px solid rgba(16,0,0,0.07);
+  font-family: 'Fraunces', serif; font-size: clamp(14px, 1.7vw, 18px); line-height: 1.45;
+  font-variation-settings: "SOFT" 50, "opsz" 144; color: var(--charcoal);
+}
+.clean-list li:last-child { border-bottom: none; }
+.clean-list li::before { content: '—'; font-family: 'Inter'; font-size: 11px; color: var(--pink-text); flex-shrink: 0; }
+.slide-plum .clean-list li, .slide-ink .clean-list li { color: rgba(251,247,238,0.82); border-bottom-color: rgba(255,255,255,0.1); }
+.slide-plum .clean-list li::before, .slide-ink .clean-list li::before { color: var(--yellow); }
+
+/* ACTIVITY BLOCK */
+.act-block { border: 1px solid var(--ink); max-width: 900px; overflow: hidden; margin: 20px 0 28px; }
+.act-head { display: flex; align-items: center; justify-content: space-between; padding: 11px 22px; background: var(--ink); color: var(--paper); }
+.act-label { font-family: 'Inter'; font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; opacity: 0.55; }
+.act-time { font-family: 'Inter'; font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; background: var(--yellow); color: var(--ink); padding: 3px 10px; font-weight: 600; }
+.act-body { padding: 26px 26px 22px; background: var(--paper-2); }
+.act-instruction { font-family: 'DM Serif Display', serif; font-size: clamp(18px, 2.6vw, 26px); line-height: 1.18; letter-spacing: -0.01em; margin: 0 0 18px; }
+.act-instruction em { font-style: italic; color: var(--pink-text); }
+.act-rules { list-style: none; padding: 0; margin: 0; counter-reset: rules; }
+.act-rules li {
+  counter-increment: rules; display: flex; gap: 14px; align-items: baseline; padding: 9px 0; border-top: 1px solid rgba(16,0,0,0.08);
+  font-family: 'Fraunces', serif; font-size: 14px; line-height: 1.45; font-variation-settings: "SOFT" 50, "opsz" 144; color: var(--charcoal);
+}
+.act-rules li::before { content: counter(rules, decimal-leading-zero); font-family: 'Inter'; font-size: 9px; letter-spacing: 0.12em; color: var(--pink-text); flex-shrink: 0; padding-top: 1px; }
+
+/* DEBRIEF */
+.debrief-qs { margin: 16px 0 0; }
+.debrief-q {
+  font-family: 'DM Serif Display', serif; font-style: italic; font-size: clamp(19px, 2.5vw, 28px);
+  line-height: 1.2; color: var(--charcoal); padding: 15px 0; border-bottom: 1px solid rgba(16,0,0,0.1);
+}
+.debrief-q:last-child { border-bottom: none; }
+html[data-mode="presenter"] .reflection-field { display: none; }
+html[data-mode="participant"] .reflection-field { display: block; margin-top: 16px; }
+
+/* PULL QUOTE */
+.pull-quote { position: relative; padding: 0 0 0 6px; max-width: 820px; margin: 20px 0; }
+.pull-glyph { font-family: 'DM Serif Display', serif; font-size: 110px; line-height: 0.6; color: var(--pink-text); opacity: 0.85; display: block; margin-bottom: -18px; user-select: none; font-style: normal; }
+.slide-plum .pull-glyph, .slide-ink .pull-glyph { color: var(--yellow); opacity: 0.45; }
+.pull-q { font-family: 'DM Serif Display', serif; font-style: italic; font-size: clamp(20px, 3.2vw, 36px); line-height: 1.15; color: var(--ink); position: relative; z-index: 1; }
+.slide-plum .pull-q, .slide-ink .pull-q { color: var(--paper); }
+
+/* MODULE CTA */
+.module-cta {
+  display: inline-flex; align-items: center; gap: 16px; margin-top: 32px; text-decoration: none;
+  border: 1.5px solid rgba(251,247,238,0.4); padding: 13px 26px;
+  font-family: 'Inter'; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: rgba(251,247,238,0.75); transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+.module-cta:hover { background: rgba(251,247,238,0.1); border-color: rgba(251,247,238,0.7); color: var(--paper); }
+
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: start; max-width: 1100px; }
+
+html[data-mode="participant"] .section-divider {
+  display: flex; align-items: center; gap: 16px; padding: 28px 72px 0;
+  font-family: 'Inter'; font-size: 9px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--muted);
+}
+html[data-mode="presenter"] .section-divider { display: none; }
+.section-divider::before, .section-divider::after { content: ''; flex: 1; height: 1px; background: var(--sand); }
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .slide { padding: 80px 36px 64px; }
+  html[data-mode="participant"] .slide { padding: 40px 28px; }
+  html[data-mode="participant"] .slide[data-type="context"] .ctx-header { padding: 16px 28px; }
+  html[data-mode="participant"] .slide[data-type="context"] .slide-teaching { padding: 0 28px; }
+  html[data-mode="participant"] .slide[data-type="context"].is-open .slide-teaching { padding: 32px 28px 40px; }
+  html[data-mode="participant"] .section-divider { padding: 20px 28px 0; }
+  .fac-note { padding: 12px 36px; }
+  .two-col { grid-template-columns: 1fr; gap: 32px; }
+  .topbar { padding: 0 16px; gap: 8px; }
+  .topbar-center, .topbar-module { display: none; }
+}
+
+/* PRINT */
+@media print {
+  @page { size: A4 portrait; margin: 18mm 16mm; }
+  html[data-mode="presenter"] * { display: none !important; }
+  html[data-mode="participant"] body { padding-top: 0; }
+  .topbar, .progress-wrap, .ctx-icon, .fac-note, .mode-toggle, .topbar-btn, .topbar-nav, .section-divider, .save-toast { display: none !important; }
+  .slides-wrap { display: block; }
+  .slide { break-inside: avoid; padding: 24px 0 20px; }
+  html[data-mode="participant"] .slide[data-type="break"] { display: none !important; }
+  html[data-mode="participant"] .slide[data-type="title"] { min-height: 100px; padding: 20px 0; }
+  .slide-plum, .slide-ink { background: #100000 !important; -webkit-print-color-adjust: exact; color-adjust: exact; }
+  .slide-yellow { background: #FFBD59 !important; -webkit-print-color-adjust: exact; color-adjust: exact; }
+  .slide-sand { background: #E0D2B5 !important; -webkit-print-color-adjust: exact; color-adjust: exact; }
+  html[data-mode="participant"] .slide[data-type="context"] .ctx-header { display: flex !important; border: none; cursor: default; }
+  html[data-mode="participant"] .slide[data-type="context"] .slide-teaching { max-height: none !important; padding: 16px 0 24px !important; overflow: visible !important; }
+  .field-ta { border: none; border-bottom: 1px solid rgba(16,0,0,0.2); resize: none; min-height: 56px; background: transparent; }
+  .act-block { border: 1px solid rgba(16,0,0,0.3); }
+  .act-head { background: #100000 !important; -webkit-print-color-adjust: exact; color-adjust: exact; }
+  .reflection-field { display: block !important; }
+  html[data-mode="participant"] .p-input { opacity: 1 !important; pointer-events: auto !important; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-left">
+    <a href="../../../index.html" class="topbar-brand">design‑led: <em>practitioner</em></a>
+    <div class="topbar-divider"></div>
+    <span class="topbar-module">Module 05 · Product</span>
+  </div>
+  <div class="topbar-center">Half day · one break</div>
+  <div class="topbar-right">
+    <div class="topbar-nav">
+      <a href="04-strategy.html" class="nav-btn">← Prev</a>
+      <a href="06-devex-and-product-intelligence.html" class="nav-btn">Next →</a>
+    </div>
+    <div class="mode-toggle">
+      <button class="mode-btn btn-presenter" onclick="setMode('presenter')">Present</button>
+      <div class="mode-sep"></div>
+      <button class="mode-btn btn-participant" onclick="setMode('participant')">Workbook</button>
+    </div>
+    <a href="05-product-canvas.html" class="topbar-btn" target="_blank">A3 Canvas</a>
+    <button class="topbar-btn" onclick="window.print()">Print</button>
+  </div>
+</div>
+
+<div class="progress-wrap"><div class="progress-fill" id="progressFill"></div></div>
+<div class="save-toast" id="saveToast">Saved</div>
+
+<div class="slides-wrap" id="slidesWrap">
+
+  <!-- SLIDE 01 · TITLE -->
+  <section class="slide slide-ink" data-type="title" data-slide="1">
+    <div class="stripe-bar-deco"></div>
+    <div class="content">
+      <span class="sig" style="font-size:26px;margin-bottom:14px;">Design-Led · Module 05</span>
+      <h1 class="serif h1">Prod<em>uct</em></h1>
+      <p class="fran body-lg">Empowered teams own outcomes.<br>Feature teams own roadmaps.</p>
+    </div>
+    <div class="fac-note">
+      <strong>Before you start:</strong> This is a half-day, room-based module — have the Cargo dashboard story ready to tell as a straight case, not a punchline. Commercially fluent tone, not soft. | <em>Open:</em> "Name a feature your team shipped that you were proud of. Did anything actually change because of it?" Take 2–3 answers, keep it light, move fast.
+    </div>
+  </section>
+
+  <!-- SLIDE 02 · OVERVIEW -->
+  <section class="slide slide-paper2" data-type="context" data-slide="2">
+    <button type="button" class="ctx-header" onclick="toggleContext(this)" aria-expanded="false">
+      <div class="ctx-header-left"><span class="ctx-eyebrow">Overview</span><span class="ctx-title">What this module is about</span></div>
+      <span class="ctx-icon">+</span>
+    </button>
+    <div class="slide-teaching">
+      <div class="content" style="max-width:860px;">
+        <div class="eyebrow">This module</div>
+        <h2 class="serif h2">What we're doing<br><em>today</em></h2>
+        <ul class="clean-list">
+          <li>Feature teams vs empowered teams</li>
+          <li>The product trio — PM, designer, engineer</li>
+          <li>Outcomes vs outputs</li>
+          <li>The Opportunity Solution Tree</li>
+          <li>Discovery as a weekly habit, not a phase</li>
+        </ul>
+        <div class="bg-num">02</div>
+      </div>
+    </div>
+    <div class="fac-note"><strong>Overview (5 min):</strong> Move fast — this sets up the rest of the day.</div>
+  </section>
+
+  <!-- SLIDE 03 · OPENING STORY -->
+  <section class="slide slide-paper" data-type="context" data-slide="3">
+    <button type="button" class="ctx-header" onclick="toggleContext(this)" aria-expanded="false">
+      <div class="ctx-header-left"><span class="ctx-eyebrow">Story</span><span class="ctx-title">Cargo's dashboard team</span></div>
+      <span class="ctx-icon">+</span>
+    </button>
+    <div class="slide-teaching">
+      <div class="content" style="max-width:860px;">
+        <div class="eyebrow">Opening story</div>
+        <h2 class="serif h2">Cargo shipped every feature<br>on the <em>roadmap.</em></h2>
+        <ul class="clean-list">
+          <li>Two years, on schedule</li>
+          <li>Every feature the roadmap promised</li>
+          <li>Usage never moved</li>
+          <li>Nobody had asked whether any of it solved a real problem</li>
+        </ul>
+        <p class="fran body-md" style="margin-top:20px;font-style:italic;">This is what a feature factory looks like from the inside — busy, on time, and pointless.</p>
+        <div class="bg-num">03</div>
+      </div>
+    </div>
+    <div class="fac-note"><strong>Story (5 min):</strong> Tell it straight, let the two years land. Don't editorialise yet — the reframe comes in the next two concept slides.</div>
+  </section>
+
+  <!-- SLIDE 04 · CONCEPT: FEATURE TEAMS VS EMPOWERED TEAMS -->
+  <section class="slide slide-paper2" data-type="context" data-slide="4">
+    <button type="button" class="ctx-header" onclick="toggleContext(this)" aria-expanded="false">
+      <div class="ctx-header-left"><span class="ctx-eyebrow">Concept</span><span class="ctx-title">Feature teams vs empowered teams</span></div>
+      <span class="ctx-icon">+</span>
+    </button>
+    <div class="slide-teaching">
+      <div class="content" style="max-width:1080px;">
+        <div class="eyebrow">Feature teams vs empowered teams</div>
+        <div class="two-col">
+          <div>
+            <h3 class="serif h3">Feature team:</h3>
+            <ul class="clean-list">
+              <li>Told what to build</li>
+              <li>Measured on output and velocity</li>
+              <li>Roadmap is a contract</li>
+              <li>Designer hands off to build</li>
+              <li>Success = shipped on time</li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="serif h3">Empowered team:</h3>
+            <ul class="clean-list">
+              <li>Given a problem to solve</li>
+              <li>Measured on outcomes</li>
+              <li>Roadmap is a hypothesis</li>
+              <li>Designer is in the room from discovery</li>
+              <li>Success = the metric moved</li>
+            </ul>
+          </div>
+        </div>
+        <p class="fran body-md" style="margin-top:20px;font-style:italic;">The difference isn't who owns the backlog. It's who owns the <em>why.</em></p>
+        <div class="bg-num">04</div>
+      </div>
+    </div>
+    <div class="fac-note"><strong>Concept (8 min):</strong> Land hard on "who owns the why" — it's the spine of this whole module. Most rooms will self-identify as feature teams here; let that land without rescuing anyone.</div>
+  </section>
+
+  <!-- SLIDE 05 · CONCEPT: THE PRODUCT TRIO -->
+  <section class="slide slide-paper" data-type="context" data-slide="5">
+    <button type="button" class="ctx-header" onclick="toggleContext(this)" aria-expanded="false">
+      <div class="ctx-header-left"><span class="ctx-eyebrow">Concept</span><span class="ctx-title">The product trio</span></div>
+      <span class="ctx-icon">+</span>
+    </button>
+    <div class="slide-teaching">
+      <div class="content" style="max-width:860px;">
+        <div class="eyebrow">The product trio</div>
+        <h2 class="serif h2">PM, designer, engineer —<br><em>together.</em></h2>
+        <ul class="clean-list">
+          <li>Discovery and delivery, not designer-then-PM-then-engineer</li>
+          <li>All three in the room, every week</li>
+          <li>The designer helps write the problem, not just the screens</li>
+          <li>The engineer shapes what's feasible early, not after the mockups</li>
+          <li>Nobody sits and waits for someone else's output</li>
+        </ul>
+        <p class="fran body-md" style="margin-top:20px;font-style:italic;">Hand-off is a symptom, not a process.</p>
+        <div class="bg-num">05</div>
+      </div>
+    </div>
+    <div class="fac-note"><strong>Concept (7 min):</strong> Ask who in the room has ever been handed a spec with the decisions already made. Almost everyone raises a hand — use it.</div>
+  </section>
+
+  <!-- SLIDE 06 · CONCEPT: OUTCOMES VS OUTPUTS -->
+  <section class="slide slide-paper2" data-type="context" data-slide="6">
+    <button type="button" class="ctx-header" onclick="toggleContext(this)" aria-expanded="false">
+      <div class="ctx-header-left"><span class="ctx-eyebrow">Concept</span><span class="ctx-title">Outcomes vs outputs</span></div>
+      <span class="ctx-icon">+</span>
+    </button>
+    <div class="slide-teaching">
+      <div class="content" style="max-width:860px;">
+        <div class="eyebrow">Outcomes vs outputs</div>
+        <h2 class="serif h2">Shipping is not<br><em>succeeding.</em></h2>
+        <ul class="clean-list">
+          <li><strong>Output</strong> — a feature shipped, a screen built, a backlog cleared</li>
+          <li><strong>Outcome</strong> — a measurable change in customer or business behaviour</li>
+          <li>A team can hit 100% of its outputs and 0% of its outcomes</li>
+          <li>"Done" and "worked" are different words</li>
+        </ul>
+        <div class="pull-quote" style="margin-top:22px;">
+          <span class="pull-glyph">"</span>
+          <p class="pull-q">Cargo shipped everything on the roadmap. It just didn't matter.</p>
+        </div>
+        <div class="bg-num">06</div>
+      </div>
+    </div>
+    <div class="fac-note"><strong>Concept (8 min):</strong> This is the reframe of the opening story — circle back to Cargo explicitly here.</div>
+  </section>
+
+  <!-- SLIDE 07 · CONCEPT: OPPORTUNITY SOLUTION TREE -->
+  <section class="slide slide-paper" data-type="context" data-slide="7">
+    <button type="button" class="ctx-header" onclick="toggleContext(this)" aria-expanded="false">
+      <div class="ctx-header-left"><span class="ctx-eyebrow">Concept</span><span class="ctx-title">The Opportunity Solution Tree</span></div>
+      <span class="ctx-icon">+</span>
+    </button>
+    <div class="slide-teaching">
+      <div class="content" style="max-width:860px;">
+        <div class="eyebrow">The Opportunity Solution Tree</div>
+        <h2 class="serif h2">One outcome.<br>Many <em>paths.</em></h2>
+        <ul class="clean-list">
+          <li><strong>Outcome</strong> — the measurable change you're chasing, at the top</li>
+          <li><strong>Opportunities</strong> — the problems, needs, and pain points that could drive it</li>
+          <li><strong>Solutions</strong> — the specific things you could build for each opportunity</li>
+          <li><strong>Experiments</strong> — the fastest way to test whether a solution actually works</li>
+        </ul>
+        <p class="fran body-md" style="margin-top:20px;font-style:italic;">The tree keeps you honest about how many ways there are to reach an outcome — and how early you're allowed to pick one.</p>
+        <div class="bg-num">07</div>
+      </div>
+    </div>
+    <div class="fac-note"><strong>Concept (8 min):</strong> Draw it live if you can — a simple vertical tree on a whiteboard. Teresa Torres' framework; credit her by name if asked.</div>
+  </section>
+
+  <!-- SLIDE 08 · ACTIVITY 01 -->
+  <section class="slide slide-paper" data-type="activity" data-slide="8">
+    <div class="content" style="max-width:940px;">
+      <div class="eyebrow">Activity 01 · 20 min</div>
+      <h2 class="serif h2">Map the <em>Tree</em></h2>
+      <div class="act-block p-input">
+        <div class="act-head"><span class="act-label">Activity 01</span><span class="act-time">20 min</span></div>
+        <div class="act-body">
+          <p class="act-instruction">Build an Opportunity Solution Tree for a real product outcome from your team.</p>
+          <ol class="act-rules">
+            <li>Individual — name one real outcome you're accountable for (2 min)</li>
+            <li>List 3–4 opportunities that could plausibly drive that outcome</li>
+            <li>For your strongest opportunity, list 2–3 possible solutions</li>
+            <li>Pairs — pressure-test: is each solution actually solving the opportunity above it, or just a feature someone already wanted? — 8 minutes</li>
+          </ol>
+        </div>
+      </div>
+      <div class="p-input" style="margin-top:8px;">
+        <div class="field-group"><label class="field-label"><span class="field-num">01</span>The outcome</label><textarea class="field-ta" data-field="dlp_m05_ost_outcome" rows="2" placeholder="A measurable change you're accountable for…"></textarea></div>
+        <div class="field-group"><label class="field-label"><span class="field-num">02</span>Opportunities (3–4)</label><textarea class="field-ta" data-field="dlp_m05_ost_opportunities" rows="3" placeholder="Problems, needs, pain points that could drive the outcome…"></textarea></div>
+        <div class="field-group"><label class="field-label"><span class="field-num">03</span>Solutions for your strongest opportunity</label><textarea class="field-ta" data-field="dlp_m05_ost_solutions" rows="3" placeholder="2–3 possible solutions…"></textarea></div>
+      </div>
+    </div>
+    <div class="fac-note"><strong>Activity 01 (20 min):</strong> Watch for outcomes that are actually outputs in disguise ("ship the redesign") and solutions that got typed straight into the outcome box. Press: "how would you measure that it worked?"</div>
+  </section>
+
+  <!-- SLIDE 09 · QUICK HIT -->
+  <section class="slide slide-yellow" data-type="quick-hit" data-slide="9">
+    <div class="content" style="max-width:860px;">
+      <div class="eyebrow">Quick hit · 5 min</div>
+      <div class="pull-quote" style="margin-bottom:4px;">
+        <span class="pull-glyph" style="color:var(--plum);opacity:0.4;">"</span>
+        <p class="pull-q" style="color:var(--ink);">What's one output your team is proud of<br>that never moved an outcome?</p>
+      </div>
+      <p class="fran body-md" style="margin-top:20px;">This is the feature-factory tell. Say it plainly.</p>
+      <div class="p-input field-group" style="margin-top:24px;max-width:580px;">
+        <textarea class="field-ta" data-field="dlp_m05_quick_hit" rows="3" placeholder="An output we were proud of, that didn't move anything…"></textarea>
+      </div>
+    </div>
+    <div class="fac-note"><strong>Quick Hit (5 min):</strong> Collect 3–4 answers from the room. This one tends to sting a little — let the silence sit before anyone volunteers.</div>
+  </section>
+
+  <!-- SLIDE 10 · CONCEPT: DISCOVERY VS DELIVERY -->
+  <section class="slide slide-paper2" data-type="context" data-slide="10">
+    <button type="button" class="ctx-header" onclick="toggleContext(this)" aria-expanded="false">
+      <div class="ctx-header-left"><span class="ctx-eyebrow">Concept</span><span class="ctx-title">Discovery vs delivery</span></div>
+      <span class="ctx-icon">+</span>
+    </button>
+    <div class="slide-teaching">
+      <div class="content" style="max-width:860px;">
+        <div class="eyebrow">Discovery vs delivery</div>
+        <h2 class="serif h2">Discovery is a<br><em>habit,</em> not a phase.</h2>
+        <ul class="clean-list">
+          <li><strong>Delivery</strong> — building and shipping what you've already decided to build</li>
+          <li><strong>Discovery</strong> — deciding what's worth building, continuously</li>
+          <li>Weekly touchpoints with customers, not a research phase before "the real work"</li>
+          <li>Discovery and delivery run in parallel, every week, indefinitely</li>
+        </ul>
+        <p class="fran body-md" style="margin-top:20px;font-style:italic;">If discovery stops when delivery starts, you're back to a feature factory with better vocabulary.</p>
+        <div class="bg-num">10</div>
+      </div>
+    </div>
+    <div class="fac-note"><strong>Concept (7 min):</strong> Teresa Torres' "continuous discovery" — weekly customer touchpoints is the concrete, non-negotiable habit. Name it as a cadence, not a mindset.</div>
+  </section>
+
+  <!-- SLIDE 11 · ACTIVITY 02 -->
+  <section class="slide slide-paper" data-type="activity" data-slide="11">
+    <div class="content" style="max-width:940px;">
+      <div class="eyebrow">Activity 02 · 20 min</div>
+      <h2 class="serif h2">Write the <em>One-Pager</em></h2>
+      <div class="act-block p-input">
+        <div class="act-head"><span class="act-label">Activity 02</span><span class="act-time">20 min</span></div>
+        <div class="act-body">
+          <p class="act-instruction">Write a one-page product brief for your Opportunity Solution Tree outcome. Lead with the outcome, not the feature.</p>
+          <ol class="act-rules">
+            <li>Outcome — the measurable change, one sentence</li>
+            <li>Opportunity — the problem you're addressing and why it matters now</li>
+            <li>Solution — what you're proposing to build, kept small, kept honest</li>
+            <li>How you'll know — the signal that tells you it worked</li>
+          </ol>
+        </div>
+      </div>
+      <div class="p-input" style="margin-top:8px;">
+        <div class="field-group"><label class="field-label"><span class="field-num">01</span>Outcome + opportunity</label><textarea class="field-ta" data-field="dlp_m05_onepager_1" rows="3" placeholder="The measurable change, and the problem driving it…"></textarea></div>
+        <div class="field-group"><label class="field-label"><span class="field-num">02</span>Solution + how you'll know</label><textarea class="field-ta" data-field="dlp_m05_onepager_2" rows="3" placeholder="What you're proposing to build, and the signal it worked…"></textarea></div>
+      </div>
+    </div>
+    <div class="fac-note"><strong>Activity 02 (20 min) — Watch for:</strong> Briefs that open with a feature name instead of an outcome. Send them back to line one — don't let them "get to it eventually."</div>
+  </section>
+
+  <!-- SLIDE 12 · DEBRIEF: THE REAL DIFFERENCE -->
+  <section class="slide slide-sand" data-type="debrief" data-slide="12">
+    <div class="content" style="max-width:820px;">
+      <div class="eyebrow">Synthesis · 10 min</div>
+      <h3 class="serif h3">The real difference.</h3>
+      <div class="debrief-qs">
+        <div class="debrief-q">Feature teams ship. Empowered teams learn.</div>
+        <div class="debrief-q">Outputs are activity. Outcomes are evidence.</div>
+        <div class="debrief-q">Ownership of "why" is what separates a team from a queue.</div>
+      </div>
+      <div class="reflection-field p-input">
+        <textarea class="field-ta" data-field="dlp_m05_synthesis" rows="3" style="background:var(--paper);" placeholder="What I noticed…"></textarea>
+      </div>
+    </div>
+    <div class="fac-note"><strong>Synthesis (10 min):</strong> This is the bridge into Module 06 — internal tools and product intelligence need the same outcome-first discipline, just aimed at employees instead of customers.</div>
+  </section>
+
+  <!-- SLIDE 13 · CLOSE -->
+  <section class="slide slide-ink" data-type="close" data-slide="13">
+    <div class="stripe-bar-deco"></div>
+    <div class="content" style="max-width:880px;">
+      <div class="eyebrow">Close · 10 min</div>
+      <h2 class="serif h2">One takeaway.<br>One question <em>still open.</em></h2>
+      <div class="p-input" style="margin-top:32px;max-width:600px;">
+        <label class="field-label field-label-light"><span class="field-num">Takeaway</span>What landed for you</label>
+        <textarea class="field-ta field-ta-light" data-field="dlp_m05_takeaway" rows="2" placeholder="What landed…"></textarea>
+      </div>
+      <div class="p-input" style="margin-top:20px;max-width:600px;">
+        <label class="field-label field-label-light"><span class="field-num">Open</span>What's still unclear</label>
+        <textarea class="field-ta field-ta-light" data-field="dlp_m05_open_question" rows="2" placeholder="What's still unclear…"></textarea>
+      </div>
+      <div style="margin-top:44px;padding-top:36px;border-top:1px solid rgba(251,247,238,0.18);">
+        <p class="fran body-sm" style="color:rgba(251,247,238,0.55);margin-bottom:6px;">Next module</p>
+        <p class="fran body-lg" style="margin:0 0 4px;">DEVEX &amp; PRODUCT INTELLIGENCE</p>
+        <p class="fran body-md" style="margin:0;"><em>Internal tools are real products. Treat them like it.</em></p>
+        <a href="06-devex-and-product-intelligence.html" class="module-cta">Module 06 → DevEx &amp; Product Intelligence</a>
+      </div>
+    </div>
+    <div class="fac-note">
+      <strong>Close (10 min):</strong> One takeaway, one open question — don't resolve it, just capture it. | <strong>Further reading (facilitator):</strong> <em>Inspired</em> &amp; <em>Empowered</em> — Marty Cagan · <em>Escaping the Build Trap</em> — Melissa Perri · <em>Sense &amp; Respond</em> — Jeff Gothelf &amp; Josh Seiden · <em>Continuous Discovery Habits</em> — Teresa Torres.
+    </div>
+  </section>
+
+</div>
+
+<script>
+(function () {
+  'use strict';
+  var ROOT = document.documentElement;
+  var STORAGE_PREFIX = 'dlp_m05_';
+  var saveTimer;
+
+  function setMode(mode) {
+    ROOT.dataset.mode = mode;
+    localStorage.setItem('dlp_mode_global', mode);
+    if (mode === 'participant') { window.scrollTo(0, 0); }
+    else { var wrap = document.getElementById('slidesWrap'); if (wrap) wrap.scrollTo(0, 0); }
+  }
+  window.setMode = setMode;
+
+  function toggleContext(header) {
+    var expanded = header.getAttribute('aria-expanded') === 'true';
+    header.setAttribute('aria-expanded', String(!expanded));
+    var section = header.closest('section');
+    if (section) section.classList.toggle('is-open', !expanded);
+    var icon = header.querySelector('.ctx-icon');
+    if (icon) icon.textContent = !expanded ? '−' : '+';
+  }
+  window.toggleContext = toggleContext;
+
+  function initFields() {
+    document.querySelectorAll('[data-field]').forEach(function (el) {
+      var key = el.dataset.field.indexOf(STORAGE_PREFIX) === 0 ? el.dataset.field : STORAGE_PREFIX + el.dataset.field;
+      var saved = localStorage.getItem(key);
+      if (saved) el.value = saved;
+      el.addEventListener('input', function () {
+        localStorage.setItem(key, el.value);
+        updateProgress();
+        triggerSaveToast();
+      });
+    });
+    updateProgress();
+  }
+
+  function updateProgress() {
+    var fields = document.querySelectorAll('[data-field]');
+    var filled = 0;
+    fields.forEach(function (f) { if (f.value.trim().length > 8) filled++; });
+    var pct = fields.length ? (filled / fields.length) * 100 : 0;
+    var fill = document.getElementById('progressFill');
+    if (fill) fill.style.width = pct.toFixed(1) + '%';
+  }
+
+  function triggerSaveToast() {
+    var toast = document.getElementById('saveToast');
+    if (!toast) return;
+    toast.classList.add('visible');
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(function () { toast.classList.remove('visible'); }, 1800);
+  }
+
+  function init() {
+    var params = new URLSearchParams(window.location.search);
+    var urlMode = params.get('mode');
+    var savedMode = localStorage.getItem('dlp_mode_global');
+    var mode = urlMode || savedMode || 'participant';
+    ROOT.dataset.mode = mode;
+    initFields();
+  }
+
+  if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', init); } else { init(); }
+})();
+</script>
+</body>
+</html>

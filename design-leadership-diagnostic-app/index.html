@@ -1,0 +1,741 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Design Leadership Diagnostic — Frankly Human</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<!--
+  Intended webfonts: Archivo (display), JetBrains Mono (labels/eyebrows/mono
+  scaffolding), Inter (body). This is a real Netlify site, so the Google
+  Fonts links below load for real — unlike an Artifact sandbox, which is
+  why we link them directly rather than relying on system-font fallbacks.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ================================================================
+   Design Leadership Diagnostic · Frankly Human
+   Editorial register — Archivo / JetBrains Mono / Inter
+   Palette: Ink · Paper · Ember · Cobalt · Lime
+   No drop-shadow. No gradient. No border-radius. Ever.
+   ================================================================ */
+
+:root {
+  --ink:        #111111;
+  --paper:      #FAFAF7;
+  --soft-white: #FAF7F2;
+  --charcoal:   #2A2724;
+  --muted:      #6B6B66;
+  --ember:      #E8503A;
+  --ember-text: #B83A26;
+  --cobalt:     #1F44E8;
+  --lime:       #C8F23A;
+  --max:        640px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; height: 100%; }
+body {
+  font-family: 'Inter', sans-serif;
+  font-size: 17px; line-height: 1.6;
+  background: var(--paper); color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+}
+button, input, textarea { font: inherit; border-radius: 0; }
+a { color: inherit; }
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+}
+
+/* === Screens === */
+.screen { display: none; }
+.screen.active { display: flex; flex-direction: column; }
+#screen-welcome    { min-height: 100dvh; align-items: center; justify-content: center; padding: 48px 24px; background: var(--soft-white); }
+#screen-intake     { min-height: 100dvh; align-items: center; justify-content: flex-start; padding: 64px 24px; overflow-y: auto; background: var(--paper); }
+#screen-diagnostic { height: 100dvh; overflow: hidden; background: var(--paper); }
+#screen-close      { min-height: 100dvh; align-items: center; justify-content: flex-start; padding: 56px 24px; overflow-y: auto; background: var(--paper); }
+
+/* === Shared type/eyebrow/display === */
+.dl-eyebrow {
+  font-family: 'JetBrains Mono'; font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--muted);
+  display: inline-flex; align-items: center; gap: 12px;
+  margin: 0 0 20px;
+}
+.dl-eyebrow::before {
+  content: ''; display: inline-block;
+  width: 26px; height: 1px; background: var(--ink);
+}
+
+.dl-display {
+  font-family: 'Archivo', sans-serif; font-weight: 800; font-stretch: 110%;
+  letter-spacing: -0.02em; line-height: 0.96;
+  font-size: clamp(32px, 6vw, 56px);
+  color: var(--ink); margin: 0 0 24px;
+}
+
+.dl-lede {
+  font-family: 'Inter'; font-size: 17px; line-height: 1.55; color: var(--charcoal);
+  margin: 0 0 12px; max-width: 480px;
+}
+.dl-lede + .dl-lede { margin-bottom: 28px; }
+
+/* === Buttons / fields (shared shell vocabulary) === */
+.btn-primary {
+  display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%;
+  padding: 16px 24px;
+  font-family: 'Inter'; font-size: 12px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase;
+  background: var(--ink); color: var(--paper);
+  border: 1px solid var(--ink); cursor: pointer;
+  transition: background-color 0.15s, color 0.15s, border-color 0.15s;
+}
+.btn-primary:hover:not(:disabled) { background: var(--cobalt); border-color: var(--cobalt); color: var(--paper); }
+.btn-primary:disabled { opacity: 0.38; cursor: not-allowed; }
+.btn-primary:focus-visible { outline: 2px solid var(--cobalt); outline-offset: 2px; }
+
+.name-field { margin: 28px 0 16px; }
+.name-field label {
+  display: block;
+  font-family: 'JetBrains Mono'; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 8px;
+}
+.name-field input {
+  width: 100%;
+  border: 1px solid var(--ink); background: var(--paper);
+  padding: 14px 16px; font-family: 'Inter'; font-size: 16px; color: var(--ink);
+  transition: border-color 0.15s; appearance: none;
+}
+.name-field input:focus-visible { border-color: var(--cobalt); outline: 2px solid var(--cobalt); outline-offset: 1px; }
+
+.dl-note {
+  font-family: 'JetBrains Mono'; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--muted); text-align: center; margin: 16px 0 0;
+}
+.dl-note .ember { color: var(--ember-text); }
+
+.resume-banner {
+  border: 1px solid var(--ink); background: var(--soft-white);
+  padding: 20px 22px; margin-bottom: 28px;
+}
+.resume-text { margin: 0 0 14px; font-family: 'Inter'; font-size: 15px; line-height: 1.5; color: var(--charcoal); }
+.resume-actions { display: flex; gap: 16px; flex-wrap: wrap; align-items: center; }
+.btn-resume {
+  font-family: 'Inter'; font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
+  background: var(--ink); color: var(--paper); border: 1px solid var(--ink);
+  padding: 12px 20px; cursor: pointer; transition: background-color 0.15s, border-color 0.15s;
+}
+.btn-resume:hover { background: var(--cobalt); border-color: var(--cobalt); }
+.btn-resume-fresh {
+  background: none; border: none; text-decoration: underline;
+  font-family: 'Inter'; font-size: 12px; color: var(--muted); cursor: pointer; padding: 8px 0;
+}
+.btn-resume-fresh:hover { color: var(--ink); }
+
+/* ===== WELCOME ===== */
+.welcome-inner { max-width: var(--max); width: 100%; }
+
+/* ===== INTAKE ===== */
+.intake-inner { max-width: var(--max); width: 100%; }
+
+.dl-intake-list { margin: 32px 0 0; }
+.dl-intake-item {
+  border-top: 1px solid var(--ink);
+  padding: 16px 0;
+  display: flex; gap: 24px; align-items: baseline;
+}
+.dl-intake-item:last-child { border-bottom: 1px solid var(--ink); }
+.dl-intake-item .lead {
+  font-family: 'JetBrains Mono'; font-size: 11px; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--muted); flex-shrink: 0; width: 90px;
+}
+.dl-intake-item .body { font-family: 'Inter'; font-size: 16px; line-height: 1.55; color: var(--ink); }
+.dl-intake-item .body strong { font-weight: 600; }
+
+.dl-privacy-block {
+  background: var(--ink); color: var(--paper);
+  padding: 28px 32px; margin: 32px 0;
+}
+.dl-privacy-block .tag {
+  font-family: 'JetBrains Mono'; font-size: 10px; letter-spacing: 0.22em;
+  text-transform: uppercase; color: rgba(250,250,247,0.5); margin: 0 0 14px; display: block;
+}
+.dl-privacy-block p {
+  font-family: 'Inter'; font-size: 16px; line-height: 1.55; color: var(--paper); margin: 0;
+}
+
+.dl-leavewith-label {
+  font-family: 'JetBrains Mono'; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--muted); margin: 32px 0 12px; display: block;
+}
+.dl-leavewith { margin: 0 0 32px; padding: 0; list-style: none; }
+.dl-leavewith li {
+  display: flex; gap: 16px; padding: 10px 0;
+  font-family: 'Inter'; font-size: 15px; line-height: 1.5; color: var(--ink);
+  border-top: 1px solid rgba(17,17,17,0.12);
+}
+.dl-leavewith li:first-child { border-top: none; }
+.dl-leavewith .num {
+  font-family: 'JetBrains Mono'; font-size: 11px; color: var(--muted); flex-shrink: 0; width: 22px;
+}
+
+.dl-secondary-note {
+  font-family: 'JetBrains Mono'; font-size: 11px; letter-spacing: 0.08em; color: var(--muted);
+  text-align: center; margin: 16px 0 0;
+}
+
+/* ===== DIAGNOSTIC (chat) ===== */
+.dl-header {
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--ink);
+  padding: 14px 20px;
+  display: flex; align-items: center; justify-content: space-between;
+  background: var(--paper); z-index: 10;
+}
+.dl-brand {
+  font-family: 'JetBrains Mono'; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink);
+}
+.dl-phase-label {
+  font-family: 'JetBrains Mono'; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--muted); margin-left: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.header-right { display: flex; align-items: center; gap: 16px; margin-left: auto; }
+.btn-support {
+  background: none; border: none; cursor: pointer;
+  font-family: 'JetBrains Mono'; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--muted); padding: 4px 0; text-decoration: underline;
+  transition: color 0.15s;
+}
+.btn-support:hover, .btn-support:focus-visible { color: var(--cobalt); }
+.support-panel {
+  position: fixed; top: 60px; right: 16px; z-index: 50;
+  width: min(320px, calc(100vw - 32px));
+  background: var(--paper); border: 1px solid var(--ink);
+  box-shadow: 0 12px 32px rgba(17,17,17,0.16); /* the one functional shadow exception — floating panel depth cue */
+  padding: 20px 22px; font-family: 'Inter', sans-serif; font-size: 13px; line-height: 1.5;
+}
+.support-panel[hidden] { display: none; }
+.support-lede { margin: 0 0 12px; font-weight: 600; }
+.support-list { list-style: none; margin: 0 0 12px; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.support-list a { color: var(--cobalt); font-weight: 600; }
+.support-note { margin: 0 0 16px; color: var(--muted); font-size: 12px; }
+.support-close {
+  font-family: 'Inter'; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+  background: none; border: 1px solid var(--ink); padding: 8px 16px; cursor: pointer;
+}
+.support-close:hover { background: var(--ink); color: var(--paper); }
+
+.dl-main { flex: 1; overflow-y: auto; display: flex; flex-direction: column; }
+
+.chat-log {
+  flex: 1;
+  padding: 24px 20px 8px;
+  display: flex; flex-direction: column; gap: 20px;
+  max-width: var(--max); width: 100%; margin: 0 auto; align-self: flex-start; min-width: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .msg { animation: msgIn 0.2s ease; }
+}
+@keyframes msgIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Speaker-turn: asymmetric hairline rule, no bubble, no fill, no radius, no shadow */
+.dl-msg p { font-family: 'Inter'; font-size: 17px; line-height: 1.6; margin: 0 0 12px; }
+.dl-msg p:last-child { margin: 0; }
+.dl-msg-label {
+  font-family: 'JetBrains Mono'; font-size: 11px; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--muted); margin: 0 0 8px; display: block;
+}
+
+.msg-claude { align-self: stretch; }
+.dl-msg-claude-inner {
+  background: transparent; border: none;
+  border-left: 2px solid var(--cobalt);
+  padding: 2px 0 2px 20px;
+}
+.dl-msg-claude-inner p { color: var(--ink); }
+.dl-msg-claude-inner em.dl-ember {
+  font-style: normal; color: var(--ember-text); font-weight: 600;
+}
+
+.msg-user { align-self: flex-end; max-width: 78%; }
+.dl-msg-user-inner {
+  background: transparent; border: none;
+  border-right: 2px solid var(--ink);
+  padding: 2px 20px 2px 0; text-align: right;
+}
+.dl-msg-user-inner p { color: var(--charcoal); }
+.msg-user .dl-msg-label { text-align: right; }
+
+.msg-system {
+  text-align: center;
+  font-family: 'JetBrains Mono'; font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--muted);
+  padding: 14px 0 10px;
+  border-top: 1px solid var(--cobalt);
+  margin-top: 4px;
+}
+
+.msg-typing { align-self: stretch; }
+.typing-dots {
+  display: inline-flex; gap: 5px; padding: 6px 0 2px 20px;
+  border-left: 2px solid var(--cobalt);
+}
+.typing-dots span {
+  width: 6px; height: 6px; border-radius: 50%; background: var(--muted);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .typing-dots span { animation: dotpulse 1.2s infinite ease-in-out; }
+}
+.typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+.typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes dotpulse {
+  0%, 80%, 100% { opacity: 0.3; transform: scale(0.8); }
+  40% { opacity: 1; transform: scale(1); }
+}
+
+/* Persistent support note (distress guardrail) */
+.dl-distress-note {
+  font-family: 'Inter'; font-size: 14px; line-height: 1.5; color: var(--charcoal);
+  margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(17,17,17,0.15);
+}
+.dl-distress-note a { color: var(--cobalt); font-weight: 600; }
+
+/* ===== SPECIAL COMPONENTS ===== */
+.special-component {
+  max-width: var(--max); width: 100%;
+  margin: 0 auto; padding: 4px 20px 20px;
+  align-self: flex-start; min-width: 0;
+}
+
+/* Four-thread scorer */
+.dl-thread-card { margin: 8px 0 32px; }
+.dl-thread-label {
+  font-family: 'JetBrains Mono'; font-size: 11px; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--ink); margin: 0 0 16px; display: block;
+}
+
+.dl-thread-choice { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+.dl-thread-btn {
+  flex: 1; min-width: 220px; min-height: 52px;
+  padding: 14px 18px;
+  border: 1px solid var(--ink); background: transparent;
+  font-family: 'Inter'; font-size: 15px; color: var(--ink);
+  text-align: left; cursor: pointer;
+  transition: background-color 0.12s ease, color 0.12s ease, border-color 0.12s ease;
+}
+.dl-thread-btn:hover { border-color: var(--cobalt); }
+.dl-thread-btn[aria-pressed="true"] {
+  background: var(--cobalt); border-color: var(--cobalt); color: var(--paper);
+}
+.dl-thread-btn:focus-visible { outline: 2px solid var(--cobalt); outline-offset: 2px; }
+
+.dl-thread-evidence-label {
+  display: block; font-family: 'JetBrains Mono'; font-size: 10px; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--muted); margin: 0 0 8px;
+}
+.dl-thread-evidence-input {
+  width: 100%; border: 1px solid var(--ink); background: var(--paper);
+  padding: 12px 14px; font-family: 'Inter'; font-size: 15px; color: var(--ink);
+  transition: border-color 0.15s; resize: vertical; min-height: 44px;
+}
+.dl-thread-evidence-input:focus-visible { border-color: var(--cobalt); outline: 2px solid var(--cobalt); outline-offset: 1px; }
+
+.dl-thread-next {
+  margin-top: 14px; width: auto; padding: 12px 22px;
+}
+
+.dl-thread-summary {
+  border-top: 1px solid var(--ink); padding: 14px 0;
+  display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+  font-family: 'JetBrains Mono'; font-size: 12px; color: var(--muted);
+}
+.dl-thread-summary .name { color: var(--ink); letter-spacing: 0.1em; text-transform: uppercase; }
+.dl-thread-summary .choice { color: var(--muted); }
+
+.dl-instruction {
+  font-family: 'Inter'; font-size: 15px; line-height: 1.5;
+  color: var(--muted); margin: 0 0 20px;
+}
+
+/* Trap selector */
+.dl-trap-options { display: flex; flex-direction: column; gap: 8px; margin: 4px 0 24px; }
+@media (min-width: 640px) { .dl-trap-options { flex-direction: row; } }
+
+.dl-trap-card {
+  flex: 1; padding: 20px; min-height: 96px;
+  border: 1px solid var(--ink); background: transparent;
+  text-align: left; cursor: pointer;
+  display: flex; flex-direction: column; gap: 8px;
+  transition: background-color 0.12s ease, color 0.12s ease, border-color 0.12s ease;
+}
+.dl-trap-card .name { font-family: 'Inter'; font-weight: 600; font-size: 15px; }
+.dl-trap-card .desc { font-family: 'Inter'; font-size: 13px; line-height: 1.4; color: var(--muted); }
+.dl-trap-card:hover { border-color: var(--cobalt); }
+.dl-trap-card[aria-pressed="true"] { background: var(--cobalt); border-color: var(--cobalt); color: var(--paper); }
+.dl-trap-card[aria-pressed="true"] .desc { color: var(--paper); opacity: 0.87; }
+.dl-trap-card:focus-visible { outline: 2px solid var(--cobalt); outline-offset: 2px; }
+.dl-trap-card:disabled { cursor: default; }
+
+/* ===== CHAT INPUT AREA ===== */
+.chat-input-area {
+  flex-shrink: 0;
+  border-top: 1px solid var(--ink);
+  background: var(--paper);
+  padding: 12px 20px;
+}
+.chat-input-inner { max-width: var(--max); margin: 0 auto; }
+
+.continue-bar { margin-bottom: 10px; }
+.btn-continue {
+  width: 100%; padding: 13px;
+  border: 1px solid var(--ink); background: transparent;
+  font-family: 'Inter'; font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--ink); cursor: pointer;
+  transition: background-color 0.15s, color 0.15s, border-color 0.15s;
+}
+.btn-continue:hover { background: var(--cobalt); border-color: var(--cobalt); color: var(--paper); }
+.btn-continue:focus-visible { outline: 2px solid var(--cobalt); outline-offset: 2px; }
+
+.input-row { display: flex; gap: 8px; align-items: flex-end; }
+#user-input {
+  flex: 1; resize: none; overflow: hidden; min-height: 44px; max-height: 120px;
+  border: 1px solid var(--ink); background: var(--paper);
+  padding: 11px 14px; font-family: 'Inter'; font-size: 15px; color: var(--ink);
+  line-height: 1.5; transition: border-color 0.15s;
+}
+#user-input:focus-visible { border-color: var(--cobalt); outline: 2px solid var(--cobalt); outline-offset: 1px; }
+#btn-send {
+  width: 44px; height: 44px; flex-shrink: 0;
+  border: 1px solid var(--ink); background: var(--ink);
+  color: var(--paper); font-size: 18px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+}
+#btn-send:hover:not(:disabled) { background: var(--cobalt); border-color: var(--cobalt); }
+#btn-send:disabled { opacity: 0.35; cursor: not-allowed; }
+#btn-send:focus-visible { outline: 2px solid var(--cobalt); outline-offset: 2px; }
+
+/* ===== CLOSE ===== */
+.close-inner { max-width: var(--max); width: 100%; }
+
+/* Profile reveal — no box, no border, no fill, no radius, no shadow */
+.dl-reveal { margin: 0 0 48px; }
+
+.dl-reveal-eyebrow {
+  font-family: 'JetBrains Mono'; font-size: 10px; letter-spacing: 0.22em;
+  text-transform: uppercase; color: var(--muted); margin: 0 0 20px; display: block;
+}
+
+.dl-reveal-degraded {
+  font-family: 'JetBrains Mono'; font-size: 12px; line-height: 1.6; color: var(--muted);
+  border-left: 2px solid var(--muted); padding: 8px 0 8px 14px; margin: 0 0 28px;
+}
+.dl-reveal-context {
+  font-family: 'Inter'; font-size: 15px; line-height: 1.6; color: var(--muted);
+  font-style: italic; margin: 0 0 32px;
+}
+.dl-reveal-context em.dl-ember { font-style: italic; color: var(--ember-text); font-weight: 600; }
+
+.dl-reveal-rule { border: none; border-top: 1px solid var(--ink); margin: 0 0 32px; }
+
+.dl-reveal-sentence {
+  font-family: 'Archivo', sans-serif; font-weight: 800; font-stretch: 110%;
+  letter-spacing: -0.02em; line-height: 1.05;
+  font-size: clamp(28px, 5.5vw, 48px);
+  color: var(--ember); margin: 0 0 40px;
+}
+.dl-reveal-sentence .dl-lime {
+  font-style: normal; background: var(--lime); color: var(--ink);
+  padding: 2px 8px; box-decoration-break: clone; -webkit-box-decoration-break: clone;
+}
+
+.dl-reveal-threads { display: flex; flex-wrap: wrap; gap: 24px; margin: 0 0 32px; }
+.dl-reveal-thread {
+  font-family: 'JetBrains Mono'; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+}
+.dl-reveal-thread .name { color: var(--ink); }
+.dl-reveal-thread .state { color: var(--muted); margin-left: 6px; }
+
+.dl-reveal-credit {
+  font-family: 'JetBrains Mono'; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--muted); opacity: 0.55; margin: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .dl-reveal { animation: dlRevealIn 0.4s ease-out; }
+}
+@keyframes dlRevealIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Bridges (Continue in Claude / Design-Led: Leader) — flat, bordered, never filled */
+.dl-bridge {
+  border: 1px solid var(--ink); padding: 28px 30px; margin-bottom: 28px; background: var(--paper);
+}
+.dl-bridge--cobalt { border-color: var(--cobalt); }
+.dl-bridge-eyebrow {
+  font-family: 'JetBrains Mono'; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--muted); margin: 0 0 14px; display: block;
+}
+.dl-bridge-text {
+  font-family: 'Inter'; font-size: 16px; line-height: 1.55; color: var(--charcoal); margin: 0 0 20px;
+}
+.dl-bridge-cta {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-family: 'Inter'; font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
+  padding: 13px 22px; border: 1.5px solid var(--cobalt); color: var(--cobalt);
+  background: none; cursor: pointer;
+  text-decoration: none; transition: background-color 0.15s, color 0.15s;
+}
+.dl-bridge-cta:hover { background: var(--cobalt); color: var(--paper); }
+.dl-bridge-cta--ink { border-color: var(--ink); color: var(--ink); }
+.dl-bridge-cta--ink:hover { background: var(--ink); color: var(--paper); }
+.dl-bridge-cta:focus-visible { outline: 2px solid var(--cobalt); outline-offset: 2px; }
+.dl-bridge-sub {
+  display: block; margin-top: 12px;
+  font-family: 'JetBrains Mono'; font-size: 10px; letter-spacing: 0.08em; color: var(--muted);
+}
+.dl-bridge-secondary {
+  display: inline-block; margin-top: 14px;
+  font-family: 'Inter'; font-size: 12px; letter-spacing: 0.02em; color: var(--muted);
+  text-decoration: underline;
+}
+.dl-bridge-secondary:hover { color: var(--ink); }
+
+/* Email capture */
+.ec-offer { font-family: 'Inter'; font-size: 16px; line-height: 1.5; color: var(--charcoal); margin: 0 0 20px; }
+.ec-field { margin-bottom: 14px; }
+.ec-field label {
+  display: block;
+  font-family: 'JetBrains Mono'; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 7px;
+}
+.ec-field input {
+  width: 100%;
+  border: 1px solid var(--ink); background: var(--paper);
+  padding: 14px 16px; font-family: 'Inter'; font-size: 16px; color: var(--ink);
+  transition: border-color 0.15s; appearance: none;
+}
+.ec-field input:focus-visible { border-color: var(--cobalt); outline: 2px solid var(--cobalt); outline-offset: 1px; }
+.ec-error { font-family: 'Inter'; font-size: 12px; color: var(--ember-text); margin-top: 4px; }
+
+.btn-skip {
+  display: block; width: 100%; margin-top: 12px; padding: 10px;
+  background: none; border: none; cursor: pointer;
+  font-family: 'Inter'; font-size: 12px; color: var(--muted);
+  letter-spacing: 0.04em; text-decoration: underline;
+}
+.btn-skip:hover { color: var(--ink); }
+
+.ec-success { border: 1px solid var(--ink); padding: 24px; margin-bottom: 28px; }
+.ec-success p { font-family: 'Inter'; font-size: 16px; color: var(--charcoal); margin: 0; }
+
+/* Shake — reused verbatim for required-field validation */
+@keyframes shake {
+  0%,100%{transform:translateX(0)}
+  20%{transform:translateX(-4px)}
+  40%{transform:translateX(4px)}
+  60%{transform:translateX(-3px)}
+  80%{transform:translateX(2px)}
+}
+@media (prefers-reduced-motion: no-preference) {
+  .shake { animation: shake 0.35s ease; }
+}
+
+@media (max-width: 480px) {
+  .dl-intake-item { gap: 14px; }
+  .dl-intake-item .lead { width: 64px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===== SCREEN 1: WELCOME ===== -->
+<main id="screen-welcome" class="screen active">
+  <div class="welcome-inner">
+    <div id="resume-banner" class="resume-banner" hidden>
+      <p class="resume-text" id="resume-text"></p>
+      <div class="resume-actions">
+        <button type="button" class="btn-resume" id="btn-resume">Continue where I left off →</button>
+        <button type="button" class="btn-resume-fresh" id="btn-resume-fresh">Start over instead</button>
+      </div>
+    </div>
+    <p class="dl-eyebrow">Frankly Human · Design Leadership Diagnostic</p>
+    <h1 class="dl-display">Why does the room keep closing without you in it?</h1>
+    <p class="dl-lede">A 20–30 minute diagnostic for Heads of Design and senior design leaders.</p>
+    <p class="dl-lede">You'll leave with the specific pattern keeping your function positioned as a service department — named, evidenced, and addressed to what you actually said, not a personality type.</p>
+    <div class="name-field">
+      <label for="participant-name">First name</label>
+      <input type="text" id="participant-name" autocomplete="given-name" />
+    </div>
+    <button class="btn-primary" id="btn-start" disabled>Start the diagnostic</button>
+    <p class="dl-note"><span class="ember">$500</span> · 20–30 minutes · Result on screen the moment you finish</p>
+  </div>
+</main>
+
+<!-- ===== SCREEN 2: INTAKE ===== -->
+<main id="screen-intake" class="screen">
+  <div class="intake-inner">
+    <p class="dl-eyebrow">Before you start</p>
+    <h1 class="dl-display" style="font-size:clamp(28px,5vw,44px);">What this is — and isn't</h1>
+    <p class="dl-lede" style="max-width:none;">A direct, structured conversation about where your organisational influence actually sits, and the specific pattern that's keeping it there. Twenty to thirty minutes. One question at a time. A named result at the end, not a follow-up email.</p>
+
+    <div class="dl-intake-list">
+      <div class="dl-intake-item">
+        <span class="lead">Is not</span>
+        <span class="body"><strong>It is not a leadership style quiz.</strong> No archetype picked from a menu.</span>
+      </div>
+      <div class="dl-intake-item">
+        <span class="lead">Is not</span>
+        <span class="body"><strong>It is not 360-degree feedback.</strong> No one else's opinion of you enters this — only yours, and only about what you've actually seen.</span>
+      </div>
+      <div class="dl-intake-item">
+        <span class="lead">Is not</span>
+        <span class="body"><strong>It is not a substitute for executive coaching.</strong> It's a diagnosis, not a program.</span>
+      </div>
+      <div class="dl-intake-item">
+        <span class="lead">Is not</span>
+        <span class="body"><strong>It is not Design-Led: Leader.</strong> It's the door to it, not a shorter version of it.</span>
+      </div>
+    </div>
+
+    <div class="dl-privacy-block">
+      <span class="tag">Privacy</span>
+      <p>What you say here stays with you. If this was purchased through a corporate licence, the person who bought your seat sees that a seat was used — never your answers, never your result. No exceptions.</p>
+    </div>
+
+    <span class="dl-leavewith-label">What you leave with</span>
+    <ol class="dl-leavewith">
+      <li><span class="num">01</span><span>A read on where your real influence sits, across four threads — not a guess, a structured one.</span></li>
+      <li><span class="num">02</span><span>The specific leadership trap you're caught in, named.</span></li>
+      <li><span class="num">03</span><span>Your Leadership Influence Profile — one sentence built from what you actually said.</span></li>
+      <li><span class="num">04</span><span>A direct line from that pattern to what Design-Led: Leader would need to address.</span></li>
+      <li><span class="num">05</span><span>One conversation worth having with your own leadership, ready to use this week.</span></li>
+    </ol>
+
+    <!-- TODO: payment integration — this screen should only render its full
+         content when a confirmed-payment state exists for this session.
+         Out of scope for this build per the orchestrator's brief; the CTA
+         below proceeds directly to the diagnostic. The unconfirmed-payment
+         error copy (Content Copy §6.2) is drafted and ready to wire in
+         once a real payment/session-confirmation signal exists. -->
+    <button class="btn-primary" id="btn-begin">Begin</button>
+    <p class="dl-secondary-note">Takes 20–30 minutes. You can leave and come back.</p>
+  </div>
+</main>
+
+<!-- ===== SCREEN 3: DIAGNOSTIC (chat) ===== -->
+<main id="screen-diagnostic" class="screen">
+  <header class="dl-header">
+    <h1 class="sr-only">Design Leadership Diagnostic</h1>
+    <span class="dl-brand">Frankly Human</span>
+    <span id="phase-label" class="dl-phase-label" aria-live="polite"></span>
+    <span class="header-right">
+      <button id="btn-support" class="btn-support" type="button"
+              aria-haspopup="true" aria-expanded="false" aria-controls="support-panel">Need support?</button>
+    </span>
+  </header>
+
+  <div id="support-panel" class="support-panel" role="region" aria-label="Support resources" hidden>
+    <p class="support-lede">If this is more than a work problem right now, you don't have to sit with it alone:</p>
+    <ul class="support-list">
+      <li><strong>Lifeline (Australia)</strong> — <a href="tel:131114">13 11 14</a>, free &amp; confidential, 24/7</li>
+    </ul>
+    <p class="support-note">Outside Australia, please reach out to a local crisis line or someone you trust.</p>
+    <button id="btn-support-close" class="support-close" type="button">Close</button>
+  </div>
+
+  <div class="dl-main" id="dl-main">
+    <div class="chat-log" id="chat-log" role="log" aria-live="polite" aria-label="Diagnostic conversation"></div>
+
+    <!-- Four-thread scorer (Phase 1) -->
+    <div id="thread-scorer" class="special-component" style="display:none;" aria-label="Four-thread scorer"></div>
+
+    <!-- Trap selector (Phase 2) -->
+    <div id="trap-selector" class="special-component" style="display:none;">
+      <p class="dl-instruction">For each: pick the statement that's true more often than not, then name the example that proves it.</p>
+      <div class="dl-trap-options" id="trap-options" role="group" aria-label="Which trap feels most true"></div>
+      <div id="trap-evidence-block" style="display:none;">
+        <label class="dl-thread-evidence-label" for="trap-evidence-input">The example that proves it</label>
+        <textarea class="dl-thread-evidence-input" id="trap-evidence-input" rows="2" aria-required="true"></textarea>
+        <button type="button" class="btn-primary dl-thread-next" id="btn-trap-submit">That's the trap →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="chat-input-area">
+    <div class="chat-input-inner">
+      <div class="continue-bar" id="continue-bar" style="display:none;">
+        <button class="btn-continue" id="btn-continue">Continue →</button>
+      </div>
+      <div class="input-row" id="input-row">
+        <label for="user-input" class="sr-only">Your response</label>
+        <textarea id="user-input" rows="1" placeholder="Type your response…" aria-label="Type your response"></textarea>
+        <button id="btn-send" aria-label="Send response">↑</button>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- ===== SCREEN 4: CLOSE ===== -->
+<main id="screen-close" class="screen">
+  <div class="close-inner">
+    <div class="dl-reveal" id="dl-reveal">
+      <h1 class="dl-reveal-eyebrow">Your Leadership Influence Profile</h1>
+      <p class="dl-reveal-degraded" id="reveal-degraded-note" hidden>This read came from what you gave us across all four phases — the one-line synthesis just didn't generate cleanly. The four threads and trap above are accurate either way.</p>
+      <p class="dl-reveal-context" id="reveal-context"></p>
+      <hr class="dl-reveal-rule">
+      <p class="dl-reveal-sentence" id="reveal-sentence"></p>
+      <hr class="dl-reveal-rule">
+      <div class="dl-reveal-threads" id="reveal-threads"></div>
+      <p class="dl-reveal-credit">Frankly Human · Design Leadership Diagnostic</p>
+    </div>
+
+    <div id="email-capture">
+      <p class="ec-offer">I'll send this as a PDF — the profile, the four scores, the moment you named.</p>
+      <div class="ec-field">
+        <label for="ec-name">First name</label>
+        <input type="text" id="ec-name" autocomplete="given-name" />
+      </div>
+      <div class="ec-field">
+        <label for="ec-email">Email</label>
+        <input type="email" id="ec-email" autocomplete="email" placeholder="your@email.com" aria-describedby="ec-error" aria-invalid="false" />
+        <p class="ec-error" id="ec-error" role="alert" style="display:none;">That's not a valid email address.</p>
+      </div>
+      <button class="btn-primary" id="btn-subscribe">Send me the PDF</button>
+      <button class="btn-skip" id="btn-skip-subscribe">Skip — I'll save it myself</button>
+    </div>
+
+    <div id="ec-success" style="display:none;">
+      <div class="ec-success">
+        <p>Sent. Check your inbox in the next few minutes.</p>
+      </div>
+    </div>
+
+    <div class="dl-bridge dl-bridge--cobalt" id="claude-bridge">
+      <span class="dl-bridge-eyebrow">Take this further</span>
+      <p class="dl-bridge-text">This didn't end at a sentence. Take your four thread scores, the trap, and the specific moment into a live conversation — script the next talk with your own leadership, or go deeper on a 90-day plan.</p>
+      <a class="dl-bridge-cta" id="btn-continue-claude" href="#" target="_blank" rel="noopener">Continue in Claude <span>→</span></a>
+      <span class="dl-bridge-sub">Pre-filled with everything you just told this diagnostic. Nothing to retype.</span>
+    </div>
+
+    <div class="dl-bridge" id="dld-bridge">
+      <span class="dl-bridge-eyebrow">Where this goes</span>
+      <p class="dl-bridge-text">This diagnostic named the pattern. Design-Led: Leader is thirteen modules built to break it — the specific thread and trap you just got, not leadership in general.<br><br>Would you like to talk about what Design-Led: Leader could do for your seat at the table?</p>
+      <a class="dl-bridge-cta dl-bridge-cta--ink" href="mailto:hello@franklyhuman.com?subject=Design-Led%3A%20Leader">Talk about Design-Led: Leader</a>
+      <a class="dl-bridge-secondary" href="#">See the full program →</a>
+    </div>
+  </div>
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>

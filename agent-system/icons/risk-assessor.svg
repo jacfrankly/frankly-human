@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="450" viewBox="0 0 400 450">
+
+  <defs>
+    <clipPath id="arch-clip">
+      <path d="M 26,425 L 26,200 A 174,174,0,0,1,374,200 L 374,425 Z"/>
+    </clipPath>
+  </defs>
+
+  <rect width="400" height="450" fill="#FFFFFF"/>
+
+  <g clip-path="url(#arch-clip)">
+
+    <!-- WALL CRACK — hairline crack in the surface, revealed by the plumb line -->
+    <polyline
+      points="214,148 218,192 213,238 218,285 214,335"
+      fill="none" stroke="#000000" stroke-width="1"
+      stroke-linecap="round" stroke-linejoin="round"/>
+
+    <!-- STRING — perfectly vertical, taut -->
+    <line x1="200" y1="135" x2="200" y2="258"
+          stroke="#000000" stroke-width="1.5" stroke-linecap="round"/>
+
+    <!-- STRING ANCHOR — small hook/pin at top -->
+    <circle cx="200" cy="132" r="5" fill="#000000"/>
+
+    <!-- PLUMB BOB — filled orange, the instrument of honest measurement -->
+    <!-- Classic teardrop: wide at top, pointed at bottom -->
+    <path d="
+      M 200,338
+      C 177,320 172,296 176,272
+      C 180,260 191,256 200,256
+      C 209,256 220,260 224,272
+      C 228,296 223,320 200,338
+      Z"
+      fill="#F15A22"/>
+
+    <!-- Bob cap (top ring where string attaches) -->
+    <rect x="195" y="254" width="10" height="8" rx="2" fill="#000000"/>
+
+    <!-- Subtle highlight ring on bob to suggest 3D form -->
+    <ellipse cx="193" cy="280" rx="5" ry="8"
+             fill="none" stroke="#FFFFFF" stroke-width="1.5" opacity="0.6"/>
+
+  </g>
+
+  <path d="M 20,430 L 20,200 A 180,180,0,0,1,380,200 L 380,430 Z"
+        fill="none" stroke="#000000" stroke-width="3"/>
+  <path d="M 26,425 L 26,200 A 174,174,0,0,1,374,200 L 374,425 Z"
+        fill="none" stroke="#000000" stroke-width="1.5"/>
+
+</svg>

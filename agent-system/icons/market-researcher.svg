@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="450" viewBox="0 0 400 450">
+  <defs>
+    <clipPath id="arch-clip">
+      <path d="M 26,425 L 26,200 A 174,174,0,0,1,374,200 L 374,425 Z"/>
+    </clipPath>
+  </defs>
+  <rect width="400" height="450" fill="#FFFFFF"/>
+  <g clip-path="url(#arch-clip)">
+    <!-- Telescope group rotated -20deg around center of instrument -->
+    <g transform="rotate(-20, 200, 252)">
+      <!-- Eyepiece (left/lower, slightly wider) -->
+      <rect x="88" y="241" width="55" height="22" rx="5" fill="#000000"/>
+      <!-- Main barrel (longest, narrowest) -->
+      <rect x="141" y="244" width="122" height="16" fill="#000000"/>
+      <!-- Objective lens housing (right/upper, widest) -->
+      <rect x="261" y="238" width="58" height="28" rx="5" fill="#000000"/>
+      <!-- Lens highlight inside objective -->
+      <circle cx="290" cy="252" r="8" fill="#FFFFFF"/>
+    </g>
+    <!-- Orange star target — outside rotation group, at screen position where objective points -->
+    <polygon points="347,189 349.4,195.8 356.5,195.9 350.8,200.2 352.9,207.1 347,203 341.1,207.1 343.2,200.2 337.5,195.9 344.6,195.8" fill="#F15A22"/>
+  </g>
+  <!-- Arch borders drawn on top of content -->
+  <path d="M 20,430 L 20,200 A 180,180,0,0,1,380,200 L 380,430 Z" fill="none" stroke="#000000" stroke-width="3"/>
+  <path d="M 26,425 L 26,200 A 174,174,0,0,1,374,200 L 374,425 Z" fill="none" stroke="#000000" stroke-width="1.5"/>
+</svg>

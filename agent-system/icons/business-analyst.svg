@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="450" viewBox="0 0 400 450">
+  <defs>
+    <clipPath id="arch-clip">
+      <path d="M 26,425 L 26,200 A 174,174,0,0,1,374,200 L 374,425 Z"/>
+    </clipPath>
+  </defs>
+  <rect width="400" height="450" fill="#FFFFFF"/>
+  <g clip-path="url(#arch-clip)">
+    <!-- Balance scale, drawn in unrotated space -->
+    <!-- Base lower -->
+    <rect x="155" y="368" width="90" height="10" rx="4" fill="#000000"/>
+    <!-- Base upper -->
+    <rect x="170" y="362" width="60" height="8" rx="2" fill="#000000"/>
+    <!-- Post -->
+    <rect x="197" y="215" width="6" height="149" fill="#000000"/>
+    <!-- Beam (perfectly horizontal = balanced) -->
+    <rect x="108" y="208" width="184" height="10" rx="3" fill="#000000"/>
+    <!-- Pivot cap -->
+    <circle cx="200" cy="208" r="7" fill="#000000"/>
+    <!-- Left string -->
+    <line x1="112" y1="218" x2="112" y2="283" stroke="#000000" stroke-width="2.5"/>
+    <!-- Right string -->
+    <line x1="288" y1="218" x2="288" y2="283" stroke="#000000" stroke-width="2.5"/>
+    <!-- Left pan (bowl arc) -->
+    <path d="M 90,283 Q 112,308 134,283" fill="none" stroke="#000000" stroke-width="2.5" stroke-linecap="round"/>
+    <!-- Right pan (bowl arc) -->
+    <path d="M 266,283 Q 288,308 310,283" fill="none" stroke="#000000" stroke-width="2.5" stroke-linecap="round"/>
+    <!-- Orange heart in left pan, centred at (112, 291) -->
+    <path d="M 112,300 C 104,295 98,288 98,283 C 98,277 104,274 109,279 C 110,281 112,283 112,283 C 112,283 114,281 115,279 C 120,274 126,277 126,283 C 126,288 120,295 112,300 Z" fill="#F15A22"/>
+    <!-- Coin in right pan: filled circle with inner ring -->
+    <circle cx="288" cy="293" r="11" fill="#000000"/>
+    <circle cx="288" cy="293" r="6" fill="none" stroke="#FFFFFF" stroke-width="1.5"/>
+  </g>
+  <!-- Arch borders drawn on top of content -->
+  <path d="M 20,430 L 20,200 A 180,180,0,0,1,380,200 L 380,430 Z" fill="none" stroke="#000000" stroke-width="3"/>
+  <path d="M 26,425 L 26,200 A 174,174,0,0,1,374,200 L 374,425 Z" fill="none" stroke="#000000" stroke-width="1.5"/>
+</svg>

@@ -22,11 +22,15 @@
     --pink:     #FF3990;
     --yellow:   #FFBD59;
     --plum:     #7A1F4A;
-    --muted:    #7A736B;
+    --muted:    #5E584F;
+    --teal-text: #1F6E67;
+    --pink-text: #C40060;
   }
 
   * { box-sizing: border-box; }
-  html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: no-preference) {
+    html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+  }
   body {
     margin: 0; padding: 0;
     font-family: 'Inter', sans-serif;
@@ -193,7 +197,7 @@
   .pull-quote .glyph {
     font-family: 'DM Serif Display', serif;
     font-size: 120px; line-height: 0.6;
-    color: var(--pink); opacity: 0.7;
+    color: var(--pink-text); opacity: 0.85;
     display: block; margin-bottom: -20px;
     user-select: none;
   }
@@ -311,7 +315,7 @@
   .activity-rules li::before {
     content: counter(rules, decimal-leading-zero);
     font-family: 'Inter'; font-size: 10px; letter-spacing: 0.12em;
-    color: var(--pink); flex-shrink: 0; padding-top: 2px;
+    color: var(--pink-text); flex-shrink: 0; padding-top: 2px;
   }
 
   /* ---- Values grid ---- */
@@ -350,7 +354,7 @@
   .why-card.filled { background: var(--paper-2); }
   .why-label { font-family: 'Inter'; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
   .why-text { font-family: 'DM Serif Display', serif; font-size: 24px; letter-spacing: -0.01em; margin: 0 0 10px; }
-  .why-example { font-family: 'Fraunces', serif; font-style: italic; font-size: 17px; color: var(--teal); line-height: 1.35; font-variation-settings: "SOFT" 50, "opsz" 144; }
+  .why-example { font-family: 'Fraunces', serif; font-style: italic; font-size: 17px; color: var(--teal-text); line-height: 1.35; font-variation-settings: "SOFT" 50, "opsz" 144; }
 
   /* ---- Numbered list ---- */
   .num-list { list-style: none; padding: 0; margin: 0; max-width: 720px; counter-reset: items; }
@@ -361,7 +365,7 @@
   }
   .num-list li::before {
     content: counter(items, decimal-leading-zero);
-    font-family: 'Inter'; font-size: 10px; letter-spacing: 0.12em; color: var(--pink);
+    font-family: 'Inter'; font-size: 10px; letter-spacing: 0.12em; color: var(--pink-text);
     flex-shrink: 0; padding-top: 3px;
   }
   .list-title { font-family: 'DM Serif Display', serif; font-size: 18px; margin: 0 0 3px; letter-spacing: -0.01em; }
@@ -399,11 +403,21 @@
     display: flex; flex-direction: column; gap: 7px; z-index: 40;
   }
   .pdot {
+    /* Real hit-area is 24x24 (WCAG 2.5.8) via padding around a 5px visual
+       dot; negative margin keeps the original ~12px visual pitch between
+       dots by letting adjacent hit-areas overlap rather than the dots
+       themselves growing. */
+    width: 24px; height: 24px; margin: -6px 0;
+    display: flex; align-items: center; justify-content: center;
+    background: none; border: none; padding: 0; cursor: pointer;
+  }
+  .pdot-visual {
     width: 5px; height: 5px; border-radius: 999px;
-    background: var(--ink); opacity: 0.18; cursor: pointer;
+    background: var(--ink); opacity: 0.18;
     transition: opacity 0.2s, transform 0.2s;
   }
-  .pdot:hover, .pdot.on { opacity: 0.75; transform: scale(1.5); }
+  .pdot:hover .pdot-visual, .pdot.on .pdot-visual { opacity: 0.75; transform: scale(1.5); }
+  .pdot:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
 
   /* ---- Responsive ---- */
   @media (max-width: 800px) {
@@ -443,7 +457,7 @@
 </div>
 <script>
 (function(){
-  var SK='fh_whydeck_v2',PW='frankly';
+  var SK='fh_masterclass_v2',PW='frankly';
   function unlock(){
     var g=document.getElementById('_gate');if(!g)return;
     g.style.transition='opacity .3s';g.style.opacity='0';
@@ -600,11 +614,11 @@
           </div>
           <div>
             <div style="display:flex; gap:16px; align-items:baseline; padding:20px 24px; border-bottom:1px solid rgba(16,0,0,0.1);">
-              <span class="serif" style="font-size:72px; color:var(--pink); line-height:0.85; flex-shrink:0;">1</span>
+              <span class="serif" style="font-size:72px; color:var(--pink-text); line-height:0.85; flex-shrink:0;">1</span>
               <span class="serif" style="font-size:19px;">Why statement that reflects your values</span>
             </div>
             <div style="display:flex; gap:16px; align-items:baseline; padding:20px 24px; border-bottom:1px solid rgba(16,0,0,0.1);">
-              <span class="serif" style="font-size:72px; color:var(--teal); line-height:0.85; flex-shrink:0;">3</span>
+              <span class="serif" style="font-size:72px; color:var(--teal-text); line-height:0.85; flex-shrink:0;">3</span>
               <span class="serif" style="font-size:19px;">Core values you're ready to act on</span>
             </div>
             <div style="display:flex; gap:16px; align-items:baseline; padding:20px 24px;">
@@ -792,10 +806,10 @@
 
     <div style="display:flex; gap:14px; flex-wrap:wrap;">
       <div style="border:1px solid var(--ink); padding:14px 28px; background:var(--paper);">
-        <span class="serif" style="font-size:28px; color:var(--teal);">Brilliant</span>
+        <span class="serif" style="font-size:28px; color:var(--teal-text);">Brilliant</span>
       </div>
       <div style="border:1px solid var(--ink); padding:14px 28px; background:var(--paper);">
-        <span class="serif" style="font-size:28px; color:var(--pink);">Brave</span>
+        <span class="serif" style="font-size:28px; color:var(--pink-text);">Brave</span>
       </div>
       <div style="border:1px solid var(--ink); padding:14px 28px; background:var(--paper);">
         <span class="serif" style="font-size:28px; color:var(--plum);">Bold</span>
@@ -1076,7 +1090,7 @@
     </div>
 
     <div style="border:1px solid var(--pink); padding:24px 28px; max-width:640px; background:rgba(255,57,144,0.04); margin-top:4px;">
-      <span style="font-family:'Inter'; font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:var(--pink);">Example</span>
+      <span style="font-family:'Inter'; font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:var(--pink-text);">Example</span>
       <p class="fran" style="font-style:italic; font-size:22px; line-height:1.3; color:var(--ink); margin:10px 0 0; font-variation-settings:'SOFT' 50,'opsz' 144;">
         To authentically share my gifts — so that others may realise their gifts can make a difference.
       </p>
@@ -1283,7 +1297,7 @@
 
     <div class="two-col two-col-start" style="gap:56px;">
       <div>
-        <span class="sig" style="font-size:40px; color:var(--pink); margin-bottom:6px;">her late 40s,</span>
+        <span class="sig" style="font-size:40px; color:var(--pink-text); margin-bottom:6px;">her late 40s,</span>
         <h2 class="serif h3" style="margin-bottom:20px;">
           From money-making to <em>meaning-making.</em>
         </h2>
@@ -1384,10 +1398,10 @@
 
     <div class="two-col two-col-start">
       <div>
-        <span class="sig" style="font-size:40px; color:var(--pink); margin-bottom:4px;">a 6-week</span>
-        <h2 class="serif h3" style="margin-bottom:20px;">coaching experience.</h2>
+        <span class="sig" style="font-size:40px; color:var(--pink-text); margin-bottom:4px;">a 12-module</span>
+        <h2 class="serif h3" style="margin-bottom:20px;">life-design system.</h2>
         <p class="fran body-lg" style="color:var(--charcoal); margin-bottom:14px;">
-          From stuck and stagnant to living a passionate and fulfilled life. Designed by you, for you.
+          Your life is a system. Systems produce predictable outcomes. If you want different outcomes, you don't need more willpower — you need a different system.
         </p>
         <p class="fran body-sm" style="color:var(--muted);">
           Design To Me teaches you to think like a designer — someone who creates something from nothing — to totally customise your life so you can live it on your terms.
@@ -1402,32 +1416,20 @@
       <div>
         <div style="border:1px solid var(--ink); overflow:hidden;">
           <div style="background:var(--ink); padding:18px 24px;">
-            <span style="font-family:'Inter'; font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:rgba(251,247,238,0.6);">6 Weeks · 6 Unique Experiences</span>
+            <span style="font-family:'Inter'; font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:rgba(251,247,238,0.6);">12 Modules · 3 Layers · ~27.5 Hours</span>
           </div>
           <div>
             <div style="padding:16px 24px; border-bottom:1px solid rgba(16,0,0,0.1); display:flex; gap:14px; align-items:baseline;">
-              <span style="font-family:'Inter'; font-size:10px; color:var(--pink); flex-shrink:0;">01</span>
-              <span class="serif" style="font-size:17px;">Your Why — values, purpose, direction</span>
+              <span style="font-family:'Inter'; font-size:10px; color:var(--pink-text); flex-shrink:0;">01</span>
+              <span class="serif" style="font-size:17px;">Awareness — Modules 01–05: the patterns, stories, values, and identity that shaped you</span>
             </div>
             <div style="padding:16px 24px; border-bottom:1px solid rgba(16,0,0,0.1); display:flex; gap:14px; align-items:baseline;">
-              <span style="font-family:'Inter'; font-size:10px; color:var(--pink); flex-shrink:0;">02</span>
-              <span class="serif" style="font-size:17px;">Design thinking foundations</span>
-            </div>
-            <div style="padding:16px 24px; border-bottom:1px solid rgba(16,0,0,0.1); display:flex; gap:14px; align-items:baseline;">
-              <span style="font-family:'Inter'; font-size:10px; color:var(--pink); flex-shrink:0;">03</span>
-              <span class="serif" style="font-size:17px;">Creative confidence</span>
-            </div>
-            <div style="padding:16px 24px; border-bottom:1px solid rgba(16,0,0,0.1); display:flex; gap:14px; align-items:baseline;">
-              <span style="font-family:'Inter'; font-size:10px; color:var(--pink); flex-shrink:0;">04</span>
-              <span class="serif" style="font-size:17px;">Prototype your life</span>
-            </div>
-            <div style="padding:16px 24px; border-bottom:1px solid rgba(16,0,0,0.1); display:flex; gap:14px; align-items:baseline;">
-              <span style="font-family:'Inter'; font-size:10px; color:var(--pink); flex-shrink:0;">05</span>
-              <span class="serif" style="font-size:17px;">Test, learn, iterate</span>
+              <span style="font-family:'Inter'; font-size:10px; color:var(--pink-text); flex-shrink:0;">02</span>
+              <span class="serif" style="font-size:17px;">Alignment — Modules 06, 09–11: what actually matters — future self, boundaries, belonging, desire</span>
             </div>
             <div style="padding:16px 24px; display:flex; gap:14px; align-items:baseline;">
-              <span style="font-family:'Inter'; font-size:10px; color:var(--pink); flex-shrink:0;">06</span>
-              <span class="serif" style="font-size:17px;">Live it. Redesign as you go.</span>
+              <span style="font-family:'Inter'; font-size:10px; color:var(--pink-text); flex-shrink:0;">03</span>
+              <span class="serif" style="font-size:17px;">Agency — Modules 07, 08, 12: decisions, prototyping, and the Life Operating System that sustains it</span>
             </div>
           </div>
         </div>
@@ -1586,12 +1588,21 @@
 (function () {
   const slides = document.querySelectorAll('.slide');
   const nav    = document.getElementById('progress');
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const scrollBehavior = reduceMotion ? 'auto' : 'smooth';
 
   slides.forEach((_, i) => {
-    const d = document.createElement('div');
+    const d = document.createElement('button');
+    d.type = 'button';
     d.className = 'pdot';
+    d.setAttribute('aria-label', 'Go to slide ' + (i + 1) + ' of ' + slides.length);
+    d.setAttribute('aria-current', 'false');
     d.title = 'Slide ' + (i + 1);
-    d.addEventListener('click', () => slides[i].scrollIntoView({ behavior: 'smooth' }));
+    var visual = document.createElement('span');
+    visual.className = 'pdot-visual';
+    visual.setAttribute('aria-hidden', 'true');
+    d.appendChild(visual);
+    d.addEventListener('click', () => slides[i].scrollIntoView({ behavior: scrollBehavior }));
     nav.appendChild(d);
   });
 
@@ -1601,7 +1612,10 @@
     entries.forEach(e => {
       if (e.isIntersecting) {
         const i = [...slides].indexOf(e.target);
-        dots.forEach((d, j) => d.classList.toggle('on', i === j));
+        dots.forEach((d, j) => {
+          d.classList.toggle('on', i === j);
+          d.setAttribute('aria-current', i === j ? 'true' : 'false');
+        });
       }
     });
   }, { threshold: 0.5 });
@@ -1614,10 +1628,10 @@
       return r.top > -40 && r.top < window.innerHeight * 0.5;
     });
     if ((e.key === 'ArrowDown' || e.key === 'ArrowRight') && cur < slides.length - 1) {
-      e.preventDefault(); slides[cur + 1].scrollIntoView({ behavior: 'smooth' });
+      e.preventDefault(); slides[cur + 1].scrollIntoView({ behavior: scrollBehavior });
     }
     if ((e.key === 'ArrowUp' || e.key === 'ArrowLeft') && cur > 0) {
-      e.preventDefault(); slides[cur - 1].scrollIntoView({ behavior: 'smooth' });
+      e.preventDefault(); slides[cur - 1].scrollIntoView({ behavior: scrollBehavior });
     }
   });
 })();

@@ -1,0 +1,836 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>The Why Workbook — Frankly Human</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..900,0..100;1,9..144,300..900,0..100&family=Inter:wght@400;500;600&family=Allura&family=Patrick+Hand&display=swap" rel="stylesheet">
+<style>
+/* ================================================================
+   Why Workbook · Frankly Human
+   Design language from FH Style Guide 2
+   Palette: Ink · Paper · Teal · Pink · Yellow · Plum
+   Type: DM Serif Display · Fraunces · Inter · Patrick Hand
+   ================================================================ */
+
+:root {
+  --ink:      #100000;
+  --charcoal: #423B3B;
+  --paper:    #FBF7EE;
+  --paper-2:  #F4EFE2;
+  --sand:     #E0D2B5;
+  --teal:     #47ACA4;
+  --pink:     #FF3990;
+  --yellow:   #FFBD59;
+  --plum:     #7A1F4A;
+  --muted:    #5E584F;
+  --teal-text: #1F6E67;
+  --pink-text: #C40060;
+  --max:      640px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; height: 100%; }
+body {
+  font-family: 'Inter', sans-serif;
+  font-size: 17px; line-height: 1.55;
+  background: var(--paper); color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+}
+
+/* === Screens === */
+.screen { display: none; }
+.screen.active { display: flex; flex-direction: column; }
+#screen-welcome  { min-height: 100dvh; align-items: center; justify-content: center; padding: 48px 24px; }
+#screen-workshop { height: 100dvh; overflow: hidden; }
+#screen-close    { min-height: 100dvh; align-items: center; justify-content: flex-start; padding: 48px 24px; overflow-y: auto; }
+
+/* ===== WELCOME ===== */
+.welcome-inner { max-width: var(--max); width: 100%; }
+
+.ww-eyebrow {
+  font-family: 'Inter'; font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--muted);
+  display: inline-flex; align-items: center; gap: 12px;
+  margin: 0 0 20px;
+}
+.ww-eyebrow::before {
+  content: ''; display: inline-block;
+  width: 26px; height: 1px; background: var(--ink);
+}
+
+.ww-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(52px, 14vw, 96px);
+  line-height: 0.92; letter-spacing: -0.02em;
+  margin: 0 0 24px;
+}
+.ww-title em { font-style: italic; color: var(--plum); }
+
+.ww-lede {
+  font-family: 'Fraunces', serif;
+  font-size: 18px; line-height: 1.5; color: var(--charcoal);
+  font-variation-settings: "SOFT" 50, "opsz" 144;
+  margin: 0 0 12px; max-width: 480px;
+}
+
+.resume-banner {
+  border: 1.5px solid var(--ink); background: var(--paper-2);
+  padding: 20px 22px; margin-bottom: 28px;
+}
+.resume-text {
+  margin: 0 0 14px; font-family: 'Fraunces', serif; font-size: 15px; line-height: 1.5;
+  font-variation-settings: "SOFT" 50, "opsz" 144;
+}
+.resume-actions { display: flex; gap: 16px; flex-wrap: wrap; align-items: center; }
+.btn-resume {
+  font-family: 'Inter'; font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+  background: var(--ink); color: var(--paper); border: 1px solid var(--ink);
+  padding: 12px 20px; cursor: pointer;
+}
+.btn-resume:hover { background: var(--teal-text); border-color: var(--teal-text); }
+.btn-resume-fresh {
+  background: none; border: none; text-decoration: underline;
+  font-family: 'Inter'; font-size: 12px; color: var(--muted); cursor: pointer; padding: 8px 0;
+}
+.btn-resume-fresh:hover { color: var(--ink); }
+
+.name-field { margin: 28px 0 16px; }
+.name-field label {
+  display: block;
+  font-family: 'Inter'; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 8px;
+}
+.name-field input {
+  width: 100%;
+  border: 1px solid var(--ink); background: var(--paper);
+  padding: 14px 16px; font-family: 'Inter'; font-size: 16px; color: var(--ink);
+  outline: none; transition: border-color 0.15s; appearance: none;
+}
+.name-field input:focus { border-color: var(--teal-text); }
+
+.btn-primary {
+  display: flex; align-items: center; justify-content: center; width: 100%;
+  padding: 16px 24px;
+  font-family: 'Inter'; font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase;
+  background: var(--ink); color: var(--paper);
+  border: 1px solid var(--ink); cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.btn-primary:hover:not(:disabled) { background: var(--teal); border-color: var(--teal); color: var(--ink); }
+.btn-primary:disabled { opacity: 0.38; cursor: not-allowed; }
+
+.ww-note {
+  font-family: 'Patrick Hand', cursive;
+  font-size: 15px; color: var(--muted); text-align: center; margin: 12px 0 0;
+}
+
+/* ===== WORKSHOP ===== */
+.ww-header {
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--ink);
+  padding: 14px 20px;
+  display: flex; align-items: center; justify-content: space-between;
+  background: var(--paper); z-index: 10;
+}
+.header-right { display: flex; align-items: center; gap: 16px; margin-left: auto; }
+.btn-back {
+  display: none; align-items: center; gap: 4px;
+  background: none; border: none; cursor: pointer;
+  font-family: 'Inter'; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--muted); padding: 4px 0;
+  transition: color 0.15s;
+}
+.btn-back:hover { color: var(--ink); }
+.btn-support {
+  display: flex; align-items: center; gap: 4px;
+  background: none; border: none; cursor: pointer;
+  font-family: 'Inter'; font-size: 11px; letter-spacing: 0.08em;
+  color: var(--muted); padding: 4px 0; text-decoration: underline;
+  transition: color 0.15s;
+}
+.btn-support:hover, .btn-support:focus-visible { color: var(--plum); }
+.support-panel {
+  position: fixed; top: 60px; right: 16px; z-index: 50;
+  width: min(320px, calc(100vw - 32px));
+  background: var(--paper); border: 1.5px solid var(--ink);
+  box-shadow: 0 12px 32px rgba(16,0,0,0.16);
+  padding: 20px 22px; font-family: 'Inter', sans-serif; font-size: 13px; line-height: 1.5;
+}
+.support-panel[hidden] { display: none; }
+.support-lede { margin: 0 0 12px; font-weight: 600; }
+.support-list { list-style: none; margin: 0 0 12px; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.support-list a { color: var(--plum); font-weight: 600; }
+.support-note { margin: 0 0 16px; color: var(--muted); font-size: 12px; }
+.support-close {
+  font-family: 'Inter'; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+  background: none; border: 1px solid var(--ink); padding: 8px 16px; cursor: pointer;
+}
+.support-close:hover { background: var(--ink); color: var(--paper); }
+.ww-brand {
+  font-family: 'DM Serif Display', serif;
+  font-size: 17px; letter-spacing: -0.01em;
+}
+.ww-brand em { font-style: italic; color: var(--plum); }
+.ww-phase-label {
+  font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600;
+  letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted);
+  margin-left: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+@media (max-width: 480px) {
+  .ww-phase-label { font-size: 10px; margin-left: 10px; }
+}
+
+.ww-main {
+  flex: 1; overflow-y: auto;
+  display: flex; flex-direction: column;
+}
+
+/* ===== CHAT LOG ===== */
+.chat-log {
+  flex: 1;
+  padding: 24px 20px 8px;
+  display: flex; flex-direction: column; gap: 14px;
+  max-width: var(--max); width: 100%; margin: 0 auto; align-self: flex-start; min-width: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .msg { animation: msgIn 0.2s ease; }
+}
+@keyframes msgIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.msg-coach { align-self: stretch; }
+.msg-coach-inner {
+  background: var(--paper-2);
+  border: 1px solid var(--sand);
+  border-left: 3px solid var(--teal);
+  padding: 16px 18px;
+}
+.msg-coach-inner p { margin: 0 0 10px; font-size: 18px; line-height: 1.65; }
+.msg-coach-inner p:last-child { margin: 0; }
+
+.msg-user { align-self: flex-end; max-width: 80%; }
+.msg-user-inner {
+  background: var(--paper); border: 1px solid var(--sand);
+  padding: 12px 16px; text-align: right;
+  color: var(--charcoal); font-size: 16px; line-height: 1.5;
+}
+
+.msg-system {
+  text-align: center;
+  font-family: 'Inter'; font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--teal-text);
+  padding: 14px 0 10px;
+  border-top: 1px solid var(--sand);
+  margin-top: 8px;
+}
+
+.msg-typing { align-self: stretch; }
+.typing-dots {
+  display: inline-flex; gap: 5px; padding: 14px 18px;
+  background: var(--paper-2); border: 1px solid var(--sand); border-left: 3px solid var(--teal);
+}
+.typing-dots span {
+  width: 7px; height: 7px; border-radius: 50%; background: var(--muted);
+  animation: dotpulse 1.2s infinite ease-in-out;
+}
+.typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+.typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes dotpulse {
+  0%, 80%, 100% { opacity: 0.3; transform: scale(0.8); }
+  40% { opacity: 1; transform: scale(1); }
+}
+
+/* ===== SPECIAL COMPONENTS ===== */
+.special-component {
+  max-width: var(--max); width: 100%;
+  margin: 0 auto; padding: 8px 20px 16px;
+  align-self: flex-start; min-width: 0;
+}
+
+/* Values sort */
+.vs-instruction {
+  font-family: 'Patrick Hand', cursive; font-size: 16px;
+  color: var(--charcoal); margin: 0 0 14px;
+}
+.values-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+.value-chip {
+  padding: 9px 16px; min-height: 44px;
+  border: 1px solid var(--sand); background: var(--paper);
+  font-family: 'Inter'; font-size: 14px; color: var(--charcoal);
+  cursor: pointer; user-select: none;
+  transition: all 0.12s; display: inline-flex; align-items: center;
+}
+.value-chip:focus { outline: 2px solid var(--teal); outline-offset: 2px; }
+.value-chip[data-state="circled"] {
+  background: rgba(71,172,164,0.14); border-color: var(--teal); color: var(--ink);
+}
+.value-chip[data-state="starred"] {
+  background: var(--yellow); border: 2px solid var(--ink); color: var(--ink);
+  font-weight: 600;
+}
+.value-chip[data-state="starred"]::before { content: '★ '; font-size: 13px; }
+.vs-star-hint {
+  background: var(--yellow); border: 1px solid var(--ink);
+  padding: 12px 16px; margin-bottom: 14px;
+  font-family: 'Inter'; font-size: 13px; letter-spacing: 0.01em;
+  color: var(--ink); font-weight: 500;
+}
+.vs-footer { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.vs-count {
+  font-family: 'Inter'; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--muted); flex: 1;
+}
+.btn-values-done { width: auto; padding: 12px 24px; flex-shrink: 0; }
+
+/* Values map */
+.vm-instruction {
+  font-family: 'Patrick Hand', cursive; font-size: 16px;
+  color: var(--charcoal); margin: 0 0 20px;
+}
+.vm-item { margin-bottom: 20px; }
+.vm-value-name {
+  font-family: 'DM Serif Display', serif; font-size: 22px;
+  margin: 0 0 10px; letter-spacing: -0.01em;
+}
+.vm-states { display: flex; gap: 8px; flex-wrap: wrap; }
+.vm-state-btn {
+  padding: 10px 16px; min-height: 52px;
+  border: 1px solid var(--sand); background: var(--paper);
+  display: flex; flex-direction: column; align-items: flex-start; gap: 2px;
+  color: var(--charcoal); cursor: pointer; text-align: left;
+  transition: all 0.12s;
+}
+.vm-state-btn:focus { outline: 2px solid var(--teal); outline-offset: 2px; }
+.vm-btn-label {
+  font-family: 'Inter'; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+  font-weight: 600;
+}
+.vm-btn-desc {
+  font-family: 'Inter'; font-size: 11px; color: var(--muted); font-weight: 400;
+  letter-spacing: 0; text-transform: none;
+}
+.vm-state-btn.sel-aligned   { background: var(--teal);   border-color: var(--teal);   color: var(--ink);   }
+.vm-state-btn.sel-aligned .vm-btn-desc   { color: var(--ink); opacity: 0.65; }
+.vm-state-btn.sel-activated { background: var(--pink);   border-color: var(--pink);   color: var(--paper); }
+.vm-state-btn.sel-activated .vm-btn-desc { color: var(--paper); opacity: 0.75; }
+.vm-state-btn.sel-absent    { background: var(--sand);   border-color: var(--sand);   color: var(--ink);   }
+.vm-state-btn.sel-absent .vm-btn-desc    { color: var(--ink); opacity: 0.65; }
+
+/* Actions */
+.actions-instruction {
+  font-family: 'Patrick Hand', cursive; font-size: 16px;
+  color: var(--charcoal); margin: 0 0 20px;
+}
+.action-item { margin-bottom: 20px; }
+.action-value-name {
+  display: block;
+  font-family: 'DM Serif Display', serif; font-size: 18px;
+  margin: 0 0 8px; letter-spacing: -0.01em;
+}
+.action-input {
+  width: 100%;
+  border: 1px solid var(--sand); background: var(--paper);
+  padding: 12px 14px; font-family: 'Inter'; font-size: 15px; color: var(--ink);
+  outline: none; transition: border-color 0.15s; appearance: none;
+}
+.action-input:focus { border-color: var(--teal-text); }
+
+/* Why Statement area */
+.why-area-box {
+  border: 1px solid var(--ink); padding: 20px;
+  background: var(--paper-2); margin-bottom: 8px;
+}
+.why-area-label {
+  display: block;
+  font-family: 'Inter'; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 12px;
+}
+#why-textarea {
+  width: 100%; resize: vertical; min-height: 90px;
+  border: 1px solid var(--sand); background: var(--paper);
+  padding: 14px 16px;
+  font-family: 'Fraunces', serif; font-size: 18px; line-height: 1.5; color: var(--ink);
+  font-variation-settings: "SOFT" 50, "opsz" 144;
+  outline: none; transition: border-color 0.15s;
+}
+#why-textarea:focus { border-color: var(--teal-text); }
+
+/* ===== CHAT INPUT AREA ===== */
+.chat-input-area {
+  flex-shrink: 0;
+  border-top: 1px solid var(--sand);
+  background: var(--paper);
+  padding: 12px 20px;
+}
+.chat-input-inner { max-width: var(--max); margin: 0 auto; }
+
+.continue-bar { margin-bottom: 10px; }
+.btn-continue {
+  width: 100%; padding: 11px;
+  border: 1px solid var(--sand); background: transparent;
+  font-family: 'Inter'; font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--muted); cursor: pointer;
+  transition: all 0.15s;
+}
+.btn-continue:hover { border-color: var(--teal-text); color: var(--teal-text); }
+
+.input-row { display: flex; gap: 8px; align-items: flex-end; }
+#user-input {
+  flex: 1; resize: none; overflow: hidden; min-height: 44px; max-height: 120px;
+  border: 1px solid var(--sand); background: var(--paper);
+  padding: 11px 14px; font-family: 'Inter'; font-size: 15px; color: var(--ink);
+  line-height: 1.5; outline: none; transition: border-color 0.15s;
+}
+#user-input:focus { border-color: var(--teal-text); }
+#btn-send {
+  width: 44px; height: 44px; flex-shrink: 0;
+  border: 1px solid var(--ink); background: var(--ink);
+  color: var(--paper); font-size: 18px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+#btn-send:hover:not(:disabled) { background: var(--teal); border-color: var(--teal); color: var(--ink); }
+#btn-send:disabled { opacity: 0.35; cursor: not-allowed; }
+
+/* ===== CLOSE SCREEN ===== */
+.close-inner { max-width: var(--max); width: 100%; }
+
+.why-card {
+  border: 2px solid var(--ink); padding: 36px;
+  background: var(--plum); color: var(--paper);
+  margin-bottom: 36px;
+}
+.wc-label {
+  font-family: 'Inter'; font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase;
+  color: rgba(251,247,238,0.55); margin: 0 0 20px; display: block;
+}
+.wc-statement {
+  font-family: 'DM Serif Display', serif; font-style: italic;
+  font-size: clamp(22px, 5vw, 32px); line-height: 1.2; letter-spacing: -0.01em;
+  color: var(--paper); margin: 0 0 24px; padding: 0; border: none;
+}
+.wc-values { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+.wc-value {
+  padding: 5px 12px;
+  border: 1px solid rgba(251,247,238,0.3);
+  font-family: 'Inter'; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: rgba(251,247,238,0.75);
+}
+.wc-credit {
+  font-family: 'Inter'; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: rgba(251,247,238,0.35); margin: 0;
+}
+
+.ec-offer {
+  font-family: 'Fraunces', serif; font-size: 20px; line-height: 1.4; color: var(--charcoal);
+  font-variation-settings: "SOFT" 50, "opsz" 144;
+  margin: 0 0 24px;
+}
+.ec-field { margin-bottom: 14px; }
+.ec-field label {
+  display: block;
+  font-family: 'Inter'; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 7px;
+}
+.ec-field input {
+  width: 100%;
+  border: 1px solid var(--ink); background: var(--paper);
+  padding: 14px 16px; font-family: 'Inter'; font-size: 16px; color: var(--ink);
+  outline: none; transition: border-color 0.15s; appearance: none;
+}
+.ec-field input:focus { border-color: var(--teal-text); }
+.ec-error { font-family: 'Inter'; font-size: 12px; color: var(--pink-text); margin-top: 4px; }
+
+.btn-skip {
+  display: block; width: 100%; margin-top: 12px; padding: 10px;
+  background: none; border: none; cursor: pointer;
+  font-family: 'Inter'; font-size: 12px; color: var(--muted);
+  letter-spacing: 0.06em; text-decoration: underline;
+  text-decoration-color: rgba(122,115,107,0.4);
+}
+.btn-skip:hover { color: var(--ink); }
+
+.ec-success {
+  border: 1px solid var(--teal); padding: 24px;
+  background: rgba(71,172,164,0.08);
+}
+.ec-success p {
+  font-family: 'Fraunces', serif; font-size: 18px; color: var(--charcoal); margin: 0;
+  font-variation-settings: "SOFT" 50, "opsz" 144;
+}
+
+/* D2M bridge */
+.d2m-bridge {
+  border: 1px solid var(--ink); padding: 28px 30px; margin-bottom: 28px;
+  background: var(--paper-2);
+}
+.d2m-bridge-eyebrow {
+  font-family: 'Inter'; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--muted); margin: 0 0 14px; display: block;
+}
+.d2m-bridge-text {
+  font-family: 'Fraunces', serif; font-size: 17px; line-height: 1.55; color: var(--charcoal);
+  font-variation-settings: "SOFT" 50, "opsz" 144;
+  margin: 0 0 20px;
+}
+.d2m-bridge-text strong { color: var(--plum); font-weight: 600; }
+.d2m-bridge-cta {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-family: 'Inter'; font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
+  padding: 13px 22px; border: 1.5px solid var(--plum); color: var(--plum);
+  text-decoration: none; transition: background 0.15s, color 0.15s;
+}
+.d2m-bridge-cta:hover { background: var(--plum); color: var(--paper); }
+.d2m-bridge-secondary {
+  display: block; margin-top: 14px;
+  font-family: 'Inter'; font-size: 11px; letter-spacing: 0.06em; color: var(--muted);
+  text-decoration: underline; text-decoration-color: rgba(122,115,107,0.4);
+}
+.d2m-bridge-secondary:hover { color: var(--ink); }
+
+@media (max-width: 480px) {
+  .ww-title { font-size: 52px; }
+}
+
+/* ===== SPLIT SHELL: brand panel (left 2/3) + coach (right 1/3) ===== */
+.app-shell { min-height: 100dvh; }
+
+/* Distinct shade from the coach column (--paper) so it reads as backdrop,
+   not the surface you're meant to interact with. */
+.brand-panel {
+  background:
+    radial-gradient(circle at 20% 0%, rgba(122,31,74,.06), transparent 50%),
+    radial-gradient(circle at 90% 30%, rgba(71,172,164,.07), transparent 60%),
+    var(--paper-2);
+}
+
+.bp-eyebrow {
+  font-family: 'Allura', cursive; font-size: clamp(22px, 2vw, 28px);
+  color: var(--plum); display: inline-block; transform: rotate(-2deg);
+  margin: 0 0 4px;
+}
+.bp-title {
+  font-family: 'DM Serif Display', serif; font-weight: 400;
+  font-size: clamp(40px, 5vw, 72px); line-height: 0.95; letter-spacing: -0.02em;
+  margin: 0 0 20px; color: var(--ink); text-transform: lowercase;
+}
+.bp-title em { font-style: italic; color: var(--plum); }
+.bp-lede {
+  font-family: 'Fraunces', serif; font-size: 17px; line-height: 1.5; color: var(--charcoal);
+  font-variation-settings: "SOFT" 50, "opsz" 144;
+  max-width: 420px; margin: 0 0 48px;
+}
+
+.fanned-deck { position: relative; height: 280px; margin-top: 8px; }
+.fan-card {
+  position: absolute; top: 0; left: 50%; width: 150px; height: 211px; margin-left: -75px;
+  border: 1.5px solid var(--ink); border-radius: 16px; overflow: hidden;
+  background: var(--paper);
+  box-shadow: 0 1px 0 var(--ink), 8px 8px 0 -2px rgba(16,0,0,.1);
+  display: flex; flex-direction: column;
+}
+.fan-card svg { display: block; width: 100%; }
+.fan-card .fc-art { flex: 1; }
+.fan-card .fc-name {
+  font-family: 'DM Serif Display', serif; font-size: 16px; text-align: center;
+  padding: 10px 6px 12px; color: var(--ink); text-transform: lowercase; letter-spacing: -0.01em;
+}
+.fan-card .fc-name em { font-style: italic; color: var(--plum); }
+
+.fan-card:nth-child(1) { transform: translate(-190px, 22px) rotate(-16deg); z-index: 1; }
+.fan-card:nth-child(2) { transform: translate(-98px, 6px)   rotate(-8deg);  z-index: 2; }
+.fan-card:nth-child(3) { transform: translate(0px, -8px)    rotate(0deg);   z-index: 3; }
+.fan-card:nth-child(4) { transform: translate(98px, 6px)    rotate(8deg);   z-index: 2; }
+.fan-card:nth-child(5) { transform: translate(190px, 22px)  rotate(16deg);  z-index: 1; }
+
+/* Cards 1–2 are covered on their right edge by their higher z-index neighbour;
+   cards 4–5 are covered on their left. Shift each name toward its own
+   uncovered side so it never sits under the overlap. */
+.fan-card:nth-child(1) .fc-name,
+.fan-card:nth-child(2) .fc-name { text-align: left; padding-left: 14px; }
+.fan-card:nth-child(4) .fc-name,
+.fan-card:nth-child(5) .fc-name { text-align: right; padding-right: 14px; }
+
+/* Compact title merged into the existing in-chat header (mobile only, see below) */
+.ww-header-title {
+  display: none;
+  font-family: 'DM Serif Display', serif; font-size: 15px; color: var(--ink); text-transform: lowercase;
+}
+.ww-header-title em { font-style: italic; color: var(--plum); }
+
+/* Persistent brand mark, top-left of the brand panel (desktop only —
+   on mobile the in-chat header already carries the brand mark). */
+.bp-brand-mark { display: none; }
+
+/* Desktop: even 50/50 split, coach column always full-height */
+@media (min-width: 900px) {
+  .app-shell { display: grid; grid-template-columns: 1fr 1fr; height: 100vh; }
+  .brand-panel {
+    position: relative; overflow: hidden;
+    border-right: 1px solid var(--ink);
+    display: flex; align-items: center; justify-content: center;
+    padding: 64px; height: 100vh;
+  }
+  .brand-panel-inner { max-width: 640px; width: 100%; }
+  .bp-brand-mark { display: block; position: absolute; top: 32px; left: 32px; }
+
+  /* Brand now lives in the left panel — don't duplicate it in the coach header */
+  #screen-workshop .ww-header .ww-brand { display: none; }
+}
+/* Narrower desktop/tablet window: scale the deck down a touch so it doesn't crowd the column */
+@media (min-width: 900px) and (max-width: 1199px) {
+  .fanned-deck { transform: scale(0.82); transform-origin: top center; }
+}
+
+/* Mobile: full brand panel (title + deck) only ahead of the workshop starting —
+   the coaching screens need the full viewport once a session is underway.
+   Instead of a separate header, the workshop title merges into the existing
+   in-chat header bar, replacing the phase label on the right. */
+@media (max-width: 899px) {
+  .brand-panel { padding: 40px 24px 0; }
+  .fanned-deck { height: 170px; transform: scale(0.85); transform-origin: top center; }
+
+  .app-shell:has(#screen-workshop.active) .brand-panel,
+  .app-shell:has(#screen-close.active) .brand-panel { display: none; }
+
+  /* Phase label now carries this header's live information on mobile;
+     the static title is redundant once a session is underway. */
+}
+</style>
+</head>
+<body>
+
+<div class="app-shell">
+
+<!-- ===== BRAND PANEL (left 2/3 on desktop) ===== -->
+<aside class="brand-panel">
+  <span class="ww-brand bp-brand-mark"><em>frankly</em> human.</span>
+  <div class="brand-panel-inner">
+    <span class="bp-eyebrow">a workshop for</span>
+    <h2 class="bp-title">the why<br>in <em>you.</em></h2>
+    <p class="bp-lede">One statement. Your values. A life you actually meant to build.</p>
+
+    <div class="fanned-deck" aria-hidden="true">
+      <div class="fan-card">
+        <div class="fc-art"><svg viewBox="0 0 200 260">
+          <rect width="200" height="260" fill="#FBF7EE"/>
+          <circle cx="62" cy="82" r="15" fill="#47ACA4"/>
+          <circle cx="140" cy="72" r="10" fill="#100000"/>
+          <circle cx="88" cy="148" r="19" fill="#100000"/>
+          <circle cx="152" cy="148" r="8" fill="#47ACA4"/>
+          <circle cx="42" cy="196" r="11" fill="#100000"/>
+          <circle cx="124" cy="196" r="13" fill="#47ACA4"/>
+          <circle cx="168" cy="116" r="7" fill="#100000"/>
+          <circle cx="52" cy="126" r="9" fill="#47ACA4"/>
+        </svg></div>
+        <div class="fc-name">joy<em>.</em></div>
+      </div>
+      <div class="fan-card">
+        <div class="fc-art"><svg viewBox="0 0 200 260">
+          <rect width="200" height="260" fill="#FBF7EE"/>
+          <line x1="100" y1="136" x2="100" y2="74" stroke="#100000" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="107" y1="138" x2="131" y2="96" stroke="#100000" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="112" y1="143" x2="143" y2="125" stroke="#100000" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="114" y1="150" x2="140" y2="150" stroke="#100000" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="112" y1="157" x2="143" y2="175" stroke="#100000" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="107" y1="162" x2="131" y2="204" stroke="#100000" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="100" y1="164" x2="100" y2="226" stroke="#100000" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="93" y1="138" x2="78" y2="113" stroke="#100000" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="93" y1="162" x2="78" y2="188" stroke="#100000" stroke-width="2.5" stroke-linecap="round"/>
+          <circle cx="100" cy="150" r="12" fill="#FF3990"/>
+          <circle cx="100" cy="150" r="5" fill="#100000"/>
+        </svg></div>
+        <div class="fc-name">boldness<em>.</em></div>
+      </div>
+      <div class="fan-card">
+        <div class="fc-art"><svg viewBox="0 0 200 260">
+          <rect width="200" height="260" fill="#FBF7EE"/>
+          <circle cx="100" cy="124" r="90" fill="#FFBD59" opacity="0.07"/>
+          <circle cx="100" cy="124" r="70" fill="#FFBD59" opacity="0.09"/>
+          <circle cx="100" cy="124" r="52" fill="#FFBD59" opacity="0.13"/>
+          <circle cx="100" cy="124" r="36" fill="#FFBD59" opacity="0.2"/>
+          <circle cx="100" cy="124" r="22" fill="#FFBD59" opacity="0.32"/>
+          <circle cx="100" cy="124" r="10" fill="#FFBD59" opacity="0.6"/>
+          <circle cx="100" cy="124" r="3" fill="#100000" opacity="0.35"/>
+        </svg></div>
+        <div class="fc-name">aesthetics<em>.</em></div>
+      </div>
+      <div class="fan-card">
+        <div class="fc-art"><svg viewBox="0 0 200 260">
+          <rect width="200" height="260" fill="#FBF7EE"/>
+          <path d="M22 120 Q55 105 100 116 Q148 127 178 108 Q173 145 138 152 Q100 160 56 147 Q26 138 22 120Z" fill="#7A1F4A"/>
+          <path d="M32 150 Q62 140 104 147 Q138 153 170 142 Q165 168 132 174 Q96 180 60 168 Q34 160 32 150Z" fill="#100000" opacity="0.65"/>
+        </svg></div>
+        <div class="fc-name">authenticity<em>.</em></div>
+      </div>
+      <div class="fan-card">
+        <div class="fc-art"><svg viewBox="0 0 200 260">
+          <rect width="200" height="260" fill="#FBF7EE"/>
+          <line x1="30" y1="200" x2="158" y2="60" stroke="#47ACA4" stroke-width="9" stroke-linecap="round"/>
+          <line x1="58" y1="214" x2="170" y2="90" stroke="#100000" stroke-width="5" stroke-linecap="round"/>
+          <line x1="82" y1="224" x2="180" y2="118" stroke="#100000" stroke-width="2.5" stroke-linecap="round"/>
+        </svg></div>
+        <div class="fc-name">achievement<em>.</em></div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- ===== SCREEN 1: WELCOME ===== -->
+<div id="screen-welcome" class="screen active">
+  <div class="welcome-inner">
+    <div id="resume-banner" class="resume-banner" hidden>
+      <p class="resume-text">Welcome back<span id="resume-name"></span> — you have a Why Workbook session in progress.</p>
+      <div class="resume-actions">
+        <button type="button" class="btn-resume" id="btn-resume">Continue where I left off →</button>
+        <button type="button" class="btn-resume-fresh" id="btn-resume-fresh">Start fresh instead</button>
+      </div>
+    </div>
+    <p class="ww-eyebrow">Frankly Human</p>
+    <h1 class="ww-title">The Why<br><em>Workbook.</em></h1>
+    <p class="ww-lede">A 45-minute self-paced coaching workbook.</p>
+    <p class="ww-lede" style="font-size:16px; margin-bottom:0;">You'll leave with your top values, three aligned actions, and a working Why Statement — the reconnaissance most people skip.</p>
+    <div class="name-field">
+      <label for="participant-name">Your first name</label>
+      <input type="text" id="participant-name" autocomplete="given-name" placeholder="First name" />
+    </div>
+    <button class="btn-primary" id="btn-start" disabled>Begin →</button>
+    <p class="ww-note">Free · No account needed · Start anytime</p>
+  </div>
+</div>
+
+<!-- ===== SCREEN 2: WORKSHOP ===== -->
+<div id="screen-workshop" class="screen">
+  <header class="ww-header">
+    <h1 class="sr-only" id="phase-label-sr">the Why Workbook</h1>
+    <span class="ww-brand"><em>frankly</em> human.</span>
+    <span id="phase-label" class="ww-phase-label" aria-live="polite"></span>
+    <span class="header-right">
+      <button id="btn-support" class="btn-support" type="button"
+              aria-haspopup="true" aria-expanded="false" aria-controls="support-panel">Need support?</button>
+      <button id="btn-back" class="btn-back" style="display:none;" aria-label="Go back">← back</button>
+      <span class="ww-header-title">the why in <em>you.</em></span>
+    </span>
+  </header>
+
+  <div id="support-panel" class="support-panel" role="region" aria-label="Support resources" hidden>
+    <p class="support-lede">If things feel like a lot right now, you don't have to sit with it alone:</p>
+    <ul class="support-list">
+      <li><strong>Lifeline (Australia)</strong> — <a href="tel:131114">13 11 14</a>, free &amp; confidential, 24/7</li>
+      <li><strong>Beyond Blue</strong> — <a href="tel:1300224636">1300 22 4636</a></li>
+    </ul>
+    <p class="support-note">Outside Australia, please reach out to a local crisis line or someone you trust.</p>
+    <button id="btn-support-close" class="support-close" type="button">Close</button>
+  </div>
+
+  <div class="ww-main" id="ww-main">
+    <!-- Chat log -->
+    <div class="chat-log" id="chat-log" role="log" aria-live="polite" aria-label="Coaching conversation"></div>
+
+    <!-- Values sort (Phase 2a) -->
+    <div id="values-sort" class="special-component" style="display:none;" aria-label="Values selection">
+      <p class="vs-instruction">Tap to select the values that feel true to you.</p>
+      <div id="vs-star-hint" class="vs-star-hint" style="display:none;">★ Now tap 3 of those again to star them — the ones you wouldn't negotiate on.</div>
+      <div class="values-chips" id="values-chips" role="group"></div>
+      <div class="vs-footer">
+        <span class="vs-count" id="vs-count" aria-live="polite">0 circled · 0 starred</span>
+        <button class="btn-primary btn-values-done" id="btn-values-done" disabled>These are my values →</button>
+      </div>
+    </div>
+
+    <!-- Values map (Phase 2c) -->
+    <div id="values-map" class="special-component" style="display:none;">
+      <p class="vm-instruction">For each of your top 3 values — how is it showing up in your life right now? Pick the one that feels most honest.</p>
+      <div id="vm-items"></div>
+      <button class="btn-primary" id="btn-map-done" disabled style="margin-top:8px;">I've mapped all three →</button>
+    </div>
+
+    <!-- Actions (Phase 3a) -->
+    <div id="actions-ui" class="special-component" style="display:none;">
+      <p class="actions-instruction">One small action per value. Small enough to do in 10 minutes if you had to.</p>
+      <div id="actions-inputs"></div>
+      <button class="btn-primary" id="btn-actions-done" disabled style="margin-top:8px;">I've got my actions →</button>
+    </div>
+
+    <!-- Why Statement field (Phase 4) -->
+    <div id="why-area" class="special-component" style="display:none;">
+      <div class="why-area-box">
+        <span class="why-area-label">Your Why Statement</span>
+        <textarea id="why-textarea" placeholder="To… so that…" rows="3" aria-label="Your Why Statement"></textarea>
+      </div>
+      <p style="font-family:'Patrick Hand',cursive;font-size:14px;color:var(--muted);margin:6px 0 0;">Use the conversation above — put it into your own words.</p>
+    </div>
+  </div>
+
+  <!-- Input area -->
+  <div class="chat-input-area">
+    <div class="chat-input-inner">
+      <div class="continue-bar" id="continue-bar" style="display:none;">
+        <button class="btn-continue" id="btn-continue">Continue →</button>
+      </div>
+      <div class="input-row" id="input-row">
+        <label for="user-input" class="sr-only">Your response</label>
+        <textarea id="user-input" rows="1" placeholder="Type your response…" aria-label="Type your response"></textarea>
+        <button id="btn-send" aria-label="Send response">↑</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SCREEN 3: CLOSE ===== -->
+<div id="screen-close" class="screen">
+  <div class="close-inner">
+    <div class="why-card" id="why-card">
+      <span class="wc-label">Your Why Statement</span>
+      <blockquote class="wc-statement" id="wc-statement"></blockquote>
+      <div class="wc-values" id="wc-values"></div>
+      <p class="wc-credit">Frankly Human · Why Workbook</p>
+    </div>
+
+    <div class="d2m-bridge" id="d2m-bridge">
+      <span class="d2m-bridge-eyebrow">Where this goes next</span>
+      <p class="d2m-bridge-text" id="d2m-bridge-text">Origin Story is where you start turning today's reflection into a system you can actually live inside.</p>
+      <a class="d2m-bridge-cta" href="../curriculum/workbooks/d2m/01-origin-story.html">Start with Origin Story <span>→</span></a>
+      <a class="d2m-bridge-secondary" href="../curriculum/workbooks/d2m/sales-page.html">or see the full Design to Me program →</a>
+    </div>
+
+    <div id="email-capture">
+      <p class="ec-offer">I'll send you this as a PDF to keep.</p>
+      <div class="ec-field">
+        <label for="ec-name">First name</label>
+        <input type="text" id="ec-name" autocomplete="given-name" />
+      </div>
+      <div class="ec-field">
+        <label for="ec-email">Email</label>
+        <input type="email" id="ec-email" autocomplete="email" placeholder="your@email.com" />
+        <p class="ec-error" id="ec-error" style="display:none;">Please enter a valid email address.</p>
+      </div>
+      <button class="btn-primary" id="btn-subscribe">Send me the PDF</button>
+      <button class="btn-skip" id="btn-skip-subscribe">That's okay — I'll screenshot it</button>
+    </div>
+
+    <div id="ec-success" style="display:none;">
+      <div class="ec-success">
+        <p>On its way. Check your inbox in the next few minutes.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /.app-shell -->
+
+<script src="app.js"></script>
+</body>
+</html>

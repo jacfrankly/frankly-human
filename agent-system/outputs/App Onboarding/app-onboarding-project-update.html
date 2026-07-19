@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>App Onboarding — Project Update & Stakeholder Feedback</title>
+<style>
+  :root {
+    --text: #1a1a18;
+    --text-sec: #5a5a56;
+    --text-ter: #8a8a85;
+    --bg: #ffffff;
+    --bg-sec: #f5f4f0;
+    --bg-ter: #eeede8;
+    --border: #dddcd6;
+    --border-med: #c8c7c0;
+    --blue-bg: #e6f1fb; --blue-text: #0c447c;
+    --green-bg: #eaf3de; --green-text: #27500a;
+    --amber-bg: #faeeda; --amber-text: #633806;
+    --red-bg: #fcebeb; --red-text: #791f1f;
+    --purple-bg: #eeedfe; --purple-text: #3c3489;
+    --teal-bg: #e1f5ee; --teal-text: #085041;
+    --gray-bg: #f1efe8; --gray-text: #444441;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --text: #e8e6dc; --text-sec: #a8a79f; --text-ter: #6a6a64;
+      --bg: #1c1c1a; --bg-sec: #242422; --bg-ter: #2c2c28;
+      --border: #3a3a36; --border-med: #4a4a44;
+      --blue-bg: #0c2a4a; --blue-text: #b5d4f4;
+      --green-bg: #0f2d06; --green-text: #c0dd97;
+      --amber-bg: #2d1a04; --amber-text: #fac775;
+      --red-bg: #2d0c0c; --red-text: #f7c1c1;
+      --purple-bg: #1e1a4a; --purple-text: #cecbf6;
+      --teal-bg: #042018; --teal-text: #9fe1cb;
+      --gray-bg: #2a2a26; --gray-text: #c8c7c0;
+    }
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Georgia', 'Times New Roman', serif; background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.7; }
+  .page { max-width: 860px; margin: 0 auto; padding: 48px 32px 80px; }
+
+  /* Header */
+  .doc-header { border-bottom: 1px solid var(--border); padding-bottom: 24px; margin-bottom: 32px; }
+  .doc-label { font-family: 'Courier New', monospace; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--text-ter); margin-bottom: 8px; }
+  .doc-title { font-size: 24px; font-weight: normal; color: var(--text); margin-bottom: 6px; line-height: 1.3; }
+  .doc-meta { font-size: 12px; color: var(--text-sec); font-family: 'Courier New', monospace; }
+  .doc-meta span { margin-right: 20px; }
+
+  /* Section headers */
+  h2 { font-size: 13px; font-weight: normal; letter-spacing: .08em; text-transform: uppercase; color: var(--text-ter); font-family: 'Courier New', monospace; margin: 40px 0 14px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+  h3 { font-size: 14px; font-weight: bold; color: var(--text); margin: 0 0 4px; }
+
+  /* Status table */
+  .status-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 8px; }
+  .status-table th { text-align: left; font-size: 11px; font-weight: normal; letter-spacing: .06em; text-transform: uppercase; color: var(--text-ter); font-family: 'Courier New', monospace; padding: 6px 10px; border-bottom: 1px solid var(--border); }
+  .status-table td { padding: 9px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .status-table tr:last-child td { border-bottom: none; }
+  .status-table tr:hover td { background: var(--bg-sec); }
+  .agent-col { font-weight: bold; font-family: 'Courier New', monospace; font-size: 12px; white-space: nowrap; }
+  .output-col { color: var(--text-sec); font-size: 12px; }
+  .wave-col { font-family: 'Courier New', monospace; font-size: 11px; color: var(--text-ter); }
+
+  /* Badges */
+  .badge { display: inline-block; font-size: 10px; font-weight: bold; padding: 2px 7px; border-radius: 3px; letter-spacing: .04em; font-family: 'Courier New', monospace; white-space: nowrap; }
+  .b-done { background: var(--green-bg); color: var(--green-text); }
+  .b-skip { background: var(--red-bg); color: var(--red-text); }
+  .b-next { background: var(--amber-bg); color: var(--amber-text); }
+  .b-pending { background: var(--gray-bg); color: var(--gray-text); }
+  .b-pm { background: var(--blue-bg); color: var(--blue-text); }
+  .b-svc { background: var(--teal-bg); color: var(--teal-text); }
+  .b-des { background: var(--purple-bg); color: var(--purple-text); }
+
+  /* Assumptions table */
+  .assumptions-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 16px; }
+  .assumptions-table th { text-align: left; font-size: 11px; font-weight: normal; letter-spacing: .06em; text-transform: uppercase; color: var(--text-ter); font-family: 'Courier New', monospace; padding: 6px 10px; border-bottom: 1px solid var(--border); }
+  .assumptions-table td { padding: 10px 10px; border-bottom: 1px solid var(--border); vertical-align: top; font-size: 12px; }
+  .assumptions-table tr:last-child td { border-bottom: none; }
+  .id-col { font-family: 'Courier New', monospace; font-size: 11px; color: var(--text-ter); white-space: nowrap; font-weight: bold; }
+  .status-input { width: 100%; font-size: 12px; padding: 4px 6px; background: var(--bg-sec); border: 1px solid var(--border); color: var(--text); border-radius: 3px; font-family: Georgia, serif; resize: none; min-height: 48px; }
+  .status-input:focus { outline: none; border-color: var(--border-med); }
+
+  /* Feedback blocks */
+  .feedback-block { border: 1px solid var(--border); border-radius: 4px; margin-bottom: 16px; overflow: hidden; }
+  .fb-header { display: flex; align-items: baseline; gap: 10px; background: var(--bg-sec); padding: 10px 14px; border-bottom: 1px solid var(--border); }
+  .fb-agent { font-family: 'Courier New', monospace; font-size: 12px; font-weight: bold; color: var(--text); }
+  .fb-file { font-family: 'Courier New', monospace; font-size: 11px; color: var(--text-ter); }
+  .fb-body { padding: 14px; }
+  .fb-row { display: grid; grid-template-columns: 140px 1fr; gap: 8px; margin-bottom: 10px; align-items: start; }
+  .fb-label { font-family: 'Courier New', monospace; font-size: 11px; color: var(--text-ter); padding-top: 5px; }
+  textarea, input[type="text"] { width: 100%; font-size: 12px; padding: 6px 8px; background: var(--bg); border: 1px solid var(--border); color: var(--text); border-radius: 3px; font-family: Georgia, serif; resize: vertical; }
+  textarea:focus, input[type="text"]:focus { outline: none; border-color: var(--border-med); }
+  textarea.small { min-height: 40px; }
+  textarea.medium { min-height: 64px; }
+  textarea.large { min-height: 96px; }
+  select { font-size: 12px; padding: 5px 8px; background: var(--bg); border: 1px solid var(--border); color: var(--text); border-radius: 3px; font-family: Georgia, serif; }
+  .fb-note { font-size: 11px; color: var(--text-ter); font-style: italic; margin-top: 4px; }
+
+  /* Prompt blocks */
+  .prompt-block { background: var(--bg-ter); border: 1px solid var(--border); border-radius: 4px; margin-bottom: 16px; overflow: hidden; }
+  .prompt-header { display: flex; align-items: center; gap: 8px; padding: 8px 14px; border-bottom: 1px solid var(--border); background: var(--bg-sec); }
+  .prompt-label { font-family: 'Courier New', monospace; font-size: 11px; color: var(--text-ter); text-transform: uppercase; letter-spacing: .06em; }
+  .prompt-agent { font-family: 'Courier New', monospace; font-size: 12px; font-weight: bold; color: var(--text); }
+  .prompt-body { padding: 14px; }
+  pre { font-family: 'Courier New', monospace; font-size: 11.5px; color: var(--text-sec); line-height: 1.6; white-space: pre-wrap; word-break: break-word; }
+  pre .placeholder { color: var(--amber-text); font-style: italic; }
+  .trigger { font-size: 11px; color: var(--text-ter); font-style: italic; margin-bottom: 6px; }
+
+  /* Instruction callout */
+  .callout { background: var(--amber-bg); border-left: 3px solid var(--amber-text); padding: 12px 16px; margin-bottom: 24px; border-radius: 0 4px 4px 0; }
+  .callout p { font-size: 13px; color: var(--amber-text); line-height: 1.6; }
+  .callout strong { font-weight: bold; }
+
+  /* Section divider with label */
+  .section-intro { font-size: 13px; color: var(--text-sec); margin-bottom: 20px; line-height: 1.7; }
+
+  /* Print */
+  @media print {
+    .page { padding: 24px; }
+    textarea, input, select { border: 1px solid #ccc; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="doc-header">
+    <div class="doc-label">Project Update — App Onboarding Redesign</div>
+    <h1 class="doc-title">Work Status, Critical Assumptions &amp; Stakeholder Feedback</h1>
+    <div class="doc-meta">
+      <span>Client: Test (Enterprise)</span>
+      <span>Prepared: 8 April 2026</span>
+      <span>Version: 1.0</span>
+      <span>For use in: Claude Code + Claude.ai</span>
+    </div>
+  </div>
+
+  <div class="callout">
+    <p><strong>How to use this document.</strong> Fill in the Stakeholder Feedback section after each stakeholder conversation. In the Status column, mark each assumption as CONFIRMED, CONTRADICTED, UPDATED, or STILL OPEN. Paste your completed feedback blocks into the agent prompts in Section 4 and re-run the relevant agents in Claude Code. Save updated outputs with a version suffix (e.g. <code>Strategy v2.md</code>).</p>
+  </div>
+
+  <!-- SECTION 1 -->
+  <h2>1 — Agent pipeline status</h2>
+  <p class="section-intro">All agents run to date, what each produced, and what was skipped. Skipped agents are flagged with the reason and the conditions needed to run them.</p>
+
+  <table class="status-table">
+    <thead>
+      <tr>
+        <th style="width:60px">Wave</th>
+        <th style="width:180px">Agent</th>
+        <th>Output produced</th>
+        <th style="width:90px">Status</th>
+        <th style="width:70px">Layer</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="wave-col">W1</td>
+        <td class="agent-col">user-researcher</td>
+        <td class="output-col">JTBD analysis (3 segments), opportunity landscape, assumption inventory. All findings labelled RESEARCHED / INFERRED / ASSUMED.</td>
+        <td><span class="badge b-done">DONE</span></td>
+        <td><span class="badge b-pm">PM</span></td>
+      </tr>
+      <tr>
+        <td class="wave-col">W1</td>
+        <td class="agent-col">business-analyst</td>
+        <td class="output-col">Business case, ROI model (£90k–£160k/yr savings, ~25-month payback), strategic alignment map.</td>
+        <td><span class="badge b-done">DONE</span></td>
+        <td><span class="badge b-pm">PM</span></td>
+      </tr>
+      <tr>
+        <td class="wave-col">W2</td>
+        <td class="agent-col">strategy-architect</td>
+        <td class="output-col">Service vision, North Star metric, 5 input metrics, OKR alignment (hypothetical — no OKRs provided), 6 service principles, strategic tensions.</td>
+        <td><span class="badge b-done">DONE</span></td>
+        <td><span class="badge b-pm">PM</span></td>
+      </tr>
+      <tr>
+        <td class="wave-col">W2</td>
+        <td class="agent-col">risk-assessor</td>
+        <td class="output-col">Risk register (25 risks × 5 categories), 5 critical assumptions (CA-01 to CA-05), go/no-go recommendation per workstream.</td>
+        <td><span class="badge b-done">DONE</span></td>
+        <td><span class="badge b-pm">PM</span></td>
+      </tr>
+      <tr>
+        <td class="wave-col">W3</td>
+        <td class="agent-col">requirements-writer</td>
+        <td class="output-col">Service blueprint (8 stages × 6 layers), 7 user stories with ACs, full PRD, 5 touchpoint briefs (TD-01 to TD-05), edge case inventory, dependency table (D-01 to D-06), open questions (OQ-01 to OQ-09).</td>
+        <td><span class="badge b-done">DONE</span></td>
+        <td><span class="badge b-pm">PM</span></td>
+      </tr>
+      <tr>
+        <td class="wave-col">W3</td>
+        <td class="agent-col">synthesis (journey)</td>
+        <td class="output-col">AS-IS + TO-BE journey maps for all 3 user segments. Recommendations report (R1–R7). Open questions for client decision.</td>
+        <td><span class="badge b-done">DONE</span></td>
+        <td><span class="badge b-svc">Service</span></td>
+      </tr>
+      <tr style="opacity:.6">
+        <td class="wave-col">—</td>
+        <td class="agent-col">market-researcher</td>
+        <td class="output-col"><em>Not run. Business Analyst covered market context sufficiently for this service redesign context. Run if competitive positioning or market sizing analysis is required.</em></td>
+        <td><span class="badge b-skip">SKIPPED</span></td>
+        <td><span class="badge b-pm">PM</span></td>
+      </tr>
+      <tr style="opacity:.6">
+        <td class="wave-col">—</td>
+        <td class="agent-col">opportunity-mapper</td>
+        <td class="output-col"><em>Not run as standalone. Opportunity mapping was absorbed into the Synthesis agent's recommendations output. Run if a formal Opportunity Solution Tree is required for roadmap prioritisation.</em></td>
+        <td><span class="badge b-skip">SKIPPED</span></td>
+        <td><span class="badge b-pm">PM</span></td>
+      </tr>
+      <tr style="opacity:.6">
+        <td class="wave-col">—</td>
+        <td class="agent-col">experiment-designer</td>
+        <td class="output-col"><em>Not run. JSM prototype build is the experiment. Must define 4–5 hypotheses and pass/fail criteria before prototype testing begins. Replaces this stage.</em></td>
+        <td><span class="badge b-next">NEXT</span></td>
+        <td><span class="badge b-pm">PM</span></td>
+      </tr>
+      <tr style="opacity:.6">
+        <td class="wave-col">—</td>
+        <td class="agent-col">prioritisation-lead</td>
+        <td class="output-col"><em>Not run. Run after prototype user testing — findings will change priorities. Input: validated opportunity map + risk assessment + business case.</em></td>
+        <td><span class="badge b-next">NEXT</span></td>
+        <td><span class="badge b-pm">PM</span></td>
+      </tr>
+      <tr style="opacity:.6">
+        <td class="wave-col">—</td>
+        <td class="agent-col">roadmap-architect</td>
+        <td class="output-col"><em>Not run. Run after prototype testing and prioritisation. Input: prioritised backlog + product strategy + technical constraints (JSM platform confirmed).</em></td>
+        <td><span class="badge b-next">NEXT</span></td>
+        <td><span class="badge b-pm">PM</span></td>
+      </tr>
+      <tr style="opacity:.6">
+        <td class="wave-col">—</td>
+        <td class="agent-col">metrics-definer</td>
+        <td class="output-col"><em>Not run. Must run before prototype testing so pass/fail criteria are defined in advance. Input: strategy (North Star) + feature briefs from requirements-writer.</em></td>
+        <td><span class="badge b-next">NEXT</span></td>
+        <td><span class="badge b-pm">PM</span></td>
+      </tr>
+      <tr style="opacity:.6">
+        <td class="wave-col">—</td>
+        <td class="agent-col">product-critic</td>
+        <td class="output-col"><em>Not run. Run after requirements are confirmed and before touchpoint design begins. Validates each requirement traces to a real user need.</em></td>
+        <td><span class="badge b-pending">PENDING</span></td>
+        <td><span class="badge b-pm">PM</span></td>
+      </tr>
+      <tr style="opacity:.6">
+        <td class="wave-col">—</td>
+        <td class="agent-col">policy-reviewer</td>
+        <td class="output-col"><em>Not run. Run when Cybersecurity and Legal stakeholder input is available. Produces promise-delivery gap analysis and backstage remediation verdicts.</em></td>
+        <td><span class="badge b-pending">PENDING</span></td>
+        <td><span class="badge b-svc">Service</span></td>
+      </tr>
+      <tr style="opacity:.6">
+        <td class="wave-col">—</td>
+        <td class="agent-col">design-scout → heuristic-evaluator (×5)</td>
+        <td class="output-col"><em>Full Designpowers pipeline not yet run. 5 touchpoint briefs are ready (TD-01 to TD-05). Run per touchpoint after metrics-definer and product-critic are complete.</em></td>
+        <td><span class="badge b-pending">PENDING</span></td>
+        <td><span class="badge b-des">Design</span></td>
+      </tr>
+      <tr style="opacity:.6">
+        <td class="wave-col">—</td>
+        <td class="agent-col">launch-planner</td>
+        <td class="output-col"><em>Run after touchpoint design is complete and all 7 programme pre-conditions are resolved.</em></td>
+        <td><span class="badge b-pending">PENDING</span></td>
+        <td><span class="badge b-pm">PM</span></td>
+      </tr>
+      <tr style="opacity:.6">
+        <td class="wave-col">—</td>
+        <td class="agent-col">retrospective-lead</td>
+        <td class="output-col"><em>Run 2–4 weeks post pilot launch.</em></td>
+        <td><span class="badge b-pending">PENDING</span></td>
+        <td><span class="badge b-pm">PM</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- SECTION 2 -->
+  <h2>2 — Critical assumptions &amp; open questions status</h2>
+  <p class="section-intro">Five critical assumptions from the Risk Assessor and nine open questions from the Design Spec. Fill in the Status column after each stakeholder conversation. Mark each as CONFIRMED / CONTRADICTED / UPDATED / STILL OPEN and note the source.</p>
+
+  <table class="assumptions-table">
+    <thead>
+      <tr>
+        <th style="width:60px">ID</th>
+        <th>Assumption / Question</th>
+        <th style="width:200px">Stakeholder status (fill in)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="id-col">CA-01</td>
+        <td>A Director-level service owner can be named before programme start with formal authority over all six teams.</td>
+        <td><textarea class="status-input small" placeholder="CONFIRMED / CONTRADICTED / UPDATED / STILL OPEN&#10;Source:&#10;Notes:"></textarea></td>
+      </tr>
+      <tr>
+        <td class="id-col">CA-02</td>
+        <td>All six teams will decommission their existing Jira intake channels when the front door launches.</td>
+        <td><textarea class="status-input small" placeholder="CONFIRMED / CONTRADICTED / UPDATED / STILL OPEN&#10;Source:&#10;Notes:"></textarea></td>
+      </tr>
+      <tr>
+        <td class="id-col">CA-03</td>
+        <td>Fast-track triage criteria can be defined objectively using verifiable fields — not requester self-declaration.</td>
+        <td><textarea class="status-input small" placeholder="CONFIRMED / CONTRADICTED / UPDATED / STILL OPEN&#10;Source:&#10;Notes:"></textarea></td>
+      </tr>
+      <tr>
+        <td class="id-col">CA-04</td>
+        <td>Request volume is 150–300 per year across all six teams (unvalidated — Jira export not yet done).</td>
+        <td><textarea class="status-input small" placeholder="CONFIRMED / CONTRADICTED / UPDATED / STILL OPEN&#10;Source:&#10;Notes:"></textarea></td>
+      </tr>
+      <tr>
+        <td class="id-col">CA-05</td>
+        <td>Six existing Jira instances can be integrated to a common routing layer (JSM platform confirmed).</td>
+        <td><textarea class="status-input small" placeholder="CONFIRMED / CONTRADICTED / UPDATED / STILL OPEN&#10;Source:&#10;Notes:"></textarea></td>
+      </tr>
+      <tr>
+        <td class="id-col">OQ-01</td>
+        <td>Who is the confirmed service owner with Director-level authority over all six teams?</td>
+        <td><textarea class="status-input small" placeholder="Name / title / confirmed / still open:"></textarea></td>
+      </tr>
+      <tr>
+        <td class="id-col">OQ-02</td>
+        <td>What is the agreed SLA for each team's review per request type (standard and fast-track)?</td>
+        <td><textarea class="status-input small" placeholder="Agreed SLAs or still open:"></textarea></td>
+      </tr>
+      <tr>
+        <td class="id-col">OQ-03</td>
+        <td>Decision authority model: does one team's objection block the whole request, or does the service owner adjudicate?</td>
+        <td><textarea class="status-input small" placeholder="Model confirmed or still open:"></textarea></td>
+      </tr>
+      <tr>
+        <td class="id-col">OQ-04</td>
+        <td>What is the appeals process for a requester who disputes a rejection?</td>
+        <td><textarea class="status-input small" placeholder="Process confirmed or still open:"></textarea></td>
+      </tr>
+      <tr>
+        <td class="id-col">OQ-05</td>
+        <td>What notification channels are required beyond email and in-app (e.g. Teams integration, SMS)?</td>
+        <td><textarea class="status-input small" placeholder="Channels confirmed or still open:"></textarea></td>
+      </tr>
+      <tr>
+        <td class="id-col">OQ-06</td>
+        <td>What is the data retention policy for request records including rejected and withdrawn requests?</td>
+        <td><textarea class="status-input small" placeholder="Policy confirmed or still open:"></textarea></td>
+      </tr>
+      <tr>
+        <td class="id-col">OQ-07</td>
+        <td>Will the pilot include all six teams or a subset? If a subset, which teams and app types are in scope?</td>
+        <td><textarea class="status-input small" placeholder="Pilot scope confirmed or still open:"></textarea></td>
+      </tr>
+      <tr>
+        <td class="id-col">OQ-08</td>
+        <td>Process and authority for retiring or updating an existing catalogue record (e.g. app later found to pose new risk)?</td>
+        <td><textarea class="status-input small" placeholder="Process confirmed or still open:"></textarea></td>
+      </tr>
+      <tr>
+        <td class="id-col">OQ-09</td>
+        <td>Are there app types explicitly out of scope (e.g. internally developed apps, infrastructure tools)?</td>
+        <td><textarea class="status-input small" placeholder="Scope boundary confirmed or still open:"></textarea></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- SECTION 3 -->
+  <h2>3 — Stakeholder feedback template</h2>
+  <p class="section-intro">Fill in one block per agent after receiving stakeholder input. The blocks feed directly into the agent re-run prompts in Section 4. Complete the relevant block(s) and paste into Claude Code.</p>
+
+  <div class="feedback-block">
+    <div class="fb-header">
+      <span class="fb-agent">strategy-architect</span>
+      <span class="fb-file">→ App Onboarding — Strategy.md</span>
+      <span class="badge b-pm" style="margin-left:auto">PM</span>
+    </div>
+    <div class="fb-body">
+      <div class="fb-row">
+        <div class="fb-label">Session date</div>
+        <input type="text" placeholder="DD Mon YYYY">
+      </div>
+      <div class="fb-row">
+        <div class="fb-label">Source / who</div>
+        <input type="text" placeholder="e.g. Jac (programme lead), Cybersecurity lead, team leads session">
+      </div>
+      <div class="fb-row">
+        <div class="fb-label">OKRs confirmed</div>
+        <textarea class="medium" placeholder="Paste any OKRs, objectives, or strategic goals provided by the stakeholder. Currently the strategy uses hypothetical OKR alignment."></textarea>
+      </div>
+      <div class="fb-row">
+        <div class="fb-label">Principles challenged</div>
+        <textarea class="small" placeholder="Which of the 6 service principles were questioned or modified? What was the outcome?"></textarea>
+      </div>
+      <div class="fb-row">
+        <div class="fb-label">New tensions / constraints</div>
+        <textarea class="medium" placeholder="Any strategic tensions not currently named in the strategy? Political constraints, stakeholder conflicts, or new out-of-scope decisions?"></textarea>
+      </div>
+      <div class="fb-row">
+        <div class="fb-label">North Star challenged?</div>
+        <textarea class="small" placeholder="Was the requester-confirmed resolution rate metric accepted? Any alternative metrics proposed?"></textarea>
+      </div>
+      <div class="fb-row">
+        <div class="fb-label">Trigger for re-run?</div>
+        <select>
+          <option>— select —</option>
+          <option>Yes — OKRs now available</option>
+          <option>Yes — principles challenged or modified</option>
+          <option>Yes — new strategic constraint added</option>
+          <option>Yes — North Star metric challenged</option>
+          <option>No — strategy confirmed as-is</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="feedback-block">
+    <div class="fb-header">
+      <span class="fb-agent">risk-assessor</span>
+      <span class="fb-file">→ App Onboarding — Risk Assessment.md</span>
+      <span class="badge b-pm" style="margin-left:auto">PM</span>
+    </div>
+    <div class="fb-body">
+      <div class="fb-row">
+        <div class="fb-label">Session date</div>
+        <input type="text" placeholder="DD Mon YYYY">
+      </div>
+      <div class="fb-row">
+        <div class="fb-label">Source / who</div>
+        <input type="text" placeholder="e.g. Director IT, Cyber lead, programme sponsor">
+      </div>
+      <div class="fb-row">
+        <div class="fb-label">CA-01 — Service owner</div>
+        <textarea class="small" placeholder="Has a Director-level service owner been named? Name, title, and authority scope if confirmed. If refused or unclear, describe why."></textarea>
+      </div>
+      <div class="fb-row">
+        <div class="fb-label">CA-02 — Channel decommission</div>
+        <textarea class="small" placeholder="Will each team decommission their Jira queue? Which teams have committed? Which have refused or are hesitant?"></textarea>
+      </div>
+      <div class="fb-row">
+        <div class="fb-label">CA-03 — Fast-track criteria</div>
+        <textarea class="small" placeholder="Has Cybersecurity / Legal agreed to define objective fast-track criteria? Any initial criteria proposed? Any concerns raised?"></textarea>
+      </div>
+      <div class="fb-row">
+        <div class="fb-label">CA-04 — Volume data</div>
+        <textarea class="small" placeholder="Has the Jira export been approved? Any early volume data available? Anything that contradicts the 150–300 req/year assumption?"></textarea>
+      </div>
+      <div class="fb-row">
+        <div class="fb-label">CA-05 — JSM integration</div>
+        <textarea class="small" placeholder="Has JSM been confirmed as the platform? Any integration constraints, licensing issues, or IT approval requirements?"></textarea>
+      </div>
+      <div class="fb-row">
+        <div class="fb-label">New risks identified</div>
+        <textarea class="medium" placeholder="Any new risks that have emerged from stakeholder conversations not currently in the register? Political, technical, governance, or user adoption risks."></textarea>
+      </div>
+      <div class="fb-row">
+        <div class="fb-label">Go/no-go change?</div>
+        <select>
+          <option>— select —</option>
+          <option>Yes — new information changes the go/no-go for standard pathway</option>
+          <option>Yes — new information changes fast-track go/no-go</option>
+          <option>No — go/no-go recommendation stands</option>
+          <option>Not enough information yet</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="feedback-block">
+    <div class="fb-header">
+      <span class="fb-agent">policy-reviewer</span>
+      <span class="fb-file">→ App Onboarding — Policy Review.md (not yet run)</span>
+      <span class="badge b-svc" style="margin-left:auto">Service</span>
+    </div>
+    <div class="fb-body">
+      <p class="fb-note" style="margin-bottom:10px">Fill this in when Cybersecurity and/or Legal provide direct input. This triggers the first run of the policy-reviewer agent.</p>
+      <div class="fb-row">
+        <div class="fb-label">Session date</div>
+        <input type="text" placeholder="DD Mon YYYY">
+      </div>
+      <div class="fb-row">
+        <div class="fb-label">Source / who</div>
+        <input type="text" placeholder="e.g. Cybersecurity lead, Legal counsel, Compliance officer">
+      </div>
+      <div class="fb-row">
+        <div class="fb-label">Governance constraints</div>
+        <textarea class="large" placeholder="Any regulatory, compliance, or policy obligations that the service design must honour. Include any GDPR / data handling requirements, information security standards, or mandatory approval steps."></textarea>
+      </div>
+      <div class="fb-row">
+        <div class="fb-label">Fast-track concerns</div>
+        <textarea class="medium" placeholder="Any specific objections to the fast-track pathway from Cybersecurity or Legal. What criteria would they require to make fast-track safe?"></textarea>
+      </div>
+      <div class="fb-row">
+        <div class="fb-label">Backstage process constraints</div>
+        <textarea class="medium" placeholder="Any constraints on how the backstage workflow must operate (e.g. parallel review is mandatory, certain apps cannot be conditionally approved, retention rules, audit requirements)."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="feedback-block">
+    <div class="fb-header">
+      <span class="fb-agent">requirements-writer</span>
+      <span class="fb-file">→ App Onboarding — Design Spec.md</span>
+      <span class="badge b-pm" style="margin-left:auto">PM</span>
+    </div>
+    <div class="fb-body">
+      <p class="fb-note" style="margin-bottom:10px">Use this block when D-01 (six-team data-mapping exercise) produces the agreed intake field set, or when any open question (OQ-01 to OQ-09) is resolved. This triggers a Requirements Writer revision.</p>
+      <div class="fb-row">
+        <div class="fb-label">D-01 field set</div>
+        <textarea class="large" placeholder="Paste the agreed intake form fields from the data-mapping exercise. Format: field name | required by (teams) | field type | help text agreed."></textarea>
+      </div>
+      <div class="fb-row">
+        <div class="fb-label">Open questions resolved</div>
+        <textarea class="medium" placeholder="Which OQ numbers have been resolved? What was the answer? (e.g. OQ-03: decision authority model — service owner adjudicates; no single team veto.)"></textarea>
+      </div>
+      <div class="fb-row">
+        <div class="fb-label">Dependency status changes</div>
+        <textarea class="small" placeholder="Any of D-01 to D-06 now resolved, in progress, or blocked? Note status change and owner."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 4 -->
+  <h2>4 — Agent re-run prompts</h2>
+  <p class="section-intro">Paste the relevant feedback block from Section 3 into the prompt below and run in Claude Code. Run in order: Strategy Architect first if OKRs or principles changed, then Risk Assessor, then Policy Reviewer. Each downstream agent should read the updated upstream output.</p>
+
+  <div class="prompt-block">
+    <div class="prompt-header">
+      <span class="prompt-label">Re-run prompt —</span>
+      <span class="prompt-agent">strategy-architect</span>
+      <span class="prompt-label" style="margin-left:auto">Trigger: OKRs available, principles challenged, or new strategic constraint</span>
+    </div>
+    <div class="prompt-body">
+<pre>Act as the strategy-architect agent.
+Read agents/pm/strategy-architect.md for your instructions.
+
+Prior strategy output:
+[reference: outputs/App Onboarding — Strategy.md]
+
+New stakeholder context to incorporate:
+<span class="placeholder">[paste Strategy Architect feedback block from Section 3]</span>
+
+Instructions:
+- Update the OKR alignment section with the confirmed OKRs (replacing the hypothetical alignment).
+- Revise any service principles that were challenged or modified.
+- Add any new strategic tensions that the stakeholder conversation surfaced.
+- If the North Star metric was challenged, note the challenge and either defend the original or revise it with rationale.
+- Do not remove existing findings unless directly contradicted — annotate changes clearly.
+- Mark each changed section with [UPDATED — date] so the diff is visible.
+
+Save revised output to:
+outputs/App Onboarding — Strategy v2.md</pre>
+    </div>
+  </div>
+
+  <div class="prompt-block">
+    <div class="prompt-header">
+      <span class="prompt-label">Re-run prompt —</span>
+      <span class="prompt-agent">risk-assessor</span>
+      <span class="prompt-label" style="margin-left:auto">Trigger: any critical assumption confirmed, contradicted, or updated</span>
+    </div>
+    <div class="prompt-body">
+<pre>Act as the risk-assessor agent.
+Read agents/pm/risk-assessor.md for your instructions.
+
+Prior risk output:
+[reference: outputs/App Onboarding — Risk Assessment.md]
+
+Updated strategy (if strategy was revised):
+[reference: outputs/App Onboarding — Strategy v2.md — or omit if unchanged]
+
+New stakeholder input:
+<span class="placeholder">[paste Risk Assessor feedback block from Section 3]</span>
+
+Instructions:
+- Re-assess the critical assumptions (CA-01 to CA-05) using the new information.
+- For each assumption where the status has changed: update the confidence rating, revise the associated risks, and note the source of the new information.
+- Re-assess the go/no-go recommendation for both standard and fast-track pathways.
+- Add any new risks identified during stakeholder conversations.
+- Mark changed entries with [UPDATED — date].
+
+Save revised output to:
+outputs/App Onboarding — Risk Assessment v2.md</pre>
+    </div>
+  </div>
+
+  <div class="prompt-block">
+    <div class="prompt-header">
+      <span class="prompt-label">First-run prompt —</span>
+      <span class="prompt-agent">policy-reviewer</span>
+      <span class="prompt-label" style="margin-left:auto">Trigger: Cybersecurity or Legal stakeholder input available</span>
+    </div>
+    <div class="prompt-body">
+<pre>Act as the policy-reviewer agent.
+Read agents/service/policy-reviewer.md for your instructions.
+
+Service blueprint and requirements:
+[reference: outputs/App Onboarding — Design Spec.md]
+
+Risk assessment (latest version):
+[reference: outputs/App Onboarding — Risk Assessment v2.md — or v1 if not updated]
+
+Stakeholder input from Cybersecurity and Legal:
+<span class="placeholder">[paste Policy Reviewer feedback block from Section 3]</span>
+
+Produce:
+1. A promise-delivery gap analysis — for each frontstage promise in the blueprint,
+   does the backstage and policy environment support it?
+2. Policy conflict flags — any design decisions that conflict with governance,
+   regulatory, or security requirements.
+3. Backstage remediation recommendations with verdicts:
+   design fix / backstage fix / re-blueprint.
+
+Save output to:
+outputs/App Onboarding — Policy Review.md</pre>
+    </div>
+  </div>
+
+  <div class="prompt-block">
+    <div class="prompt-header">
+      <span class="prompt-label">Re-run prompt —</span>
+      <span class="prompt-agent">requirements-writer</span>
+      <span class="prompt-label" style="margin-left:auto">Trigger: D-01 field set agreed, or open questions OQ-01 to OQ-09 resolved</span>
+    </div>
+    <div class="prompt-body">
+<pre>Act as the requirements-writer agent.
+Read agents/pm/requirements-writer.md for your instructions.
+
+Prior requirements output:
+[reference: outputs/App Onboarding — Design Spec.md]
+
+Updated inputs — resolved questions and dependency changes:
+<span class="placeholder">[paste Requirements Writer feedback block from Section 3]</span>
+
+Instructions:
+- Update the dependency table (D-01 to D-06) with confirmed status.
+- Update the open questions table (OQ-01 to OQ-09) with resolved answers.
+- If D-01 field set is provided: update the intake form user stories (IF-01) and
+  Touchpoint Brief 2 (TD-02) with the confirmed field list.
+- Do not redesign resolved sections — revise specifically and mark [UPDATED — date].
+- Flag any new dependencies or questions surfaced by the resolved items.
+
+Save revised output to:
+outputs/App Onboarding — Design Spec v2.md</pre>
+    </div>
+  </div>
+
+  <div class="prompt-block">
+    <div class="prompt-header">
+      <span class="prompt-label">First-run prompt —</span>
+      <span class="prompt-agent">metrics-definer</span>
+      <span class="prompt-label" style="margin-left:auto">Run before prototype testing — defines pass/fail criteria</span>
+    </div>
+    <div class="prompt-body">
+<pre>Act as the metrics-definer agent.
+Read agents/pm/metrics-definer.md for your instructions.
+
+Product strategy (North Star):
+[reference: outputs/App Onboarding — Strategy v2.md — or v1 if unchanged]
+
+Feature briefs (touchpoints TD-01 and TD-02 are priority for prototype):
+[reference: outputs/App Onboarding — Design Spec.md — Section 4, TD-01 and TD-02]
+
+Prototype hypotheses to test:
+H1: Requesters will check the catalogue before submitting if it is easy to search.
+H2: The intake form will produce complete submissions if fields match reviewer needs.
+H3: Requesters will not escalate if they receive a clear confirmation with timeframe.
+H4: Triage self-declaration is unreliable — requesters will over-qualify for fast-track.
+
+Produce:
+- Success metrics for each of TD-01 and TD-02
+- Pass/fail criteria for each of the 4 prototype hypotheses above
+- Leading indicators observable during a 3–5 person user test
+- Guardrail metrics (what must not get worse)
+- Measurement plan for the pilot (instrumentation requirements in JSM)
+
+Save output to:
+outputs/App Onboarding — Metrics Plan.md</pre>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div style="margin-top:48px; padding-top:20px; border-top:1px solid var(--border); font-size:11px; color:var(--text-ter); font-family:'Courier New',monospace; display:flex; justify-content:space-between;">
+    <span>App Onboarding Redesign — Project Update v1.0</span>
+    <span>Generated: 8 April 2026 · For use in Claude Code + Claude.ai</span>
+  </div>
+
+</div>
+</body>
+</html>

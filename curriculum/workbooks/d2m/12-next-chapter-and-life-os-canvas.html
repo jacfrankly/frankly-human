@@ -1,0 +1,549 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>D2M · Module 12 · Next Chapter &amp; Life OS Canvas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..900,0..100;1,9..144,300..900,0..100&family=Inter:wght@400;500;600&family=Allura&family=Patrick+Hand&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink:    #100000;
+    --paper:  #FBF7EE;
+    --paper2: #F4EFE2;
+    --sand:   #E0D2B5;
+    --teal:   #47ACA4;
+    --pink:   #FF3990;
+    --yellow: #FFBD59;
+    --plum:   #7A1F4A;
+    --muted:  #7A736B;
+
+    /* A3 landscape at 96 dpi ≈ 1587 × 1123px; we design at these px values */
+    --w: 1587px;
+    --h: 1123px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #888;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 32px;
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Screen-preview wrapper — scaled to fit viewport */
+  .canvas-outer {
+    width: var(--w);
+    height: var(--h);
+    transform-origin: top center;
+    /* JS sets transform: scale() */
+    box-shadow: 0 12px 64px rgba(0,0,0,0.45);
+  }
+
+  /* ─── The actual canvas ─────────────────────────── */
+  .canvas {
+    width: var(--w);
+    height: var(--h);
+    background: var(--paper);
+    color: var(--ink);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* ── Header ── */
+  .canvas-header {
+    background: var(--plum);
+    color: var(--paper);
+    padding: 20px 40px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+  .canvas-header .eyebrow {
+    font-family: 'Inter';
+    font-size: 9px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    opacity: 0.7;
+    margin-bottom: 4px;
+  }
+  .canvas-header .module-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 26px;
+    line-height: 1;
+    letter-spacing: -0.01em;
+  }
+  .canvas-header .module-title em {
+    font-style: italic;
+    opacity: 0.75;
+  }
+  .canvas-header-right {
+    text-align: right;
+  }
+  .canvas-header .tagline {
+    font-family: 'Fraunces', serif;
+    font-size: 12px;
+    font-variation-settings: "SOFT" 60, "opsz" 144;
+    font-style: italic;
+    opacity: 0.8;
+    margin-bottom: 6px;
+  }
+  .canvas-header .brand {
+    font-family: 'Allura', cursive;
+    font-size: 22px;
+    opacity: 0.9;
+    line-height: 1;
+  }
+
+  /* ── Color stripe ── */
+  .stripe {
+    height: 4px;
+    background: linear-gradient(90deg,
+      var(--teal) 0 25%, var(--pink) 25% 50%,
+      var(--yellow) 50% 75%, var(--plum) 75% 100%);
+    flex-shrink: 0;
+  }
+
+  /* ── Grid body ── */
+  .canvas-body {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr;
+    gap: 0;
+    min-height: 0;
+  }
+
+  /* ── Each zone ── */
+  .zone {
+    border-right: 1px solid var(--ink);
+    display: flex;
+    flex-direction: column;
+    padding: 22px 24px 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .zone:last-child { border-right: none; }
+
+  .zone-accent {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+  }
+
+  .zone-number {
+    font-family: 'Inter';
+    font-size: 9px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .zone-number::before {
+    content: '';
+    display: inline-block;
+    width: 18px; height: 1px;
+    background: currentColor;
+  }
+
+  .zone-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    margin-bottom: 4px;
+  }
+  .zone-title em { font-style: italic; }
+
+  .zone-prompt {
+    font-family: 'Fraunces', serif;
+    font-size: 11px;
+    font-variation-settings: "SOFT" 50, "opsz" 144;
+    color: var(--muted);
+    line-height: 1.45;
+    margin-bottom: 14px;
+  }
+
+  /* Writing lines */
+  .lines {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 0;
+  }
+  .line {
+    border-bottom: 1px solid var(--sand);
+    height: 28px;
+    flex-shrink: 0;
+  }
+  .line-label {
+    font-family: 'Patrick Hand', cursive;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    padding-bottom: 3px;
+    margin-top: 14px;
+    border-bottom: 1px solid var(--ink);
+  }
+  .line-label:first-child { margin-top: 0; }
+
+  /* Dot grid */
+  .dot-grid {
+    flex: 1;
+    background-image: radial-gradient(circle, var(--sand) 1px, transparent 1px);
+    background-size: 14px 14px;
+    background-position: 0 0;
+    border: 1px solid var(--sand);
+    min-height: 60px;
+    margin-top: 8px;
+  }
+
+  /* Pull quote decoration */
+  .pull-quote {
+    font-family: 'DM Serif Display', serif;
+    font-size: 13px;
+    font-style: italic;
+    line-height: 1.4;
+    color: var(--plum);
+    padding: 10px 14px;
+    border-left: 2px solid var(--plum);
+    margin: 10px 0 12px;
+    background: rgba(122,31,74,0.04);
+  }
+
+  /* 5-sentence labeled rows */
+  .sentence-rows { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+  .sentence-row {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+  .sentence-label {
+    font-family: 'Patrick Hand', cursive;
+    font-size: 9.5px;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    text-transform: uppercase;
+    padding-bottom: 3px;
+    margin-top: 12px;
+  }
+  .sentence-line {
+    border-bottom: 1px solid var(--ink);
+    height: 22px;
+  }
+  .sentence-line-2 {
+    border-bottom: 1px dashed var(--sand);
+    height: 19px;
+  }
+
+  /* Pattern / entry style (reused for 90-day focus areas) */
+  .pattern-entry { margin-bottom: 12px; }
+  .pattern-entry:last-of-type { margin-bottom: 0; }
+  .pattern-entry .p-label {
+    font-family: 'Patrick Hand', cursive;
+    font-size: 9.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+  .pattern-entry .p-line { border-bottom: 1px solid var(--ink); height: 20px; }
+  .pattern-entry .p-line-sub { border-bottom: 1px dashed var(--sand); height: 16px; }
+
+  /* Sub-zone headers for the Life OS zone (three stacked sub-sections) */
+  .sub-zone { margin-bottom: 12px; }
+  .sub-zone:last-child { margin-bottom: 0; }
+  .sub-zone-head {
+    display: flex; align-items: baseline; justify-content: space-between;
+    border-bottom: 1px solid var(--ink);
+    padding-bottom: 3px; margin-bottom: 6px;
+  }
+  .sub-zone-title {
+    font-family: 'Inter'; font-weight: 600; font-size: 9.5px;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink);
+  }
+  .sub-zone-outcome {
+    font-family: 'DM Serif Display', serif; font-style: italic;
+    font-size: 10px; color: var(--plum);
+  }
+  .sub-zone .mini-line { border-bottom: 1px dashed var(--sand); height: 15px; }
+
+  /* ── Takeaway strip ── */
+  .takeaway {
+    border-top: 1px solid var(--ink);
+    background: var(--paper2);
+    padding: 12px 40px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex-shrink: 0;
+  }
+  .takeaway-label {
+    font-family: 'Inter';
+    font-size: 9px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: var(--plum);
+    font-weight: 600;
+  }
+  .takeaway-line {
+    flex: 1;
+    border-bottom: 1.5px solid var(--plum);
+  }
+  .takeaway-sig {
+    font-family: 'Allura', cursive;
+    font-size: 17px;
+    color: var(--muted);
+    white-space: nowrap;
+    line-height: 1;
+  }
+
+  /* ── Screen print button ── */
+  .print-bar {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: rgba(16,0,0,0.85);
+    color: #FBF7EE;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    padding: 14px;
+    font-family: 'Inter';
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+  .print-bar button {
+    background: var(--plum);
+    color: #FBF7EE;
+    border: none;
+    padding: 10px 24px;
+    font-family: 'Inter';
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  .print-bar button:hover { background: #5a1636; }
+  .print-bar a {
+    color: var(--sand);
+    text-decoration: none;
+    opacity: 0.7;
+  }
+  .print-bar a:hover { opacity: 1; }
+
+  /* ── PRINT ── */
+  @media print {
+    @page { size: A3 landscape; margin: 0; }
+    html, body {
+      width: 420mm; height: 297mm;
+      margin: 0; padding: 0;
+      overflow: hidden;
+      background: none;
+      display: block;
+    }
+    .canvas-outer {
+      transform: none !important;
+      width: 420mm; height: 297mm;
+      box-shadow: none;
+      page-break-after: avoid;
+    }
+    .canvas {
+      width: 420mm; height: 297mm;
+      overflow: hidden;
+    }
+    .print-bar { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="canvas-outer" id="canvasOuter">
+  <div class="canvas">
+
+    <!-- Header -->
+    <div class="canvas-header">
+      <div>
+        <div class="eyebrow">Design to Me · Module 12 · Final module</div>
+        <div class="module-title">Next Chapter &amp; <em>Life OS</em></div>
+      </div>
+      <div class="canvas-header-right">
+        <div class="tagline">"Your next chapter is a design project — and it needs a system to run on."</div>
+        <div class="brand">frankly human.</div>
+      </div>
+    </div>
+
+    <div class="stripe"></div>
+
+    <!-- 4-zone grid -->
+    <div class="canvas-body">
+
+      <!-- Zone 1: Chapter Map -->
+      <div class="zone">
+        <div class="zone-accent" style="background:var(--teal);"></div>
+        <div class="zone-number">01 · Chapter Map</div>
+        <div class="zone-title">Your Next <em>Chapter</em></div>
+        <p class="zone-prompt">Every new chapter is built from the same four moves. Name your chapter title, then map what you're leaving, carrying, inviting, and building.</p>
+        <div class="lines">
+          <div class="line-label">My chapter title is…</div>
+          <div class="line"></div>
+          <div class="line-label">Leaving behind…</div>
+          <div class="line"></div>
+          <div class="line-label">Carrying forward…</div>
+          <div class="line"></div>
+          <div class="line-label">Inviting in…</div>
+          <div class="line"></div>
+          <div class="line-label">Building toward…</div>
+          <div class="line"></div>
+        </div>
+      </div>
+
+      <!-- Zone 2: 90-Day Plan -->
+      <div class="zone">
+        <div class="zone-accent" style="background:var(--yellow);"></div>
+        <div class="zone-number">02 · 90-Day Plan</div>
+        <div class="zone-title">Small Enough<br>to Be <em>Real</em></div>
+        <p class="zone-prompt">Three focus areas. Clear goals. Actionable steps. Design within your real constraints — not against them.</p>
+
+        <div class="pattern-entry">
+          <div class="p-label">Focus area 1 — goal</div>
+          <div class="p-line"></div>
+          <div class="p-line-sub"></div>
+        </div>
+        <div class="pattern-entry">
+          <div class="p-label">Focus area 2 — goal</div>
+          <div class="p-line"></div>
+          <div class="p-line-sub"></div>
+        </div>
+        <div class="pattern-entry">
+          <div class="p-label">Focus area 3 — goal</div>
+          <div class="p-line"></div>
+          <div class="p-line-sub"></div>
+        </div>
+
+        <div class="dot-grid" style="flex:1; margin-top:10px;"></div>
+      </div>
+
+      <!-- Zone 3: Life OS (principles + rituals + non-negotiables) -->
+      <div class="zone">
+        <div class="zone-accent" style="background:var(--pink);"></div>
+        <div class="zone-number">03 · Life OS</div>
+        <div class="zone-title">Compass, <em>Anchors,</em><br>Edges</div>
+        <p class="zone-prompt">The system that sustains the chapter. Not a plan — a way of operating.</p>
+
+        <div class="sub-zone">
+          <div class="sub-zone-head">
+            <span class="sub-zone-title">Principles</span>
+            <span class="sub-zone-outcome">compass</span>
+          </div>
+          <div class="mini-line"></div>
+          <div class="mini-line"></div>
+          <div class="mini-line"></div>
+        </div>
+
+        <div class="sub-zone">
+          <div class="sub-zone-head">
+            <span class="sub-zone-title">Rituals</span>
+            <span class="sub-zone-outcome">consistency</span>
+          </div>
+          <div class="mini-line"></div>
+          <div class="mini-line"></div>
+          <div class="mini-line"></div>
+        </div>
+
+        <div class="sub-zone" style="flex:1;">
+          <div class="sub-zone-head">
+            <span class="sub-zone-title">Non-negotiables</span>
+            <span class="sub-zone-outcome">integrity</span>
+          </div>
+          <div class="mini-line"></div>
+          <div class="mini-line"></div>
+          <div class="mini-line"></div>
+        </div>
+      </div>
+
+      <!-- Zone 4: Personal Manifesto -->
+      <div class="zone">
+        <div class="zone-accent" style="background:var(--plum);"></div>
+        <div class="zone-number">04 · Manifesto</div>
+        <div class="zone-title">Your <em>Manifesto</em></div>
+        <p class="zone-prompt">A declaration, not a summary. The anchor you return to on the hard days.</p>
+
+        <div class="pull-quote">"This is yours now."</div>
+
+        <div class="sentence-rows">
+          <div class="sentence-row">
+            <div class="sentence-label">What I stand for…</div>
+            <div class="sentence-line"></div>
+            <div class="sentence-line-2"></div>
+          </div>
+          <div class="sentence-row">
+            <div class="sentence-label">What I refuse to shrink for…</div>
+            <div class="sentence-line"></div>
+            <div class="sentence-line-2"></div>
+          </div>
+          <div class="sentence-row">
+            <div class="sentence-label">What I'm building toward…</div>
+            <div class="sentence-line"></div>
+            <div class="sentence-line-2"></div>
+          </div>
+          <div class="sentence-row">
+            <div class="sentence-label">What I'm done carrying…</div>
+            <div class="sentence-line"></div>
+            <div class="sentence-line-2"></div>
+          </div>
+          <div class="sentence-row">
+            <div class="sentence-label">What my life gets to feel like now…</div>
+            <div class="sentence-line"></div>
+            <div class="sentence-line-2"></div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /canvas-body -->
+
+    <!-- Takeaway strip -->
+    <div class="takeaway">
+      <div class="takeaway-label">The chapter I'm choosing →</div>
+      <div class="takeaway-line"></div>
+      <div class="takeaway-sig">frankly human.</div>
+    </div>
+
+  </div><!-- /canvas -->
+</div><!-- /canvas-outer -->
+
+<!-- Screen UI -->
+<div class="print-bar">
+  <a href="12-next-chapter-and-life-os.html">← Back to module</a>
+  <span>Module 12 · Next Chapter &amp; Life OS — A3 Canvas</span>
+  <button onclick="window.print()">Print A3 →</button>
+</div>
+
+<script>
+  function scaleCanvas() {
+    var outer = document.getElementById('canvasOuter');
+    var vw = window.innerWidth - 64;
+    var scale = Math.min(1, vw / 1587);
+    outer.style.transform = 'scale(' + scale + ')';
+    // Keep the body height accurate so the print bar doesn't overlap
+    outer.parentElement.style.paddingBottom = '72px';
+  }
+  scaleCanvas();
+  window.addEventListener('resize', scaleCanvas);
+</script>
+</body>
+</html>

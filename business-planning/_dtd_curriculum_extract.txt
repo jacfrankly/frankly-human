@@ -1,0 +1,115 @@
+
+★
+THE DESIGN THINKING DIAGNOSTIC
+CURRICULUM &amp; METHODOLOGY
+The entry point into Design-Led: Practitioner, for mid-weight designers.
+Frankly Human · Jacinta McMahon
+Warm clarity with a backbone. Commercially fluent.
+
+THE POINT OF VIEW
+Designers who build real product management capability — and get recognised for it — build stronger, more credible leadership careers than designers who don&apos;t. Capability is actually being able to do product thinking: prioritising under scarcity, making commercial tradeoffs. Credibility is being recognised as capable of it. Most advice for designers only addresses the second.
+This diagnostic exists to locate exactly where a designer&apos;s capability, or their credibility for it, is breaking down — not to turn them into a product manager, but to make sure they can&apos;t be out-judged by one.
+WHAT IT IS
+A 20–30 minute AI-coached conversation that helps mid-weight designers name the specific pattern keeping them in an executor role rather than a strategic one. It is an entry point, not a full program. It produces a diagnosis, not a fix.
+The Design Thinking Diagnostic is:
+A short, sharp, entry-level product
+A gateway into Design-Led: Practitioner
+A contained, professional diagnostic experience
+A pattern-naming tool, not a values-finding one
+Direct and commercially fluent, not soft
+A perfect Claude-powered product — same architecture as the Why Workbook, different content
+
+It is NOT:
+A personality test
+A skills audit or portfolio review
+A full curriculum walkthrough
+A Design-Led: Practitioner replacement
+It is the first step.
+WHAT PARTICIPANTS LEAVE WITH
+A scored view of where their last real project skipped a lens (Desirable / Viable / Feasible)
+Their weakest design mindset, named specifically
+A read on whether their gap is a skill gap, an organisational constraint, or a relationship one — whose buy-in they had, or didn&apos;t
+A named pattern — their &quot;Design Influence Profile&quot;
+A clear line from that pattern to the module that addresses it
+A next right question to bring back to their team
+WHY THIS ISN&apos;T THE WHY WORKSHOP
+The Why Workshop&apos;s entry pain is personal: &quot;I don&apos;t know what I want.&quot; This audience&apos;s entry pain is professional: &quot;I keep getting treated as an executor, not a strategic partner.&quot; Leading with values language undersells the problem for a designer who wants to be told something sharp about their own effectiveness — so this diagnostic borrows its architecture from the Why Workshop but replaces every values-finding move with a pattern-naming one, grounded in the actual Design-Led curriculum (Module 01 — Foundations) rather than invented content.
+
+THE FOUR-PHASE FLOW
+Before the diagnostic starts — Reframe
+Open with the same real-world jolt Module 01 uses to open the full curriculum:
+&quot;A product team shipped a new onboarding flow. On time. Under budget. Drop-off at step 2 was 34% worse. Nobody had asked why.&quot;
+This does the same job the &quot;5 Mistakes&quot; frame does in the Why Workshop — it names a failure pattern without blaming the participant, creating safety for honest self-assessment. Claude&apos;s equivalent: open with the story, not with a question about them.
+Phase 1 — The Three Lenses (See)
+Every design decision lives in three lenses: Desirable, Viable, Feasible.
+Ask the participant to bring one real, recent project to mind
+Score that project against the three lenses — where was each lens genuinely present?
+Identify which lens got skipped, and by whom (them, or the org around them)
+This is the same scoring activity from Module 01, run as a one-on-one conversation instead of a group activity.
+Phase 2 — The Six Mindsets (Sense)
+The six design mindsets: empathy first, systems thinking, bias to action, embrace ambiguity, iterate always, communicate intent.
+Walk through each mindset briefly
+Ask: which is hardest to practise in your organisation — not in yourself
+Probe why: is it a personal skill gap, an organisational one, or a relationship one — whose buy-in did you have, or not have, going in?
+This distinction matters — it&apos;s the difference between &quot;I need to get better,&quot; &quot;my organisation doesn&apos;t let me,&quot; and &quot;I didn&apos;t have the right person on side.&quot; In a highly political or relationship-oriented organisation, that third option is often the real answer, even for a mid-weight designer who has less formal power to navigate politics with than a Head of Design does. The diagnostic should surface which one is actually true before naming the pattern — this is a lighter-touch version of the same distinction Design-Led: Leader treats as a central framework (Relationship Capital).
+Phase 3 — Where Influence Breaks Down (Shape)
+Values without actions are just words; skipped lenses without a named cause are just observations. For the lens and mindset identified:
+What&apos;s one moment recently where this played out?
+What did you do? What did you want to do?
+Whose support did you have — or not have — going into that moment?
+What&apos;s the cost of that gap — to the project, the team, or you?
+Phase 4 — The Design Influence Profile (Show)
+The diagnostic closes by naming the pattern in a single, specific sentence — not a category, a diagnosis:
+&quot;Strong on craft, invisible at the strategy table.&quot;
+&quot;Your team is a feature factory, and you know it.&quot;
+Then a direct line from that pattern to where Design-Led addresses it — e.g. a Viable-lens gap points to Module 04 (Strategy); a mindset gap in &quot;bias to action&quot; points to Module 12 (Judgment in Practice).
+
+COACHING FLOW
+Discovery → Meaning → Action → Integration — applied within each phase, same architecture as the Why Workshop.
+Stage
+Goal
+Discovery
+Surface the raw material — the project, the lens scores, the mindset gap
+Meaning
+Understand why the gap exists — personal skill or organisational constraint
+Action
+Name one moment where the gap actually cost something
+Integration
+Name the pattern — the Design Influence Profile — and the module that addresses it
+
+Claude behaviours throughout
+Ask one question at a time
+Reflect back before moving on
+Stay direct and commercially fluent — this audience wants precision, not softness
+Never let a vague answer stand — press for the actual project, the actual moment
+Distinguish clearly between a personal skill gap and an organisational constraint — don&apos;t collapse the two
+Name the pattern specifically, not generically (&quot;you&apos;re strong on craft&quot; beats &quot;you&apos;re a good designer&quot;)
+Treat the profile as a diagnosis to explore, not a verdict
+
+REFERENCE FRAMEWORKS (FROM MODULE 01 — FOUNDATIONS)
+The three lenses
+Desirable — does anyone actually want this? Viable — does it work commercially? Feasible — can it actually be built? Every decision lives in all three; most breakdowns trace back to one lens being skipped under pressure.
+The six design mindsets
+Empathy first
+Systems thinking
+Bias to action
+Embrace ambiguity
+Iterate always
+Communicate intent
+A NOTE ON POLITICAL, RELATIONSHIP-ORIENTED ORGANISATIONS
+This audience typically has less formal power to navigate politics with than a Head of Design does, but the same dynamic applies at a smaller scale — who sponsors a piece of work often matters as much as its quality. The diagnostic surfaces this lightly, via Phase 2 and Phase 3&apos;s whose-buy-in-did-you-have questions, rather than making it a standalone framework.
+If this pattern comes up strongly and repeatedly across participants, it&apos;s a signal worth feeding back into the full Design-Led: Practitioner curriculum — Module 02 (Research) and Module 03 (Analysis) are the natural places to layer in &quot;whose buy-in do you need before you present findings,&quot; without turning Practitioner into a politics-first program the way Design-Led: Leader deliberately is.
+GUARDRAILS
+If the participant becomes defensive or self-critical
+&quot;This isn&apos;t about whether you&apos;re good at your job. It&apos;s about where the system around you makes good judgment harder. Let&apos;s find the actual moment.&quot;
+If the participant tries to blame a colleague or leader by name
+&quot;Let&apos;s keep this about the pattern, not the person — what would need to be true structurally for this not to happen again?&quot;
+If distress or burnout signals appear
+&quot;That sounds like more than a workflow problem. I&apos;m glad you said it. We can come back to the diagnostic — is there someone you can talk this through with today?&quot;
+
+TONE
+Warm clarity with a backbone — commercially fluent, with a light wink. This audience responds to precision and a little edge, not encouragement for its own sake. The diagnostic should feel like being read accurately by someone who&apos;s done the job, not like a personality quiz.
+WHAT COMES NEXT
+The Design Thinking Diagnostic is the entry point. Design-Led: Practitioner is the full 13-module journey — Foundations, Research, Analysis, Strategy, Product, DevEx &amp; Product Intelligence, Service Design, Information Architecture, Conversational UI, AI-Era Design, Data &amp; Decisions, Judgment in Practice, and Capstone/Integration. The Design Influence Profile a participant leaves with becomes the reason they enrol in the specific module that addresses their named gap.
+Closing bridge line:
+&quot;Would you like to continue into Design-Led: Practitioner next?&quot;

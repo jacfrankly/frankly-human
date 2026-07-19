@@ -1,0 +1,105 @@
+
+★
+THE DESIGN LEADERSHIP DIAGNOSTIC
+CURRICULUM &amp; METHODOLOGY
+The entry point into Design-Led: Leader, for Heads of Design and senior design leaders.
+Frankly Human · Jacinta McMahon
+Paid diagnostic — $500
+
+A note before this doc: unlike the Practitioner diagnostic, Design-Led: Leader doesn&apos;t have a built curriculum yet — the practitioner-level material exists, but the leader-level content was identified as a gap still to be developed. The framework below is a proposed starting point, built to match the tone and architecture of what&apos;s already working, not a translation of existing material. Treat it as a draft to pressure-test, not a finished spec.
+WHAT IT IS
+A 20–30 minute AI-coached conversation (or paid 1:1 intake) that helps senior design leaders name the specific organisational pattern keeping their function positioned as a service department rather than a function that shapes how the business thinks. It is an entry point, not a full program. It produces a diagnosis, not a fix.
+The Design Leadership Diagnostic is:
+A short, sharp, paid entry-level product ($500 — priced to signal seriousness, not a free lead magnet)
+A gateway into Design-Led: Leader
+A contained, executive-level diagnostic experience
+A pattern-naming tool scoped to organisational power, not project judgment
+Direct, commercially fluent, unflinching about politics
+
+It is NOT:
+A leadership style quiz
+A 360-degree feedback tool
+A substitute for executive coaching
+A Design-Led: Leader replacement
+It is the first step.
+WHAT PARTICIPANTS LEAVE WITH
+A clear read on where their real organisational influence sits today, across three levers
+The specific leadership trap they&apos;re caught in, named
+A named pattern — their &quot;Leadership Influence Profile&quot;
+A clear line from that pattern to what Design-Led: Leader would address
+A next right conversation to have with their own leadership
+HOW THIS DIFFERS FROM THE PRACTITIONER DIAGNOSTIC
+The Practitioner diagnostic asks: where did a project&apos;s judgment break down? This diagnostic asks a level up: why does the design function itself keep losing the room? The audience isn&apos;t asking &quot;am I good at my job&quot; — they&apos;re asking &quot;why does the business still treat design as something to be managed, not something that shapes strategy.&quot; The tone should carry more weight and less warmth-first framing than the Practitioner version — this audience wants to be taken seriously, fast.
+
+THE FOUR-PHASE FLOW
+Before the diagnostic starts — Reframe
+Open with an organisational-power story rather than a project-failure story:
+&quot;A Head of Design spent eighteen months building a design system the company actually used. Adoption: 90%. Engineering loved it. Then the company set its three-year strategy — and no one thought to ask her into the room.&quot;
+This does the same job the onboarding-flow story does for the Practitioner diagnostic, but the failure is about organisational position, not project quality — the work was excellent and it still didn&apos;t buy a seat at the table.
+Phase 1 — The Three Levers of Influence (See)
+Proposed framework — organisational influence tends to run through three levers:
+Budget authority — do you control or meaningfully shape spend, not just execute against someone else&apos;s?
+Roadmap influence — is design shaping what gets built next, or reacting to a roadmap set elsewhere?
+Executive trust — are you in the room when strategy is actually decided, not briefed on it afterward?
+Ask the participant to score their function honestly against each lever, with one recent example per lever.
+Phase 2 — The Leadership Traps (Sense)
+Proposed named patterns senior design leaders fall into:
+The Service Department Trap — design is brought in to execute a decision already made elsewhere
+The Feature Factory Manager — measured on velocity and output, not outcomes or strategic contribution
+The Silent Expert — has the strategic opinion, but has learned not to offer it uninvited
+Ask which trap feels most true, and probe: is this something the organisation is doing to them, or something they&apos;ve started doing to themselves after enough rounds of being overlooked?
+Phase 3 — Where the Room Was Lost (Shape)
+For the lever and trap identified:
+What&apos;s one specific meeting or decision you weren&apos;t in, that you should have been?
+What did you do when you found out? What did you want to do?
+What did that cost — the decision&apos;s quality, your team&apos;s standing, or your own trajectory?
+Phase 4 — The Leadership Influence Profile (Show)
+The diagnostic closes by naming the pattern specifically:
+&quot;You&apos;ve built the credibility. You haven&apos;t been given the room.&quot;
+&quot;Your team executes brilliantly and gets consulted last.&quot;
+Then a direct line from that pattern to what Design-Led: Leader would need to cover — e.g. a budget-authority gap points toward commercial fluency and business-case-building content; an executive-trust gap points toward stakeholder positioning and the language of influence.
+
+COACHING FLOW
+Discovery → Meaning → Action → Integration — same architecture as the Practitioner diagnostic and the Why Workshop, with more weight given to organisational, not personal, framing.
+Stage
+Goal
+Discovery
+Surface the raw material — the lever scores, the trap, the specific meeting missed
+Meaning
+Understand why the gap exists — political, structural, or self-imposed
+Action
+Name one moment where the gap actually cost something concrete
+Integration
+Name the pattern — the Leadership Influence Profile — and the direction Design-Led: Leader takes
+
+Claude / facilitator behaviours throughout
+Skip the warm-up — this audience wants precision fast, not permission to begin
+Ask one question at a time, but expect denser answers — let them go long
+Never let &quot;politics&quot; or &quot;culture&quot; stand as an unexamined answer — press for the specific mechanism
+Distinguish clearly between what the organisation is withholding and what the leader has stopped asking for
+Name the pattern specifically and with some edge — this audience will discount anything that sounds like generic leadership-coaching language
+Treat the profile as a diagnosis to act on, not a verdict to sit with
+
+PROPOSED FRAMEWORKS — FOR VALIDATION
+These frameworks are new, built to match Design-Led&apos;s tone. Before this ships, they need pressure-testing against your own experience of what actually determines whether a design leader gets the room.
+The three levers of influence
+Budget authority, roadmap influence, executive trust. Worth checking: are these the right three, or is there a fourth (e.g. board/investor visibility) that matters more in the contexts your clients operate in?
+The three leadership traps
+The Service Department Trap
+The Feature Factory Manager
+The Silent Expert
+Worth checking against real client stories — do these match the patterns you actually see in Heads of Design you&apos;ve worked with, or are there sharper, more specific traps to name instead?
+GUARDRAILS
+If the participant becomes cynical or defeated (&quot;nothing will ever change here&quot;)
+&quot;That might be true of this organisation. It&apos;s worth knowing whether it&apos;s the organisation or the approach — let&apos;s look at one specific moment before we decide which.&quot;
+If the participant wants to name and blame a specific executive
+&quot;Let&apos;s stay with the pattern — what would need to be true structurally for you to be in that room next time?&quot;
+If distress or burnout signals appear
+&quot;That sounds like it&apos;s costing you more than a seat at a table. I&apos;m glad you said it. Is there someone you can talk this through with today?&quot;
+
+TONE
+Warm clarity with a backbone — but pitched higher than the Practitioner diagnostic. Less &quot;let&apos;s explore this together,&quot; more &quot;here&apos;s what I see, tell me if I&apos;m wrong.&quot; This audience has spent years being managed gently around the edges of hard conversations; the diagnostic should be the opposite of that.
+WHAT COMES NEXT
+The Design Leadership Diagnostic is the entry point. Design-Led: Leader — group program ($5,000) and executive coaching ($15,000) — is the full offer, with corporate cohort licensing ($25,000–$50,000) as the highest-ceiling revenue line. Unlike Practitioner, there is no self-paced version: this audience needs structured cohort delivery and corporate buyers need accountability mechanisms.
+Closing bridge line:
+&quot;Would you like to talk about what Design-Led: Leader could do for your seat at the table?&quot;

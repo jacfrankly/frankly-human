@@ -1,0 +1,634 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Design-Led: Leader — Curriculum Overview · Frankly Human</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..900,0..100;1,9..144,300..900,0..100&family=Inter:wght@400;500;600&family=Allura&family=Patrick+Hand&display=swap" rel="stylesheet">
+<style>
+/* =====================================================================
+   DESIGN-LED: LEADER — Curriculum Overview
+   Palette: Ink · Paper · Teal · Pink · Yellow · Plum
+   Track accent: Plum (--plum-text) · Title/close slides: Pink
+   ===================================================================== */
+
+:root {
+  --ink:      #100000;
+  --charcoal: #423B3B;
+  --paper:    #FBF7EE;
+  --paper-2:  #F4EFE2;
+  --sand:     #E0D2B5;
+  --teal:     #47ACA4;
+  --pink:     #FF3990;
+  --yellow:   #FFBD59;
+  --plum:     #7A1F4A;
+  --muted:    #5E584F;
+  --teal-text: #1F6E67;
+  --pink-text: #C40060;
+  --plum-text: #6B1B41;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: 'Inter', sans-serif;
+  font-size: 16px; line-height: 1.55;
+  background: var(--paper); color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* TOPBAR */
+.topbar {
+  position: sticky; top: 0;
+  background: var(--paper);
+  border-bottom: 1px solid rgba(16,0,0,0.12);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 48px; height: 56px;
+  z-index: 50;
+}
+.topbar-brand {
+  font-family: 'DM Serif Display', serif;
+  font-size: 18px; letter-spacing: -0.01em;
+  text-decoration: none; color: var(--ink);
+}
+.topbar-brand em { font-style: italic; color: var(--plum-text); }
+.topbar-right { display: flex; align-items: center; gap: 24px; }
+.topbar-link {
+  font-family: 'Inter'; font-size: 10px;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--muted); text-decoration: none;
+  transition: color 0.15s;
+}
+.topbar-link:hover { color: var(--ink); }
+.topbar-cta {
+  font-family: 'Inter'; font-size: 10px;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--ink); text-decoration: none;
+  border: 1px solid var(--ink); padding: 6px 16px;
+  transition: background 0.15s, color 0.15s;
+}
+.topbar-cta:hover { background: var(--ink); color: var(--paper); }
+
+.stripe-bar {
+  height: 5px;
+  background: linear-gradient(90deg,
+    var(--teal) 0 25%, var(--pink) 25% 50%,
+    var(--yellow) 50% 75%, var(--plum) 75% 100%);
+}
+
+/* HERO */
+.hero {
+  background: var(--ink); color: var(--paper);
+  padding: 88px 72px 80px;
+  position: relative; overflow: hidden;
+  min-height: 70vh;
+  display: flex; flex-direction: column; justify-content: center;
+}
+.hero-eyebrow {
+  font-family: 'Inter'; font-size: 10px;
+  letter-spacing: 0.24em; text-transform: uppercase;
+  color: rgba(251,247,238,0.5);
+  display: flex; align-items: center; gap: 14px;
+  margin-bottom: 20px;
+}
+.hero-eyebrow::before {
+  content: ''; width: 28px; height: 1px;
+  background: var(--pink); flex-shrink: 0;
+}
+.hero-sig {
+  font-family: 'Allura', cursive;
+  font-size: 32px; color: rgba(251,247,238,0.55);
+  display: block; transform: rotate(-2deg);
+  transform-origin: left; margin-bottom: 12px; line-height: 1;
+}
+.hero-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(56px, 10vw, 128px);
+  line-height: 0.9; letter-spacing: -0.02em;
+  margin: 0 0 28px;
+}
+.hero-title em { font-style: italic; color: var(--pink); }
+.hero-desc {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(17px, 2vw, 22px); line-height: 1.6;
+  font-variation-settings: "SOFT" 50, "opsz" 144;
+  color: rgba(251,247,238,0.82);
+  max-width: 700px; margin: 0 0 48px;
+}
+.hero-desc em { font-style: italic; color: var(--pink); }
+.hero-stats { display: flex; gap: 48px; flex-wrap: wrap; }
+.hero-stat { display: flex; flex-direction: column; gap: 4px; }
+.hero-stat-n {
+  font-family: 'DM Serif Display', serif;
+  font-size: 40px; line-height: 1; color: var(--paper);
+}
+.hero-stat-l {
+  font-family: 'Inter'; font-size: 9px;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: rgba(251,247,238,0.45);
+}
+.hero-blob-1 {
+  position: absolute; right: -80px; top: -60px;
+  width: 520px; height: 520px; border-radius: 50% 40% 55% 45%;
+  background: rgba(255,57,144,0.1);
+  pointer-events: none;
+}
+.hero-blob-2 {
+  position: absolute; right: 120px; bottom: -100px;
+  width: 360px; height: 360px; border-radius: 40% 55% 45% 50%;
+  background: rgba(122,31,74,0.14);
+  pointer-events: none;
+}
+.hero-content { position: relative; z-index: 1; max-width: 1200px; }
+
+/* CLAIM BAND */
+.claim-band {
+  background: var(--plum); color: var(--paper);
+  padding: 52px 72px;
+}
+.claim-band-inner {
+  max-width: 1200px; margin: 0 auto;
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 64px; align-items: start;
+}
+.claim-heading {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(32px, 4vw, 52px);
+  line-height: 1; letter-spacing: -0.01em;
+  margin: 0 0 20px;
+}
+.claim-heading em { font-style: italic; color: var(--yellow); }
+.claim-body {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(15px, 1.6vw, 18px); line-height: 1.65;
+  font-variation-settings: "SOFT" 50, "opsz" 144;
+  color: rgba(251,247,238,0.85);
+  margin: 0 0 16px;
+}
+.claim-rule {
+  font-family: 'DM Serif Display', serif; font-style: italic;
+  font-size: clamp(20px, 2.5vw, 30px);
+  line-height: 1.2; color: var(--paper);
+  border-left: 3px solid var(--yellow);
+  padding-left: 20px; margin: 0;
+}
+.who-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0; }
+.who-list li {
+  display: flex; gap: 14px; align-items: baseline;
+  padding: 11px 0; border-bottom: 1px solid rgba(255,255,255,0.1);
+  font-family: 'Fraunces', serif;
+  font-size: clamp(14px, 1.5vw, 17px); line-height: 1.45;
+  font-variation-settings: "SOFT" 50, "opsz" 144;
+  color: rgba(251,247,238,0.82);
+}
+.who-list li::before {
+  content: '—'; font-family: 'Inter'; font-size: 11px;
+  color: var(--yellow); flex-shrink: 0;
+}
+
+/* SECTION WRAPPER */
+.section { padding: 72px 72px; }
+.section-inner { max-width: 1200px; margin: 0 auto; }
+.section-paper  { background: var(--paper); }
+.section-paper2 { background: var(--paper-2); }
+.section-sand   { background: var(--sand); }
+.section-label {
+  font-family: 'Inter'; font-size: 10px;
+  letter-spacing: 0.24em; text-transform: uppercase; color: var(--muted);
+  display: flex; align-items: center; gap: 16px;
+  margin-bottom: 40px;
+}
+.section-label::after { content: ''; flex: 1; height: 1px; background: rgba(16,0,0,0.12); }
+.section-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(36px, 5vw, 64px); line-height: 0.95;
+  letter-spacing: -0.015em; margin: 0 0 20px;
+}
+.section-title em { font-style: italic; color: var(--plum-text); }
+.section-body {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(15px, 1.6vw, 18px); line-height: 1.65;
+  font-variation-settings: "SOFT" 50, "opsz" 144;
+  color: var(--charcoal); max-width: 700px;
+  margin: 0 0 48px;
+}
+
+/* ENTRY POINT CALLOUT */
+.entry-callout {
+  border: 1px solid var(--ink); background: var(--paper-2);
+  padding: 28px 32px; max-width: 760px; margin-top: 8px;
+  display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap;
+}
+.entry-callout-text { font-family: 'Fraunces', serif; font-size: 15px; color: var(--charcoal); font-variation-settings: "SOFT" 50, "opsz" 144; }
+.entry-callout-text strong { color: var(--plum-text); }
+.entry-callout-cta {
+  font-family: 'Inter'; font-size: 10px; font-weight: 600;
+  letter-spacing: 0.14em; text-transform: uppercase; white-space: nowrap;
+  color: var(--plum-text); text-decoration: none;
+}
+
+/* FOUR THREADS */
+.thread-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: rgba(16,0,0,0.1); border: 1px solid rgba(16,0,0,0.1); margin-top: 8px; }
+.thread-card { background: var(--paper); padding: 26px 22px; }
+.thread-num { font-family: 'DM Serif Display', serif; font-style: italic; font-size: 13px; color: var(--plum-text); letter-spacing: 0.02em; margin-bottom: 10px; }
+.thread-title { font-family: 'DM Serif Display', serif; font-size: 21px; line-height: 1.05; letter-spacing: -0.01em; margin: 0 0 10px; }
+.thread-desc { font-family: 'Fraunces', serif; font-size: 13.5px; line-height: 1.55; font-variation-settings: "SOFT" 50, "opsz" 144; color: var(--charcoal); margin: 0; }
+.thread-card.thread-relational { background: var(--paper-2); }
+.thread-card.thread-relational .thread-num { color: var(--pink-text); }
+
+/* THREE TRAPS */
+.trap-list { display: flex; flex-direction: column; gap: 1px; background: rgba(16,0,0,0.1); border: 1px solid rgba(16,0,0,0.1); margin-top: 8px; }
+.trap-row { background: var(--paper); padding: 22px 28px; display: grid; grid-template-columns: 220px 1fr; gap: 24px; align-items: baseline; }
+.trap-name { font-family: 'DM Serif Display', serif; font-size: 19px; font-style: italic; color: var(--plum-text); line-height: 1.2; }
+.trap-desc { font-family: 'Fraunces', serif; font-size: 14.5px; line-height: 1.55; font-variation-settings: "SOFT" 50, "opsz" 144; color: var(--charcoal); }
+@media (max-width: 760px) { .trap-row { grid-template-columns: 1fr; gap: 6px; } }
+
+/* MODULE GRID */
+.curriculum-header {
+  display: flex; align-items: baseline; justify-content: space-between;
+  margin-bottom: 40px; flex-wrap: wrap; gap: 16px;
+}
+.curriculum-count {
+  font-family: 'Inter'; font-size: 10px;
+  letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted);
+}
+.module-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 1px; background: rgba(16,0,0,0.1);
+  border: 1px solid rgba(16,0,0,0.1);
+}
+.module-card {
+  background: var(--paper-2);
+  padding: 28px 26px 24px;
+  text-decoration: none; color: var(--ink);
+  display: flex; flex-direction: column;
+  transition: background 0.15s;
+  position: relative;
+}
+.module-card:hover { background: var(--paper); }
+.module-card.inactive { background: var(--paper-2); opacity: 0.55; cursor: default; }
+.module-card.inactive:hover { background: var(--paper-2); }
+.card-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 14px; }
+.card-num { font-family: 'DM Serif Display', serif; font-style: italic; font-size: 48px; line-height: 0.85; letter-spacing: -0.03em; color: rgba(16,0,0,0.1); }
+.card-tags { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; }
+.card-tag {
+  font-family: 'Inter'; font-size: 8px;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  padding: 3px 8px; border: 1px solid var(--plum-text); color: var(--plum-text);
+}
+.card-equiv {
+  font-family: 'Inter'; font-size: 8px;
+  letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted);
+}
+.card-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(19px, 2vw, 23px); line-height: 1.05;
+  letter-spacing: -0.01em; margin: 0 0 8px;
+}
+.card-title em { font-style: italic; color: var(--plum); }
+.card-tagline {
+  font-family: 'Fraunces', serif; font-style: italic;
+  font-size: 12.5px; line-height: 1.5;
+  font-variation-settings: "SOFT" 50, "opsz" 144;
+  color: var(--muted); margin: 0 0 18px; flex: 1;
+}
+.card-footer {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: auto; padding-top: 14px;
+  border-top: 1px solid rgba(16,0,0,0.07);
+}
+.card-duration { font-family: 'Inter'; font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); }
+.card-cta { font-family: 'Inter'; font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--plum-text); display: flex; align-items: center; gap: 6px; }
+.module-card.inactive .card-cta { color: var(--muted); }
+.card-cta-coming { font-family: 'Inter'; font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); }
+
+/* HOW IT WORKS */
+.how-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; margin-top: 8px; }
+.how-item-num { font-family: 'DM Serif Display', serif; font-style: italic; font-size: 52px; line-height: 0.85; color: rgba(16,0,0,0.08); margin-bottom: 12px; }
+.how-item-title { font-family: 'DM Serif Display', serif; font-size: 22px; letter-spacing: -0.01em; margin: 0 0 8px; }
+.how-item-desc { font-family: 'Fraunces', serif; font-size: 14px; line-height: 1.6; font-variation-settings: "SOFT" 50, "opsz" 144; color: var(--charcoal); margin: 0; }
+
+/* DRAFT NOTICE */
+.draft-notice {
+  background: var(--yellow); color: var(--ink);
+  padding: 14px 72px;
+  font-family: 'Inter'; font-size: 11px; letter-spacing: 0.05em;
+  text-align: center;
+}
+.draft-notice strong { text-transform: uppercase; letter-spacing: 0.14em; }
+
+/* FOOTER */
+footer {
+  background: var(--ink); color: rgba(251,247,238,0.55);
+  padding: 36px 72px;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 16px;
+}
+.footer-brand { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--paper); }
+.footer-brand em { font-style: italic; color: var(--pink); }
+.footer-meta {
+  font-family: 'Inter'; font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase;
+  text-align: right; line-height: 1.9;
+}
+
+/* RESPONSIVE */
+@media (max-width: 960px) {
+  .hero { padding: 64px 36px 56px; }
+  .section { padding: 56px 36px; }
+  .claim-band { padding: 48px 36px; }
+  .claim-band-inner { grid-template-columns: 1fr; gap: 40px; }
+  .module-grid { grid-template-columns: repeat(2, 1fr); }
+  .how-grid { grid-template-columns: 1fr 1fr; }
+  .thread-grid { grid-template-columns: 1fr 1fr; }
+  footer { padding: 28px 36px; }
+  .topbar { padding: 0 28px; }
+  .draft-notice { padding: 14px 36px; }
+}
+@media (max-width: 600px) {
+  .hero { padding: 52px 24px 44px; }
+  .section { padding: 48px 24px; }
+  .claim-band { padding: 40px 24px; }
+  .module-grid { grid-template-columns: 1fr; }
+  .how-grid { grid-template-columns: 1fr; }
+  .thread-grid { grid-template-columns: 1fr; }
+  .hero-stats { gap: 28px; }
+  .topbar { padding: 0 16px; }
+  .topbar-right .topbar-link { display: none; }
+  footer { padding: 24px; flex-direction: column; }
+  .footer-meta { text-align: left; }
+  .draft-notice { padding: 12px 24px; }
+}
+</style>
+</head>
+<body>
+
+<div class="draft-notice"><strong>Draft</strong> — narrative content (stories, activities, quick hits) across this track is placeholder, invented to match Jacinta's voice, and pending review before delivery.</div>
+
+<nav class="topbar">
+  <a href="../../../index.html" class="topbar-brand">design‑led: <em>leader</em></a>
+  <div class="topbar-right">
+    <a href="../../../index.html" class="topbar-link">← Frankly Human Studio</a>
+    <a href="01-business-case-for-design.html" class="topbar-cta">Start Module 01 →</a>
+  </div>
+</nav>
+
+<div class="stripe-bar"></div>
+
+<section class="hero">
+  <div class="hero-blob-1"></div>
+  <div class="hero-blob-2"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">Frankly Human · Jacinta McMahon</div>
+    <span class="hero-sig">for Heads of Design ready to stop being the service department</span>
+    <h1 class="hero-title">Design‑<em>Led</em></h1>
+    <p class="hero-desc">
+      Organisational influence isn't granted by title or earned by craft alone.<br>
+      Across 13 half-day modules, senior design leaders learn to read where<br>
+      their real influence sits, break the trap that's keeping them sidelined,<br>
+      and build the budget authority, roadmap influence, executive trust, and<br>
+      <em>relationship capital</em> that move a design function off the service desk.
+    </p>
+    <div class="hero-stats">
+      <div class="hero-stat"><span class="hero-stat-n">13</span><span class="hero-stat-l">Modules</span></div>
+      <div class="hero-stat"><span class="hero-stat-n">½</span><span class="hero-stat-l">Day per module</span></div>
+      <div class="hero-stat"><span class="hero-stat-n">1</span><span class="hero-stat-l">Companion track: Practitioner</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="claim-band">
+  <div class="claim-band-inner">
+    <div>
+      <h2 class="claim-heading">What Design‑Led: Leader <em>is</em></h2>
+      <p class="claim-body">
+        Design-Led: Leader is a program about organisational influence — the kind that determines whether a design function stays a service department or becomes the function that shapes how the business thinks.
+      </p>
+      <p class="claim-body">
+        It's not a leadership style course. It's not a communications course. It's not Practitioner with more seniority in the room. It's a program about power, structure, and the specific, nameable patterns that keep senior design leaders credible but sidelined.
+      </p>
+      <blockquote class="claim-rule">
+        "The seat at the table now goes to whoever can hold judgment across the whole decision — not defend one discipline's slice of it."
+      </blockquote>
+    </div>
+    <div>
+      <h2 class="claim-heading" style="font-size:clamp(24px,3vw,36px);margin-bottom:16px;">Who it's <em>for</em></h2>
+      <ul class="who-list">
+        <li>Heads of Design and senior design leaders tired of being briefed on decisions after they're made</li>
+        <li>Leaders who have the strategic opinion and have learned not to offer it uninvited</li>
+        <li>Leaders measured on velocity and output, not outcomes or strategy</li>
+        <li>Leaders who want real product-management capability, not just better language for the meeting</li>
+        <li>Anyone ready to name the office politics everyone else pretends aren't part of the job</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<section class="section section-paper">
+  <div class="section-inner">
+    <div class="section-label">The entry point</div>
+    <h2 class="section-title">Start with the <em>diagnostic</em></h2>
+    <p class="section-body">
+      Before the full curriculum, the Design Leadership Diagnostic names the specific lever and trap keeping a leader sidelined — a scored read across the four threads of influence, and a direct line to the module that addresses it.
+    </p>
+    <div class="entry-callout">
+      <p class="entry-callout-text">A 20–30 minute AI-coached or 1:1 paid intake. Produces a <strong>named lever and trap</strong> — a diagnosis, not a fix.</p>
+      <a class="entry-callout-cta" href="#modules">See where it leads ↓</a>
+    </div>
+  </div>
+</section>
+
+<section class="section section-paper2">
+  <div class="section-inner">
+    <div class="section-label">The core claim</div>
+    <h2 class="section-title">Four threads of <em>influence</em></h2>
+    <p class="section-body">
+      Organisational influence runs through four threads. The first three are the ones a rational, well-run organisation responds to. The fourth is the one a political, relationship-oriented organisation responds to whether or not it says so out loud.
+    </p>
+    <div class="thread-grid">
+      <div class="thread-card">
+        <div class="thread-num">01</div>
+        <h3 class="thread-title">Budget <em>Authority</em></h3>
+        <p class="thread-desc">Shaping spend, not just executing against someone else's.</p>
+      </div>
+      <div class="thread-card">
+        <div class="thread-num">02</div>
+        <h3 class="thread-title">Roadmap <em>Influence</em></h3>
+        <p class="thread-desc">Shaping what's next, not reacting to what's already been decided.</p>
+      </div>
+      <div class="thread-card">
+        <div class="thread-num">03</div>
+        <h3 class="thread-title">Executive <em>Trust</em></h3>
+        <p class="thread-desc">Being in the room when strategy is decided, not briefed on it after.</p>
+      </div>
+      <div class="thread-card thread-relational">
+        <div class="thread-num">04 · Relational</div>
+        <h3 class="thread-title">Relationship <em>Capital</em></h3>
+        <p class="thread-desc">Who sponsors you, who owes you, who you owe — and whether that map is current.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section section-paper">
+  <div class="section-inner">
+    <div class="section-label">What keeps leaders stuck</div>
+    <h2 class="section-title">The three <em>traps</em></h2>
+    <p class="section-body">Every module names which thread it strengthens and which trap it helps break.</p>
+    <div class="trap-list">
+      <div class="trap-row">
+        <div class="trap-name">The Service Department Trap</div>
+        <div class="trap-desc">Brought in to execute a decision already made elsewhere.</div>
+      </div>
+      <div class="trap-row">
+        <div class="trap-name">The Feature Factory Manager</div>
+        <div class="trap-desc">Measured on velocity and output, not outcomes or strategy.</div>
+      </div>
+      <div class="trap-row">
+        <div class="trap-name">The Silent Expert</div>
+        <div class="trap-desc">Has the strategic opinion, has learned not to offer it uninvited.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section section-paper2" id="modules">
+  <div class="section-inner">
+    <div class="curriculum-header">
+      <div>
+        <div class="section-label" style="margin-bottom:12px;">The curriculum</div>
+        <h2 class="section-title" style="margin-bottom:0;">13 <em>modules</em></h2>
+      </div>
+      <div class="curriculum-count">13 half-day modules · companion curriculum to Practitioner</div>
+    </div>
+
+    <div class="module-grid">
+      <a class="module-card" href="01-business-case-for-design.html">
+        <div class="card-top"><div class="card-num">01</div><div class="card-tags"><span class="card-tag">Budget · Roadmap · Trust</span><span class="card-equiv">≈ Foundations</span></div></div>
+        <div class="card-title">The Business Case for <em>Design</em></div>
+        <p class="card-tagline">AI compressed execution. It didn't compress judgment — and judgment is where the seat at the table lives now.</p>
+        <div class="card-footer"><span class="card-duration">Half day</span><span class="card-cta">Open module →</span></div>
+      </a>
+
+      <a class="module-card" href="02-research-as-organisational-intelligence.html">
+        <div class="card-top"><div class="card-num">02</div><div class="card-tags"><span class="card-tag">Executive Trust</span><span class="card-equiv">≈ Research</span></div></div>
+        <div class="card-title">Research as Organisational <em>Intelligence</em></div>
+        <p class="card-tagline">Research that only informs screens is underused. Research that moves strategy is a leadership asset.</p>
+        <div class="card-footer"><span class="card-duration">Half day</span><span class="card-cta">Open module →</span></div>
+      </a>
+
+      <a class="module-card" href="03-making-the-insight-undeniable.html">
+        <div class="card-top"><div class="card-num">03</div><div class="card-tags"><span class="card-tag">Silent Expert</span><span class="card-equiv">≈ Analysis</span></div></div>
+        <div class="card-title">Making the Insight <em>Undeniable</em></div>
+        <p class="card-tagline">An insight that doesn't change a decision wasn't really an insight.</p>
+        <div class="card-footer"><span class="card-duration">Half day</span><span class="card-cta">Open module →</span></div>
+      </a>
+
+      <a class="module-card" href="04-owning-the-roadmap.html">
+        <div class="card-top"><div class="card-num">04</div><div class="card-tags"><span class="card-tag">Roadmap · Relational</span><span class="card-equiv">≈ Strategy</span></div></div>
+        <div class="card-title">Owning the <em>Roadmap</em></div>
+        <p class="card-tagline">Reacting to the roadmap and setting it are two different jobs.</p>
+        <div class="card-footer"><span class="card-duration">Half day</span><span class="card-cta">Open module →</span></div>
+      </a>
+
+      <a class="module-card" href="05-service-function-to-product-partner.html">
+        <div class="card-top"><div class="card-num">05</div><div class="card-tags"><span class="card-tag">Service Dept. Trap</span><span class="card-equiv">≈ Product</span></div></div>
+        <div class="card-title">From Service Function to <em>Product Partner</em></div>
+        <p class="card-tagline">Being brought in to execute a decision already made is a structural problem, not a personality one.</p>
+        <div class="card-footer"><span class="card-duration">Half day</span><span class="card-cta">Open module →</span></div>
+      </a>
+
+      <a class="module-card" href="06-investing-in-internal-capability.html">
+        <div class="card-top"><div class="card-num">06</div><div class="card-tags"><span class="card-tag">Budget · Feature Factory</span><span class="card-equiv">≈ DevEx</span></div></div>
+        <div class="card-title">Investing in Internal <em>Capability</em></div>
+        <p class="card-tagline">Nobody funds what they can't see the return on.</p>
+        <div class="card-footer"><span class="card-duration">Half day</span><span class="card-cta">Open module →</span></div>
+      </a>
+
+      <a class="module-card" href="07-systems-level-influence.html">
+        <div class="card-top"><div class="card-num">07</div><div class="card-tags"><span class="card-tag">Relational · Trust</span><span class="card-equiv">≈ Service Design</span></div></div>
+        <div class="card-title">Systems-Level <em>Influence</em></div>
+        <p class="card-tagline">The biggest wins live in the seams between functions nobody owns — and the seams are political.</p>
+        <div class="card-footer"><span class="card-duration">Half day</span><span class="card-cta">Open module →</span></div>
+      </a>
+
+      <a class="module-card" href="08-structuring-how-the-business-decides.html">
+        <div class="card-top"><div class="card-num">08</div><div class="card-tags"><span class="card-tag">Structural</span><span class="card-equiv">≈ IA</span></div></div>
+        <div class="card-title">Structuring How the Business <em>Decides</em></div>
+        <p class="card-tagline">IA thinking doesn't stop at screens. Decisions have structure too.</p>
+        <div class="card-footer"><span class="card-duration">Half day</span><span class="card-cta">Open module →</span></div>
+      </a>
+
+      <a class="module-card" href="09-language-of-influence.html">
+        <div class="card-top"><div class="card-num">09</div><div class="card-tags"><span class="card-tag">Silent Expert · Trust</span><span class="card-equiv">≈ Conversational UI</span></div></div>
+        <div class="card-title">The Language of <em>Influence</em></div>
+        <p class="card-tagline">Language is an interface. So is the way you talk to your own executive team.</p>
+        <div class="card-footer"><span class="card-duration">Half day</span><span class="card-cta">Open module →</span></div>
+      </a>
+
+      <a class="module-card" href="10-leading-through-ai-disruption.html">
+        <div class="card-top"><div class="card-num">10</div><div class="card-tags"><span class="card-tag">Budget · Roadmap</span><span class="card-equiv">≈ AI-Era Design</span></div></div>
+        <div class="card-title">Leading Through AI <em>Disruption</em></div>
+        <p class="card-tagline">Every function is being asked to justify itself against AI. Design is no exception.</p>
+        <div class="card-footer"><span class="card-duration">Half day</span><span class="card-cta">Open module →</span></div>
+      </a>
+
+      <a class="module-card" href="11-metrics-that-win-the-room.html">
+        <div class="card-top"><div class="card-num">11</div><div class="card-tags"><span class="card-tag">Trust · Budget</span><span class="card-equiv">≈ Data &amp; Decisions</span></div></div>
+        <div class="card-title">Metrics That Win the <em>Room</em></div>
+        <p class="card-tagline">The dashboard that makes your case without you in the room is worth more than the meeting you weren't invited to.</p>
+        <div class="card-footer"><span class="card-duration">Half day</span><span class="card-cta">Open module →</span></div>
+      </a>
+
+      <a class="module-card" href="12-executive-decision-hygiene.html">
+        <div class="card-top"><div class="card-num">12</div><div class="card-tags"><span class="card-tag">Relational</span><span class="card-equiv">≈ Judgment in Practice</span></div></div>
+        <div class="card-title">Executive Decision <em>Hygiene</em></div>
+        <p class="card-tagline">The same decision hygiene that improves a product call improves a board call — but it doesn't guarantee it wins.</p>
+        <div class="card-footer"><span class="card-duration">Half day</span><span class="card-cta">Open module →</span></div>
+      </a>
+
+      <a class="module-card" href="13-operating-system-for-design-leadership.html">
+        <div class="card-top"><div class="card-num">13</div><div class="card-tags"><span class="card-tag">Capstone</span><span class="card-equiv">≈ Capstone/Integration</span></div></div>
+        <div class="card-title">The Operating System for Design <em>Leadership</em></div>
+        <p class="card-tagline">Integration is the moment leadership stops being a performance and starts being a practice.</p>
+        <div class="card-footer"><span class="card-duration">Half day</span><span class="card-cta">Open module →</span></div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="section section-sand">
+  <div class="section-inner">
+    <div class="section-label">How it works</div>
+    <h2 class="section-title" style="margin-bottom:48px;">Three ways to <em>use</em> this</h2>
+    <div class="how-grid">
+      <div class="how-item">
+        <div class="how-item-num">01</div>
+        <h3 class="how-item-title">Present it</h3>
+        <p class="how-item-desc">Each module is a scroll-snap presentation deck. Open in <strong>Present</strong> mode to facilitate a half-day cohort session. Facilitator notes are pinned at the bottom of each slide.</p>
+      </div>
+      <div class="how-item">
+        <div class="how-item-num">02</div>
+        <h3 class="how-item-title">Work through it</h3>
+        <p class="how-item-desc">Switch to <strong>Workbook</strong> mode and the page transforms — teaching content collapses, activities open, your responses save automatically. Print a clean A3 canvas per module.</p>
+      </div>
+      <div class="how-item">
+        <div class="how-item-num">03</div>
+        <h3 class="how-item-title">Go deeper with Claude</h3>
+        <p class="how-item-desc">Each module has a draft Claude coaching spec — exercises, deepening prompts, and distress protocols. Not wired to a live tool yet, but ready for when it is.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div><div class="footer-brand"><em>design‑led:</em> leader</div></div>
+  <div class="footer-meta">
+    Design-Led: Leader · Jacinta McMahon<br>
+    franklyhuman.com · @franklyhumanux
+  </div>
+</footer>
+
+</body>
+</html>

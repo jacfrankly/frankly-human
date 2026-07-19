@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="450" viewBox="0 0 400 450">
+  <defs>
+    <clipPath id="arch-clip">
+      <path d="M 26,425 L 26,200 A 174,174,0,0,1,374,200 L 374,425 Z"/>
+    </clipPath>
+  </defs>
+  <rect width="400" height="450" fill="#FFFFFF"/>
+  <g clip-path="url(#arch-clip)">
+    <!-- Notebook group rotated -5deg around notebook center -->
+    <g transform="rotate(-5, 200, 265)">
+      <!-- Left page -->
+      <rect x="86" y="190" width="108" height="150" rx="3" fill="#FFFFFF" stroke="#000000" stroke-width="2.5"/>
+      <!-- Right page -->
+      <rect x="206" y="190" width="108" height="150" rx="3" fill="#FFFFFF" stroke="#000000" stroke-width="2.5"/>
+      <!-- Spine -->
+      <rect x="194" y="190" width="12" height="150" fill="#000000"/>
+      <!-- Left page lines (6 lines, y from 214 to 274 in steps of 12) -->
+      <line x1="103" y1="214" x2="175" y2="214" stroke="#000000" stroke-width="1.5"/>
+      <line x1="103" y1="226" x2="168" y2="226" stroke="#000000" stroke-width="1.5"/>
+      <line x1="103" y1="238" x2="180" y2="238" stroke="#000000" stroke-width="1.5"/>
+      <line x1="103" y1="250" x2="162" y2="250" stroke="#000000" stroke-width="1.5"/>
+      <line x1="103" y1="262" x2="172" y2="262" stroke="#000000" stroke-width="1.5"/>
+      <line x1="103" y1="274" x2="155" y2="274" stroke="#000000" stroke-width="1.5"/>
+      <!-- Right page lines (5 lines, same y values) -->
+      <line x1="218" y1="214" x2="285" y2="214" stroke="#000000" stroke-width="1.5"/>
+      <line x1="218" y1="226" x2="278" y2="226" stroke="#000000" stroke-width="1.5"/>
+      <line x1="218" y1="238" x2="288" y2="238" stroke="#000000" stroke-width="1.5"/>
+      <line x1="218" y1="250" x2="265" y2="250" stroke="#000000" stroke-width="1.5"/>
+      <line x1="218" y1="262" x2="275" y2="262" stroke="#000000" stroke-width="1.5"/>
+      <!-- Orange pressed leaf on right page, translated to (260,295) and rotated -20deg -->
+      <g transform="translate(260, 295) rotate(-20)">
+        <path d="M 0,-26 C 16,-14 16,8 0,24 C -16,8 -16,-14 0,-26 Z" fill="#F15A22"/>
+        <line x1="0" y1="-24" x2="0" y2="22" stroke="#000000" stroke-width="1"/>
+      </g>
+    </g>
+  </g>
+  <!-- Arch borders drawn on top of content -->
+  <path d="M 20,430 L 20,200 A 180,180,0,0,1,380,200 L 380,430 Z" fill="none" stroke="#000000" stroke-width="3"/>
+  <path d="M 26,425 L 26,200 A 174,174,0,0,1,374,200 L 374,425 Z" fill="none" stroke="#000000" stroke-width="1.5"/>
+</svg>

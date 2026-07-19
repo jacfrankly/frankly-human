@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="450" viewBox="0 0 400 450">
+  <defs>
+    <clipPath id="arch-clip">
+      <path d="M 26,425 L 26,200 A 174,174,0,0,1,374,200 L 374,425 Z"/>
+    </clipPath>
+  </defs>
+  <rect width="400" height="450" fill="#FFFFFF"/>
+  <g clip-path="url(#arch-clip)">
+
+    <!-- FLAG POLES — peeking above book top -->
+    <line x1="118" y1="200" x2="118" y2="170" stroke="#000000" stroke-width="2"/>
+    <line x1="282" y1="200" x2="282" y2="170" stroke="#000000" stroke-width="2"/>
+
+    <!-- LEFT FLAG — non-orange, striped to look like a different language flag -->
+    <rect x="118" y="158" width="30" height="20" rx="1" fill="#000000"/>
+    <line x1="118" y1="168" x2="148" y2="168" stroke="#FFFFFF" stroke-width="3"/>
+
+    <!-- RIGHT FLAG — orange: the destination language -->
+    <rect x="254" y="158" width="30" height="20" rx="1" fill="#F15A22"/>
+
+    <!-- BOOK PAGES -->
+    <rect x="86" y="200" width="108" height="150" rx="2"
+          fill="#FFFFFF" stroke="#000000" stroke-width="2.5"/>
+    <rect x="206" y="200" width="108" height="150" rx="2"
+          fill="#FFFFFF" stroke="#000000" stroke-width="2.5"/>
+
+    <!-- SPINE -->
+    <rect x="194" y="200" width="12" height="150" fill="#000000"/>
+
+    <!-- BOOK THICKNESS — bottom edge gives depth -->
+    <rect x="88"  y="348" width="104" height="11" fill="#000000"/>
+    <rect x="210" y="348" width="104" height="11" fill="#000000"/>
+    <!-- Right outer edge -->
+    <rect x="312" y="202" width="9" height="148" fill="#000000"/>
+
+    <!-- LEFT PAGE — dense dictionary lines (two implicit columns) -->
+    <g stroke="#000000" stroke-width="1" stroke-linecap="round">
+      <!-- Column A: entry headers + body lines -->
+      <line x1="98"  y1="216" x2="138" y2="216"/>
+      <line x1="98"  y1="224" x2="182" y2="224"/>
+      <line x1="98"  y1="232" x2="172" y2="232"/>
+      <line x1="98"  y1="240" x2="128" y2="240"/><!-- entry break -->
+      <line x1="98"  y1="250" x2="140" y2="250"/>
+      <line x1="98"  y1="258" x2="182" y2="258"/>
+      <line x1="98"  y1="266" x2="168" y2="266"/>
+      <line x1="98"  y1="274" x2="125" y2="274"/><!-- entry break -->
+      <line x1="98"  y1="284" x2="135" y2="284"/>
+      <line x1="98"  y1="292" x2="178" y2="292"/>
+      <line x1="98"  y1="300" x2="165" y2="300"/>
+      <line x1="98"  y1="308" x2="180" y2="308"/>
+      <line x1="98"  y1="316" x2="130" y2="316"/><!-- entry break -->
+      <line x1="98"  y1="326" x2="175" y2="326"/>
+      <line x1="98"  y1="334" x2="160" y2="334"/>
+    </g>
+
+    <!-- RIGHT PAGE — mirror of left -->
+    <g stroke="#000000" stroke-width="1" stroke-linecap="round">
+      <line x1="218" y1="216" x2="256" y2="216"/>
+      <line x1="218" y1="224" x2="298" y2="224"/>
+      <line x1="218" y1="232" x2="288" y2="232"/>
+      <line x1="218" y1="240" x2="244" y2="240"/>
+      <line x1="218" y1="250" x2="260" y2="250"/>
+      <line x1="218" y1="258" x2="300" y2="258"/>
+      <line x1="218" y1="266" x2="284" y2="266"/>
+      <line x1="218" y1="274" x2="242" y2="274"/>
+      <line x1="218" y1="284" x2="252" y2="284"/>
+      <line x1="218" y1="292" x2="296" y2="292"/>
+      <line x1="218" y1="300" x2="280" y2="300"/>
+      <line x1="218" y1="308" x2="298" y2="308"/>
+      <line x1="218" y1="316" x2="246" y2="316"/>
+      <line x1="218" y1="326" x2="290" y2="326"/>
+      <line x1="218" y1="334" x2="275" y2="334"/>
+    </g>
+
+  </g>
+  <path d="M 20,430 L 20,200 A 180,180,0,0,1,380,200 L 380,430 Z"
+        fill="none" stroke="#000000" stroke-width="3"/>
+  <path d="M 26,425 L 26,200 A 174,174,0,0,1,374,200 L 374,425 Z"
+        fill="none" stroke="#000000" stroke-width="1.5"/>
+</svg>

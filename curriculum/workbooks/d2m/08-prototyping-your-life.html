@@ -1,0 +1,1205 @@
+<!doctype html>
+<html lang="en" data-mode="participant">
+<head>
+<meta charset="utf-8" />
+<title>D2M · Module 08 · Prototyping Your Life — Design to Me</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..900,0..100;1,9..144,300..900,0..100&family=Inter:wght@400;500;600&family=Allura&family=Patrick+Hand&display=swap" rel="stylesheet">
+<style>
+/* =====================================================================
+   D2M · Module 08 · Prototyping Your Life
+   Dual mode: Presenter (scroll-snap) + Workbook (interactive)
+   Palette: Ink · Paper · Teal · Pink · Yellow · Plum
+   Type: DM Serif Display · Fraunces · Inter · Allura · Patrick Hand
+   ===================================================================== */
+
+:root {
+  --ink:      #100000;
+  --charcoal: #423B3B;
+  --paper:    #FBF7EE;
+  --paper-2:  #F4EFE2;
+  --sand:     #E0D2B5;
+  --teal:     #47ACA4;
+  --pink:     #FF3990;
+  --yellow:   #FFBD59;
+  --plum:     #7A1F4A;
+  --muted:    #5E584F;
+  --teal-text: #1F6E67;
+  --pink-text: #C40060;
+  --bar-h:    56px;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: 'Inter', sans-serif;
+  font-size: 16px; line-height: 1.55;
+  background: var(--paper); color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* =====================================================================
+   TOPBAR
+   ===================================================================== */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0;
+  height: var(--bar-h);
+  background: var(--paper);
+  border-bottom: 1px solid rgba(16,0,0,0.12);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 32px;
+  z-index: 200;
+  gap: 16px;
+}
+.topbar-left {
+  display: flex; align-items: center; gap: 18px; flex-shrink: 0;
+}
+.topbar-brand {
+  font-family: 'DM Serif Display', serif;
+  font-size: 18px; letter-spacing: -0.01em;
+  color: var(--ink); text-decoration: none;
+  white-space: nowrap;
+}
+.topbar-brand em { font-style: italic; color: var(--plum); }
+.topbar-divider { width: 1px; height: 18px; background: var(--sand); flex-shrink: 0; }
+.topbar-module {
+  font-family: 'Inter'; font-size: 10px;
+  letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted);
+  white-space: nowrap;
+}
+.topbar-center {
+  font-family: 'Inter'; font-size: 10px;
+  letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted);
+  flex: 1; text-align: center;
+}
+.topbar-right {
+  display: flex; align-items: center; gap: 10px; flex-shrink: 0;
+}
+.mode-toggle {
+  display: flex; align-items: stretch;
+  border: 1px solid var(--ink); overflow: hidden;
+  height: 30px;
+}
+.mode-btn {
+  padding: 0 14px;
+  font-family: 'Inter'; font-size: 10px;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--muted); background: none; border: none;
+  cursor: pointer; transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+.mode-sep { width: 1px; background: var(--ink); flex-shrink: 0; }
+html[data-mode="presenter"] .mode-btn.btn-presenter,
+html[data-mode="participant"] .mode-btn.btn-participant {
+  background: var(--ink); color: var(--paper);
+}
+.topbar-btn {
+  height: 30px; padding: 0 14px;
+  font-family: 'Inter'; font-size: 10px;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--muted); background: none;
+  border: 1px solid var(--ink); cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+  text-decoration: none; display: flex; align-items: center;
+}
+.topbar-btn:hover { background: var(--ink); color: var(--paper); }
+.topbar-nav {
+  display: flex; align-items: center; gap: 2px;
+}
+.nav-btn {
+  height: 30px; padding: 0 10px;
+  font-family: 'Inter'; font-size: 11px;
+  color: var(--muted); background: none; border: none;
+  cursor: pointer; transition: color 0.15s;
+  text-decoration: none; display: flex; align-items: center;
+}
+.nav-btn:hover { color: var(--ink); }
+.nav-btn.disabled { opacity: 0.3; cursor: default; }
+
+/* =====================================================================
+   PROGRESS BAR — workbook mode only
+   ===================================================================== */
+.progress-wrap {
+  position: fixed; top: var(--bar-h); left: 0; right: 0;
+  height: 3px; background: var(--sand); z-index: 199;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.25s;
+}
+html[data-mode="participant"] .progress-wrap {
+  opacity: 1; pointer-events: auto;
+}
+.progress-fill {
+  height: 100%; width: 0%;
+  background: var(--teal);
+  transition: width 0.5s ease;
+}
+
+/* =====================================================================
+   SLIDES CONTAINER — mode-dependent
+   ===================================================================== */
+
+/* Presenter: fixed scroll container with snap */
+html[data-mode="presenter"] body { overflow: hidden; }
+html[data-mode="presenter"] .slides-wrap {
+  position: fixed;
+  top: var(--bar-h); left: 0; right: 0; bottom: 0;
+  overflow-y: scroll;
+  overscroll-behavior: contain;
+}
+@media (prefers-reduced-motion: no-preference) {
+  html[data-mode="presenter"] .slides-wrap { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+}
+
+/* Workbook: normal body scroll */
+html[data-mode="participant"] body {
+  overflow-y: auto;
+  padding-top: calc(var(--bar-h) + 3px);
+}
+
+/* =====================================================================
+   SLIDE — base
+   ===================================================================== */
+.slide {
+  position: relative; overflow: hidden;
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 80px 72px 64px;
+}
+
+html[data-mode="presenter"] .slide {
+  min-height: calc(100vh - var(--bar-h));
+  scroll-snap-align: start;
+}
+html[data-mode="participant"] .slide {
+  min-height: unset;
+  padding: 56px 72px;
+  scroll-snap-align: unset;
+  justify-content: flex-start;
+}
+
+/* Backgrounds */
+.slide-paper  { background: var(--paper); }
+.slide-paper2 { background: var(--paper-2); }
+.slide-ink    { background: var(--ink); color: var(--paper); }
+.slide-teal   { background: var(--teal); }
+.slide-pink   { background: var(--pink); color: var(--paper); }
+.slide-plum   { background: var(--plum); color: var(--paper); }
+.slide-yellow { background: var(--yellow); }
+.slide-sand   { background: var(--sand); }
+
+.content { position: relative; z-index: 1; }
+
+/* =====================================================================
+   SLIDE TYPE OVERRIDES — workbook mode
+   ===================================================================== */
+
+/* Title: compact but still striking */
+html[data-mode="participant"] .slide[data-type="title"] {
+  min-height: 280px; padding: 56px 72px;
+  justify-content: center;
+}
+
+/* Context: accordion panel */
+html[data-mode="participant"] .slide[data-type="context"] {
+  padding: 0;
+  border-bottom: 1px solid rgba(16,0,0,0.1);
+  min-height: unset;
+  justify-content: flex-start;
+}
+
+/* Quick-hit: compact card */
+html[data-mode="participant"] .slide[data-type="quick-hit"] {
+  padding: 36px 72px;
+}
+
+/* Activity: always open and interactive */
+html[data-mode="participant"] .slide[data-type="activity"] {
+  padding: 56px 72px;
+  border-top: 3px solid var(--ink);
+  border-bottom: 3px solid var(--ink);
+  margin: 20px 0;
+}
+
+/* Debrief: compact reflection block */
+html[data-mode="participant"] .slide[data-type="debrief"] {
+  padding: 40px 72px;
+  border-bottom: 1px solid rgba(16,0,0,0.1);
+}
+
+/* Break: hidden in workbook */
+html[data-mode="participant"] .slide[data-type="break"] {
+  display: none;
+}
+
+/* Close: compact */
+html[data-mode="participant"] .slide[data-type="close"] {
+  min-height: unset; padding: 56px 72px;
+}
+
+/* =====================================================================
+   CONTEXT ACCORDION (workbook mode)
+   ===================================================================== */
+
+/* The clickable header row */
+.ctx-header {
+  display: none; /* shown only in workbook mode */
+  align-items: center; justify-content: space-between;
+  padding: 18px 72px;
+  cursor: pointer; user-select: none;
+  border-bottom: 1px solid rgba(16,0,0,0.08);
+  transition: background 0.15s;
+  gap: 16px;
+  /* Reset button chrome — .ctx-header is a <button> for keyboard/AT access */
+  background: none; border-left: none; border-right: none; border-top: none;
+  width: 100%; font: inherit; text-align: left; color: inherit;
+}
+.ctx-header:hover { background: rgba(16,0,0,0.025); }
+html[data-mode="participant"] .slide[data-type="context"] .ctx-header {
+  display: flex;
+}
+.ctx-header-left {
+  display: flex; align-items: baseline; gap: 20px;
+}
+.ctx-eyebrow {
+  font-family: 'Inter'; font-size: 9px;
+  letter-spacing: 0.24em; text-transform: uppercase; color: var(--muted);
+  flex-shrink: 0;
+}
+.ctx-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 19px; letter-spacing: -0.01em; color: var(--charcoal);
+}
+.ctx-icon {
+  font-family: 'Inter'; font-size: 20px; line-height: 1;
+  color: var(--muted); flex-shrink: 0;
+  transition: transform 0.25s;
+}
+[aria-expanded="true"] .ctx-icon { transform: rotate(45deg); }
+
+/* The collapsible teaching content */
+.slide-teaching {
+  /* in presenter mode: transparent flex item, content directly inside */
+}
+
+/* Presenter: slide-teaching fills slide, content is centered by flex parent */
+html[data-mode="presenter"] .slide-teaching {
+  flex: 1;
+  display: flex; flex-direction: column; justify-content: center;
+  max-height: none !important; overflow: visible !important; padding: 0 !important;
+}
+
+/* Workbook: collapsible */
+html[data-mode="participant"] .slide[data-type="context"] .slide-teaching {
+  overflow: hidden;
+  max-height: 0;
+  padding: 0 72px;
+  transition: max-height 0.4s ease, padding 0.4s ease;
+}
+html[data-mode="participant"] .slide[data-type="context"].is-open .slide-teaching {
+  max-height: 1600px;
+  padding: 40px 72px 52px;
+}
+
+/* Context header hidden in presenter */
+html[data-mode="presenter"] .ctx-header { display: none !important; }
+
+/* =====================================================================
+   FACILITATOR NOTES — presenter only
+   ===================================================================== */
+.fac-note {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  background: rgba(16,0,0,0.88);
+  color: rgba(251,247,238,0.82);
+  padding: 13px 72px;
+  font-family: 'Inter'; font-size: 11.5px; line-height: 1.6;
+  z-index: 10;
+}
+.fac-note strong { color: var(--yellow); font-weight: 600; }
+.fac-note em { font-style: italic; color: rgba(251,247,238,0.65); }
+html[data-mode="participant"] .fac-note { display: none; }
+
+/* =====================================================================
+   PARTICIPANT INPUTS
+   ===================================================================== */
+html[data-mode="presenter"] .p-input {
+  pointer-events: none; opacity: 0.18;
+}
+html[data-mode="participant"] .p-input {
+  pointer-events: auto; opacity: 1;
+}
+
+.field-group { margin-bottom: 24px; }
+.field-label {
+  display: block; margin-bottom: 8px;
+  font-family: 'Patrick Hand', cursive;
+  font-size: 14px; color: var(--charcoal);
+}
+.field-num {
+  font-family: 'Inter'; font-size: 9px;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--muted); margin-right: 8px;
+}
+.field-ta {
+  width: 100%; min-height: 80px;
+  padding: 14px 16px;
+  font-family: 'Fraunces', serif;
+  font-size: 15px; line-height: 1.6;
+  font-variation-settings: "SOFT" 50, "opsz" 144;
+  color: var(--ink); background: var(--paper);
+  border: 1px solid rgba(16,0,0,0.12);
+  border-bottom: 2px solid var(--charcoal);
+  outline: none; resize: vertical;
+  transition: border-color 0.15s;
+}
+.field-ta:focus { border-color: var(--teal-text); border-bottom-color: var(--teal-text); }
+.field-ta::placeholder {
+  color: rgba(16,0,0,0.48); font-style: italic;
+}
+/* Dark slide field variant */
+.field-ta-light {
+  background: rgba(251,247,238,0.07);
+  border-color: rgba(251,247,238,0.15);
+  border-bottom-color: rgba(251,247,238,0.4);
+  color: var(--paper);
+}
+.field-ta-light::placeholder { color: rgba(251,247,238,0.3); }
+.field-ta-light:focus { border-bottom-color: var(--yellow); }
+.field-label-light { color: rgba(251,247,238,0.65); }
+.field-label-light .field-num { color: rgba(251,247,238,0.35); }
+
+/* Save toast */
+.save-toast {
+  position: fixed; bottom: 28px; right: 32px;
+  background: var(--ink); color: var(--paper);
+  font-family: 'Inter'; font-size: 10px;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  padding: 8px 18px; z-index: 300;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.3s;
+}
+html[data-mode="participant"] .save-toast.visible { opacity: 1; }
+
+/* =====================================================================
+   TYPOGRAPHY
+   ===================================================================== */
+.eyebrow {
+  font-family: 'Inter'; font-size: 11px;
+  letter-spacing: 0.22em; text-transform: uppercase; color: var(--charcoal);
+  display: inline-flex; align-items: center; gap: 14px;
+  margin-bottom: 22px;
+}
+.eyebrow::before {
+  content: ''; width: 28px; height: 1px; background: currentColor;
+  opacity: 0.35; flex-shrink: 0;
+}
+.slide-plum .eyebrow { color: rgba(251,247,238,0.8); }
+.slide-ink  .eyebrow { color: rgba(251,247,238,0.6); }
+.slide-pink .eyebrow { color: rgba(16,0,0,0.8); }
+.slide-teal .eyebrow { color: rgba(16,0,0,0.8); }
+.slide-yellow .eyebrow { color: rgba(16,0,0,0.8); }
+
+.serif {
+  font-family: 'DM Serif Display', serif;
+  font-weight: 400; letter-spacing: -0.015em; line-height: 0.95;
+}
+.serif em { font-style: italic; color: var(--plum); }
+.slide-plum .serif em,
+.slide-ink  .serif em { color: var(--yellow); }
+.slide-pink .serif em { color: var(--yellow); }
+.slide-teal .serif em { color: var(--plum); }
+.slide-yellow .serif em { color: var(--plum); }
+
+.h1 { font-size: clamp(64px, 11vw, 152px); margin: 0 0 24px; }
+.h2 { font-size: clamp(40px, 6vw, 80px);  margin: 0 0 22px; max-width: 900px; }
+.h3 { font-size: clamp(28px, 4vw, 52px);  margin: 0 0 18px; max-width: 760px; }
+
+.fran {
+  font-family: 'Fraunces', serif;
+  font-weight: 400; line-height: 1.55;
+  font-variation-settings: "SOFT" 50, "opsz" 144;
+}
+.fran em { font-style: italic; color: var(--plum); }
+.slide-plum .fran,
+.slide-ink  .fran { color: rgba(251,247,238,0.85); }
+.slide-plum .fran em,
+.slide-ink  .fran em { color: var(--yellow); }
+.slide-pink .fran { color: rgba(251,247,238,0.85); }
+.slide-teal .fran em { color: var(--plum); }
+
+.body-lg { font-size: clamp(17px, 2.2vw, 24px); max-width: 660px; margin: 0 0 18px; }
+.body-md { font-size: clamp(15px, 1.8vw, 20px); max-width: 640px; margin: 0 0 14px; }
+.body-sm { font-size: 14px; max-width: 580px; margin: 0 0 10px; color: var(--muted); }
+
+.sig {
+  font-family: 'Allura', cursive;
+  color: var(--plum); line-height: 1;
+  display: block; transform: rotate(-3deg); transform-origin: left;
+}
+.slide-plum .sig,
+.slide-ink  .sig { color: var(--yellow); }
+.slide-pink .sig { color: rgba(251,247,238,0.8); }
+
+/* =====================================================================
+   DECORATIVE
+   ===================================================================== */
+.stripe-bar {
+  position: absolute; top: 0; left: 0; right: 0; height: 5px;
+  background: linear-gradient(90deg,
+    var(--teal) 0 25%, var(--pink) 25% 50%,
+    var(--yellow) 50% 75%, var(--plum) 75% 100%);
+}
+.bg-num {
+  position: absolute; bottom: -24px; right: 52px;
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(140px, 22vw, 280px);
+  line-height: 0.85; letter-spacing: -0.04em;
+  pointer-events: none; user-select: none;
+  opacity: 0.05; font-style: italic; color: inherit; z-index: 0;
+}
+html[data-mode="participant"] .slide[data-type="context"] .bg-num { display: none; }
+.blob { position: absolute; pointer-events: none; user-select: none; z-index: 0; }
+
+/* Mark / highlight */
+.mark-hi {
+  background: linear-gradient(180deg,
+    transparent 50%, rgba(255,189,89,0.55) 50%,
+    rgba(255,189,89,0.55) 92%, transparent 92%);
+  padding: 0 3px;
+}
+
+/* =====================================================================
+   LISTS
+   ===================================================================== */
+.clean-list {
+  list-style: none; padding: 0; margin: 12px 0 0;
+}
+.clean-list li {
+  display: flex; gap: 14px; align-items: baseline;
+  padding: 9px 0; border-bottom: 1px solid rgba(16,0,0,0.07);
+  font-family: 'Fraunces', serif;
+  font-size: clamp(14px, 1.7vw, 18px); line-height: 1.45;
+  font-variation-settings: "SOFT" 50, "opsz" 144; color: var(--charcoal);
+}
+.clean-list li:last-child { border-bottom: none; }
+.clean-list li::before {
+  content: '—'; font-family: 'Inter'; font-size: 11px;
+  color: var(--teal-text); flex-shrink: 0;
+}
+.slide-plum .clean-list li {
+  color: rgba(251,247,238,0.82);
+  border-bottom-color: rgba(255,255,255,0.1);
+}
+.slide-plum .clean-list li::before { color: var(--yellow); }
+
+/* =====================================================================
+   ACTIVITY BLOCK
+   ===================================================================== */
+.act-block {
+  border: 1px solid var(--ink); max-width: 900px; overflow: hidden; margin: 20px 0 28px;
+}
+.act-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 11px 22px;
+  background: var(--ink); color: var(--paper);
+}
+.act-label {
+  font-family: 'Inter'; font-size: 9px;
+  letter-spacing: 0.2em; text-transform: uppercase; opacity: 0.55;
+}
+.act-time {
+  font-family: 'Inter'; font-size: 9px;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  background: var(--yellow); color: var(--ink);
+  padding: 3px 10px; font-weight: 600;
+}
+.act-body { padding: 26px 26px 22px; background: var(--paper-2); }
+.act-instruction {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(18px, 2.6vw, 26px); line-height: 1.18;
+  letter-spacing: -0.01em; margin: 0 0 18px;
+}
+.act-instruction em { font-style: italic; color: var(--plum); }
+.act-rules { list-style: none; padding: 0; margin: 0; counter-reset: rules; }
+.act-rules li {
+  counter-increment: rules;
+  display: flex; gap: 14px; align-items: baseline;
+  padding: 9px 0; border-top: 1px solid rgba(16,0,0,0.08);
+  font-family: 'Fraunces', serif;
+  font-size: 14px; line-height: 1.45;
+  font-variation-settings: "SOFT" 50, "opsz" 144; color: var(--charcoal);
+}
+.act-rules li::before {
+  content: counter(rules, decimal-leading-zero);
+  font-family: 'Inter'; font-size: 9px; letter-spacing: 0.12em;
+  color: var(--pink-text); flex-shrink: 0; padding-top: 1px;
+}
+
+/* =====================================================================
+   DEBRIEF QUESTIONS
+   ===================================================================== */
+.debrief-qs { margin: 16px 0 0; }
+.debrief-q {
+  font-family: 'DM Serif Display', serif; font-style: italic;
+  font-size: clamp(19px, 2.5vw, 28px);
+  line-height: 1.2; color: var(--charcoal);
+  padding: 15px 0; border-bottom: 1px solid rgba(16,0,0,0.1);
+}
+.debrief-q:last-child { border-bottom: none; }
+.slide-sand .debrief-q { color: var(--charcoal); }
+
+html[data-mode="presenter"] .reflection-field { display: none; }
+html[data-mode="participant"] .reflection-field { display: block; margin-top: 16px; }
+
+/* =====================================================================
+   PULL QUOTE
+   ===================================================================== */
+.pull-quote { position: relative; padding: 0 0 0 6px; max-width: 820px; margin: 20px 0; }
+.pull-glyph {
+  font-family: 'DM Serif Display', serif; font-size: 110px; line-height: 0.6;
+  color: var(--pink-text); opacity: 0.85; display: block; margin-bottom: -18px;
+  user-select: none; font-style: normal;
+}
+.slide-plum .pull-glyph { color: var(--yellow); opacity: 0.45; }
+.pull-q {
+  font-family: 'DM Serif Display', serif; font-style: italic;
+  font-size: clamp(20px, 3.2vw, 36px); line-height: 1.15; color: var(--ink);
+  position: relative; z-index: 1;
+}
+.slide-plum .pull-q,
+.slide-ink  .pull-q { color: var(--paper); }
+
+/* =====================================================================
+   BREAK SLIDE
+   ===================================================================== */
+.break-time {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(80px, 15vw, 180px); line-height: 0.85;
+  letter-spacing: -0.03em; color: var(--paper);
+}
+.break-time em { font-style: italic; color: var(--yellow); }
+
+/* =====================================================================
+   MODULE CTA
+   ===================================================================== */
+.module-cta {
+  display: inline-flex; align-items: center; gap: 16px;
+  margin-top: 32px; text-decoration: none;
+  border: 1.5px solid rgba(251,247,238,0.4);
+  padding: 13px 26px;
+  font-family: 'Inter'; font-size: 10px;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: rgba(251,247,238,0.75);
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+.module-cta:hover {
+  background: rgba(251,247,238,0.1);
+  border-color: rgba(251,247,238,0.7); color: var(--paper);
+}
+
+/* =====================================================================
+   TWO-COL
+   ===================================================================== */
+.two-col {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 56px; align-items: start; max-width: 1100px;
+}
+
+/* =====================================================================
+   WORKBOOK SECTION DIVIDER
+   ===================================================================== */
+html[data-mode="participant"] .section-divider {
+  display: flex; align-items: center; gap: 16px;
+  padding: 28px 72px 0;
+  font-family: 'Inter'; font-size: 9px;
+  letter-spacing: 0.24em; text-transform: uppercase; color: var(--muted);
+}
+html[data-mode="presenter"] .section-divider { display: none; }
+.section-divider::before {
+  content: ''; flex: 1; height: 1px; background: var(--sand);
+}
+.section-divider::after {
+  content: ''; flex: 1; height: 1px; background: var(--sand);
+}
+
+/* =====================================================================
+   RESPONSIVE
+   ===================================================================== */
+@media (max-width: 900px) {
+  .slide { padding: 80px 36px 64px; }
+  html[data-mode="participant"] .slide { padding: 40px 28px; }
+  html[data-mode="participant"] .slide[data-type="context"] .ctx-header { padding: 16px 28px; }
+  html[data-mode="participant"] .slide[data-type="context"] .slide-teaching { padding: 0 28px; }
+  html[data-mode="participant"] .slide[data-type="context"].is-open .slide-teaching { padding: 32px 28px 40px; }
+  html[data-mode="participant"] .section-divider { padding: 20px 28px 0; }
+  .fac-note { padding: 12px 36px; }
+  .two-col { grid-template-columns: 1fr; gap: 32px; }
+  .topbar { padding: 0 16px; gap: 8px; }
+  .topbar-center, .topbar-module { display: none; }
+}
+
+/* =====================================================================
+   PRINT — workbook (A4, participant mode)
+   ===================================================================== */
+@media print {
+  @page { size: A4 portrait; margin: 18mm 16mm; }
+
+  html[data-mode="presenter"] * { display: none !important; }
+
+  html[data-mode="participant"] body { padding-top: 0; }
+  .topbar, .progress-wrap, .ctx-icon,
+  .fac-note, .mode-toggle, .topbar-btn,
+  .topbar-nav, .section-divider, .save-toast { display: none !important; }
+
+  .slides-wrap { display: block; }
+  .slide { break-inside: avoid; padding: 24px 0 20px; }
+  html[data-mode="participant"] .slide[data-type="break"] { display: none !important; }
+  html[data-mode="participant"] .slide[data-type="title"] { min-height: 100px; padding: 20px 0; }
+
+  .slide-plum  { background: #7A1F4A !important; -webkit-print-color-adjust: exact; color-adjust: exact; }
+  .slide-yellow { background: #FFBD59 !important; -webkit-print-color-adjust: exact; color-adjust: exact; }
+  .slide-sand  { background: #E0D2B5 !important; -webkit-print-color-adjust: exact; color-adjust: exact; }
+  .slide-teal  { background: #47ACA4 !important; -webkit-print-color-adjust: exact; color-adjust: exact; }
+  .slide-pink  { background: #FF3990 !important; -webkit-print-color-adjust: exact; color-adjust: exact; }
+
+  html[data-mode="participant"] .slide[data-type="context"] .ctx-header { display: flex !important; border: none; cursor: default; }
+  html[data-mode="participant"] .slide[data-type="context"] .slide-teaching {
+    max-height: none !important; padding: 16px 0 24px !important; overflow: visible !important;
+  }
+
+  .field-ta {
+    border: none; border-bottom: 1px solid rgba(16,0,0,0.2);
+    resize: none; min-height: 56px; background: transparent;
+  }
+  .act-block { border: 1px solid rgba(16,0,0,0.3); }
+  .act-head { background: #100000 !important; -webkit-print-color-adjust: exact; color-adjust: exact; }
+
+  .reflection-field { display: block !important; }
+  html[data-mode="participant"] .p-input { opacity: 1 !important; pointer-events: auto !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- ==========================================================
+     TOPBAR
+     ========================================================== -->
+<div class="topbar">
+  <div class="topbar-left">
+    <a href="../../../index.html" class="topbar-brand"><em>frankly</em> human.</a>
+    <div class="topbar-divider"></div>
+    <span class="topbar-module">Module 08 · Prototyping Your Life</span>
+  </div>
+  <div class="topbar-center">2 hours · no scheduled break</div>
+  <div class="topbar-right">
+    <div class="topbar-nav">
+      <a href="07-decision-design.html" class="nav-btn">← Prev</a>
+      <a href="09-boundaries-and-emotional-labour.html" class="nav-btn">Next →</a>
+    </div>
+    <div class="mode-toggle">
+      <button class="mode-btn btn-presenter" onclick="setMode('presenter')">Present</button>
+      <div class="mode-sep"></div>
+      <button class="mode-btn btn-participant" onclick="setMode('participant')">Workbook</button>
+    </div>
+    <a href="08-prototyping-your-life-canvas.html" class="topbar-btn" target="_blank">A3 Canvas</a>
+    <button class="topbar-btn" onclick="window.print()">Print</button>
+  </div>
+</div>
+
+<!-- Progress bar -->
+<div class="progress-wrap">
+  <div class="progress-fill" id="progressFill"></div>
+</div>
+
+<!-- Save toast -->
+<div class="save-toast" id="saveToast">Saved</div>
+
+<!-- ==========================================================
+     SLIDES
+     ========================================================== -->
+<div class="slides-wrap" id="slidesWrap">
+
+  <!-- ─── SLIDE 01 · TITLE ─── -->
+  <section class="slide slide-plum" data-type="title" data-slide="1">
+    <div class="stripe-bar"></div>
+    <div class="content">
+      <span class="sig" style="font-size:26px;margin-bottom:14px;">Design to Me · Module 08</span>
+      <h1 class="serif h1">Prototyping<br>Your <em>Life</em></h1>
+      <p class="fran body-lg">You don't need a plan.<br>You need a prototype.</p>
+    </div>
+    <div class="bg-num">08</div>
+    <div class="fac-note">
+      <strong>Before you start:</strong> Print or share the Prototyping worksheet. Have a timer visible. Devices open for writing. This module is practical and energising — keep the pace brisk. | <em>Open:</em> "How many of you have a five-year plan sitting somewhere you haven't looked at in months?" Take a show of hands. Laugh with them, not at them.
+    </div>
+  </section>
+
+
+  <!-- ─── SLIDE 02 · OVERVIEW ─── -->
+  <section class="slide slide-paper2" data-type="context" data-slide="2">
+    <button type="button" class="ctx-header" onclick="toggleContext(this)" aria-expanded="false">
+      <div class="ctx-header-left">
+        <span class="ctx-eyebrow">Overview</span>
+        <span class="ctx-title">What we're doing today</span>
+      </div>
+      <span class="ctx-icon">+</span>
+    </button>
+    <div class="slide-teaching">
+      <div class="content" style="max-width:860px;">
+        <div class="eyebrow">This module</div>
+        <h2 class="serif h2">What we're doing<br><em>today</em></h2>
+        <ul class="clean-list">
+          <li>Why plans fail</li>
+          <li>The life prototype</li>
+          <li>Designing a 7-day prototype</li>
+          <li>Running the experiment</li>
+          <li>Iterating — keep, kill, or evolve</li>
+        </ul>
+        <div class="bg-num">02</div>
+      </div>
+    </div>
+    <div class="fac-note">
+      <strong>Context (5 min):</strong> "Most people try to redesign their life with a five-year plan. Today we're doing the opposite — small, fast, low-risk experiments that actually create movement." | <strong>Listen for:</strong> nervous laughter about abandoned plans. Don't linger — move to the concept.
+    </div>
+  </section>
+
+
+  <!-- ─── SLIDE 03 · CONCEPT: WHY PLANS FAIL ─── -->
+  <section class="slide slide-paper" data-type="context" data-slide="3">
+    <button type="button" class="ctx-header" onclick="toggleContext(this)" aria-expanded="false">
+      <div class="ctx-header-left">
+        <span class="ctx-eyebrow">Concept</span>
+        <span class="ctx-title">Why plans fail</span>
+      </div>
+      <span class="ctx-icon">+</span>
+    </button>
+    <div class="slide-teaching">
+      <div class="content" style="max-width:860px;">
+        <div class="eyebrow">Why plans fail</div>
+        <h2 class="serif h2">Plans assume certainty.<br>Life is <em>not certain.</em></h2>
+        <p class="fran body-md">The usual culprits:</p>
+        <ul class="clean-list">
+          <li>Perfectionism — waiting until the plan is airtight</li>
+          <li>Overwhelm — the plan is too big to start</li>
+          <li>Unrealistic timelines — five years, no checkpoints</li>
+          <li>No feedback loops — you don't find out you're wrong until it's expensive</li>
+        </ul>
+        <p class="fran body-md" style="margin-top:22px;font-style:italic;">
+          Plans assume certainty. Prototypes assume learning.
+        </p>
+        <div class="bg-num">03</div>
+      </div>
+    </div>
+    <div class="fac-note">
+      <strong>Concept (8 min):</strong> Read the four culprits slowly. Ask: "Which one is most familiar?" Take 2–3 quick answers, don't dwell. Land on: "Plans assume certainty. Prototypes assume learning." | <strong>Watch for:</strong> people defending their plan — this isn't an attack on planning, it's a different tool for uncertainty.
+    </div>
+  </section>
+
+
+  <!-- ─── SLIDE 04 · QUICK HIT 01 ─── -->
+  <section class="slide slide-yellow" data-type="quick-hit" data-slide="4">
+    <div class="content" style="max-width:860px;">
+      <div class="eyebrow">Quick hit · 5 min</div>
+      <div class="pull-quote" style="margin-bottom:4px;">
+        <span class="pull-glyph" style="color:var(--plum);opacity:0.4;">"</span>
+        <p class="pull-q" style="color:var(--ink);">What's one area of your life<br>you wish felt different?</p>
+      </div>
+      <p class="fran body-md" style="margin-top:20px;">Write it down. Don't edit it — you'll design a prototype for this later today.</p>
+      <div class="p-input field-group" style="margin-top:24px;max-width:580px;">
+        <textarea class="field-ta" data-field="m08_quick_hit_1" rows="3"
+          placeholder="First response — unedited…"></textarea>
+      </div>
+      <p class="body-sm" style="margin-top:4px;">60 sec silent write · 2 min pair share · 3–4 from the room</p>
+    </div>
+    <div class="fac-note">
+      <strong>Quick Hit 01 (5 min):</strong> 60 seconds silent. 2 minutes pairs. Collect 3–4 from the room. Common answers: energy, a relationship, work, money, a habit. | <strong>Bridge:</strong> "Hold that answer — it's the raw material for Activity 01." Move to Slide 05.
+    </div>
+  </section>
+
+
+  <!-- ─── SLIDE 05 · CONCEPT: THE LIFE PROTOTYPE ─── -->
+  <section class="slide slide-paper2" data-type="context" data-slide="5">
+    <button type="button" class="ctx-header" onclick="toggleContext(this)" aria-expanded="false">
+      <div class="ctx-header-left">
+        <span class="ctx-eyebrow">Concept</span>
+        <span class="ctx-title">The life prototype</span>
+      </div>
+      <span class="ctx-icon">+</span>
+    </button>
+    <div class="slide-teaching">
+      <div class="content" style="max-width:1080px;">
+        <div class="eyebrow">The life prototype</div>
+        <div class="two-col">
+          <div>
+            <h2 class="serif h2">Small. Fast.<br>Low-risk. <em>Learnable.</em></h2>
+            <p class="fran body-md" style="margin-top:18px;">
+              A life prototype isn't a resolution. It's a small, structured test with a built-in way to know if it worked.
+            </p>
+          </div>
+          <div>
+            <p class="fran body-md" style="margin-bottom:8px;">Five parts:</p>
+            <ol class="act-rules" style="border: none;">
+              <li>Hypothesis — what you think will happen, and why</li>
+              <li>Behaviour — the specific, repeatable action</li>
+              <li>Duration — short. Usually 7 days.</li>
+              <li>Success criteria — what tells you it worked</li>
+              <li>Failure criteria — what tells you it didn't</li>
+            </ol>
+          </div>
+        </div>
+        <div class="bg-num">05</div>
+      </div>
+    </div>
+    <div class="fac-note">
+      <strong>Concept (10 min):</strong> Walk through the five parts. Emphasise: "Success and failure criteria are decided before you start — not after." | <strong>Watch for:</strong> people who want the duration to be longer. Redirect: "Short enough to survive being wrong."
+    </div>
+  </section>
+
+
+  <!-- ─── SLIDE 06 · ACTIVITY 01 ─── -->
+  <section class="slide slide-paper" data-type="activity" data-slide="6">
+    <div class="content" style="max-width:940px;">
+      <div class="eyebrow">Activity 01 · 20 min</div>
+      <h2 class="serif h2">Prototype Canvas —<br>design your <em>7-day test</em></h2>
+
+      <div class="act-block p-input">
+        <div class="act-head">
+          <span class="act-label">Activity 01</span>
+          <span class="act-time">20 min</span>
+        </div>
+        <div class="act-body">
+          <p class="act-instruction">Design a 7-day prototype for the area you named in the Quick Hit. Keep it small enough to actually succeed.</p>
+          <ol class="act-rules">
+            <li>Individual — 14 minutes: fill out your prototype canvas</li>
+            <li>Pairs — share your hypothesis and your success criteria — 4 minutes</li>
+            <li>Group — "What makes this small enough to actually run?"</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="p-input" style="margin-top:8px;">
+        <div class="field-group">
+          <label class="field-label">
+            <span class="field-num">01</span>Hypothesis
+          </label>
+          <textarea class="field-ta" data-field="m08_proto_hypothesis" rows="3"
+            placeholder="I think that if I… then… because…"></textarea>
+        </div>
+        <div class="field-group">
+          <label class="field-label">
+            <span class="field-num">02</span>Behaviour — the specific, repeatable action
+          </label>
+          <textarea class="field-ta" data-field="m08_proto_behaviour" rows="2"
+            placeholder="What I will actually do, every day…"></textarea>
+        </div>
+        <div class="field-group">
+          <label class="field-label">
+            <span class="field-num">03</span>Duration
+          </label>
+          <textarea class="field-ta" data-field="m08_proto_duration" rows="1"
+            placeholder="7 days, starting…"></textarea>
+        </div>
+        <div class="field-group">
+          <label class="field-label">
+            <span class="field-num">04</span>Success criteria — what tells me it worked
+          </label>
+          <textarea class="field-ta" data-field="m08_proto_success" rows="2"
+            placeholder="I'll know this worked if…"></textarea>
+        </div>
+        <div class="field-group">
+          <label class="field-label">
+            <span class="field-num">05</span>Failure criteria — what tells me it didn't
+          </label>
+          <textarea class="field-ta" data-field="m08_proto_failure" rows="2"
+            placeholder="I'll know this didn't work if…"></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="fac-note">
+      <strong>Activity 01 (20 min) — Watch for:</strong> Prototypes that are secretly five-year plans in disguise · Success criteria too vague to measure · People designing someone else's prototype (for a partner, a team). | <strong>Reframe:</strong> "Smaller than feels significant. That's usually the right size."
+    </div>
+  </section>
+
+
+  <!-- ─── SLIDE 07 · DEBRIEF 01 ─── -->
+  <section class="slide slide-sand" data-type="debrief" data-slide="7">
+    <div class="content" style="max-width:820px;">
+      <div class="eyebrow">Debrief 01 · 8 min</div>
+      <h3 class="serif h3">Choose one.</h3>
+      <div class="debrief-qs">
+        <div class="debrief-q">"What made this prototype hard to shrink?"</div>
+        <div class="debrief-q">"What are you afraid it will tell you?"</div>
+        <div class="debrief-q">"What would make this feel safe to actually run?"</div>
+      </div>
+      <div class="reflection-field p-input">
+        <textarea class="field-ta" data-field="m08_debrief_1" rows="3"
+          style="background:var(--paper);"
+          placeholder="What I noticed…"></textarea>
+      </div>
+      <p class="fran body-md" style="margin-top:28px;font-style:italic;">
+        You're not committing to a life. You're committing to seven days.
+      </p>
+    </div>
+    <div class="fac-note">
+      <strong>Debrief 01 (8 min):</strong> Choose one question based on the room's energy. Land on: "You're not committing to a life. You're committing to seven days." | <strong>If prototypes are still too big:</strong> "Cut it in half again."
+    </div>
+  </section>
+
+
+  <!-- ─── SLIDE 08 · CONCEPT: THE 7-DAY EXPERIMENT ─── -->
+  <section class="slide slide-teal" data-type="context" data-slide="8">
+    <button type="button" class="ctx-header" onclick="toggleContext(this)" aria-expanded="false">
+      <div class="ctx-header-left">
+        <span class="ctx-eyebrow">Concept</span>
+        <span class="ctx-title">The 7-day experiment</span>
+      </div>
+      <span class="ctx-icon">+</span>
+    </button>
+    <div class="slide-teaching">
+      <div class="content" style="max-width:860px;">
+        <div class="eyebrow">The 7-day experiment</div>
+        <h2 class="serif h2">Run. Observe.<br>Learn. <em>Adjust.</em></h2>
+        <ul class="clean-list">
+          <li>Run — do the behaviour, exactly as designed</li>
+          <li>Observe — notice what actually happens, without editing it</li>
+          <li>Learn — what does this tell you, whichever way it went</li>
+          <li>Adjust — decide what changes for the next round</li>
+        </ul>
+        <div class="pull-quote" style="margin-top:22px;">
+          <span class="pull-glyph">"</span>
+          <p class="pull-q">The goal isn't success — it's information.</p>
+        </div>
+        <div class="bg-num">08</div>
+      </div>
+    </div>
+    <div class="fac-note">
+      <strong>Concept (8 min):</strong> Walk through Run → Observe → Learn → Adjust as a cycle, not a line. Land on: "The goal isn't success — it's information." | <strong>Watch for:</strong> people who already assume their prototype "failed." Reframe: data, not a verdict.
+    </div>
+  </section>
+
+
+  <!-- ─── SLIDE 09 · QUICK HIT 02 ─── -->
+  <section class="slide slide-pink" data-type="quick-hit" data-slide="9">
+    <div class="content" style="max-width:860px;">
+      <div class="eyebrow">Quick hit · 5 min</div>
+      <div class="pull-quote" style="margin-bottom:4px;">
+        <span class="pull-glyph" style="color:var(--yellow);opacity:0.6;">"</span>
+        <p class="pull-q" style="color:var(--paper);">What prototype are you<br>ready to scale?</p>
+      </div>
+      <p class="fran body-md" style="margin-top:20px;">This can be one you've already run — even outside today's session. What's earned a bigger version?</p>
+      <div class="p-input field-group" style="margin-top:24px;max-width:580px;">
+        <textarea class="field-ta field-ta-light" data-field="m08_quick_hit_2" rows="3"
+          placeholder="An experiment that's already told me something…"></textarea>
+      </div>
+      <p class="body-sm" style="margin-top:4px;color:rgba(251,247,238,0.65);">60 sec silent write · 2 min pair share · 3–4 from the room</p>
+    </div>
+    <div class="fac-note">
+      <strong>Quick Hit 02 (5 min):</strong> 60 seconds silent. 2 minutes pairs. Collect 3–4 from the room. This primes Activity 02 — some people will iterate on today's prototype, others on something older. Both are valid. | <strong>Bridge:</strong> "Now we decide what happens next."
+    </div>
+  </section>
+
+
+  <!-- ─── SLIDE 10 · ACTIVITY 02 ─── -->
+  <section class="slide slide-paper2" data-type="activity" data-slide="10">
+    <div class="content" style="max-width:940px;">
+      <div class="eyebrow">Activity 02 · 20 min</div>
+      <h2 class="serif h2">Prototype Iteration —<br>keep, kill, or <em>evolve</em></h2>
+
+      <div class="act-block p-input">
+        <div class="act-head">
+          <span class="act-label">Activity 02</span>
+          <span class="act-time">20 min</span>
+        </div>
+        <div class="act-body">
+          <p class="act-instruction">Choose one prototype — from today's Activity 01 or from before. Decide what happens to it next.</p>
+          <ol class="act-rules">
+            <li>Individual — 14 minutes: name the prototype and make the call</li>
+            <li>Pairs — share your decision and why — 4 minutes</li>
+            <li>Group — "What made this decision easier or harder to make?"</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="p-input" style="margin-top:8px;">
+        <div class="field-group">
+          <label class="field-label">
+            <span class="field-num">01</span>The prototype I'm iterating on
+          </label>
+          <textarea class="field-ta" data-field="m08_iter_prototype" rows="2"
+            placeholder="What I tested, and what I learned…"></textarea>
+        </div>
+        <div class="field-group">
+          <label class="field-label">
+            <span class="field-num">02</span>Keep, kill, or evolve — and why
+          </label>
+          <textarea class="field-ta" data-field="m08_iter_decision" rows="3"
+            placeholder="I'm going to… because the data told me…"></textarea>
+        </div>
+        <div class="field-group">
+          <label class="field-label">
+            <span class="field-num">03</span>What the next iteration looks like
+          </label>
+          <textarea class="field-ta" data-field="m08_iter_next" rows="3"
+            placeholder="If I keep or evolve it, the next version is…"></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="fac-note">
+      <strong>Activity 02 (20 min) — Watch for:</strong> People who won't kill anything (attachment to sunk effort) · People who kill everything (perfectionism in disguise) · "Prototype forever" — using the word as an excuse to never commit. | <strong>Reframe:</strong> "Kill is a valid outcome. Evolve is the most common one. Endless prototyping isn't learning — it's avoidance."
+    </div>
+  </section>
+
+
+  <!-- ─── SLIDE 11 · DEBRIEF 02 ─── -->
+  <section class="slide slide-sand" data-type="debrief" data-slide="11">
+    <div class="content" style="max-width:820px;">
+      <div class="eyebrow">Debrief 02 · 8 min</div>
+      <h3 class="serif h3">Choose one.</h3>
+      <div class="debrief-qs">
+        <div class="debrief-q">"What did this prototype actually teach you?"</div>
+        <div class="debrief-q">"What's the smallest version of the next iteration?"</div>
+        <div class="debrief-q">"Where might you be avoiding a decision by calling it 'still testing'?"</div>
+      </div>
+      <div class="reflection-field p-input">
+        <textarea class="field-ta" data-field="m08_debrief_2" rows="3"
+          style="background:var(--paper);"
+          placeholder="What I noticed…"></textarea>
+      </div>
+      <p class="fran body-md" style="margin-top:28px;font-style:italic;">
+        Prototypes create information. Information creates clarity.
+      </p>
+    </div>
+    <div class="fac-note">
+      <strong>Debrief 02 (8 min):</strong> Choose one question. Land on: "Prototypes create information. Information creates clarity." | <strong>If the room is energised:</strong> let it run a little — this is often the most practical, actionable module in the program.
+    </div>
+  </section>
+
+
+  <!-- ─── SLIDE 12 · CLOSE ─── -->
+  <section class="slide slide-plum" data-type="close" data-slide="12">
+    <div class="stripe-bar"></div>
+    <div class="content" style="max-width:880px;">
+      <div class="eyebrow">Close · 8 min</div>
+      <h2 class="serif h2">One takeaway.<br>One prototype you'll <em>run this week.</em></h2>
+
+      <div class="p-input" style="margin-top:32px;max-width:600px;">
+        <label class="field-label field-label-light">
+          <span class="field-num">Takeaway</span>The prototype I'm running this week
+        </label>
+        <textarea class="field-ta field-ta-light" data-field="m08_takeaway" rows="2"
+          placeholder="This week, I'm testing…"></textarea>
+      </div>
+
+      <div style="margin-top:44px;padding-top:36px;border-top:1px solid rgba(251,247,238,0.18);">
+        <p class="fran body-sm" style="color:rgba(251,247,238,0.55);margin-bottom:6px;">Next module</p>
+        <p class="fran body-lg" style="margin:0 0 4px;">
+          BOUNDARIES &amp; EMOTIONAL LABOUR
+        </p>
+        <p class="fran body-md" style="margin:0;">
+          <em>Your life expands or contracts based on the boundaries you hold.</em>
+        </p>
+        <a href="09-boundaries-and-emotional-labour.html" class="module-cta">Module 09 → Boundaries &amp; Emotional Labour</a>
+      </div>
+    </div>
+    <div class="fac-note">
+      <strong>Close (8 min):</strong> "One thing you're taking away. One prototype you'll actually run this week." Ask 2–3 people to say theirs out loud — public commitment increases follow-through. | <strong>Transition:</strong> "Next: Boundaries & Emotional Labour — because your life expands or contracts based on the boundaries you hold."
+    </div>
+  </section>
+
+
+</div><!-- /slides-wrap -->
+
+
+<!-- ==========================================================
+     JAVASCRIPT
+     ========================================================== -->
+<script>
+(function () {
+  'use strict';
+
+  var ROOT = document.documentElement;
+  var STORAGE_PREFIX = 'd2m_m08_';
+  var saveTimer;
+
+  /* ── Mode ─────────────────────────────────────── */
+  function setMode(mode) {
+    ROOT.dataset.mode = mode;
+    localStorage.setItem('d2m_mode_global', mode);
+    if (mode === 'participant') {
+      window.scrollTo(0, 0);
+    } else {
+      var wrap = document.getElementById('slidesWrap');
+      if (wrap) wrap.scrollTo(0, 0);
+    }
+  }
+  window.setMode = setMode;
+
+  /* ── Context accordion ────────────────────────── */
+  function toggleContext(header) {
+    var expanded = header.getAttribute('aria-expanded') === 'true';
+    header.setAttribute('aria-expanded', String(!expanded));
+    var section = header.closest('section');
+    if (section) section.classList.toggle('is-open', !expanded);
+    var icon = header.querySelector('.ctx-icon');
+    if (icon) icon.textContent = !expanded ? '−' : '+';
+  }
+  window.toggleContext = toggleContext;
+
+  /* ── Field persistence ────────────────────────── */
+  function initFields() {
+    document.querySelectorAll('[data-field]').forEach(function (el) {
+      var key = STORAGE_PREFIX + el.dataset.field;
+      var saved = localStorage.getItem(key);
+      if (saved) el.value = saved;
+
+      el.addEventListener('input', function () {
+        localStorage.setItem(key, el.value);
+        updateProgress();
+        triggerSaveToast();
+      });
+    });
+    updateProgress();
+  }
+
+  /* ── Progress ─────────────────────────────────── */
+  function updateProgress() {
+    var fields = document.querySelectorAll('[data-field]');
+    var filled = 0;
+    fields.forEach(function (f) {
+      if (f.value.trim().length > 8) filled++;
+    });
+    var pct = fields.length ? (filled / fields.length) * 100 : 0;
+    var fill = document.getElementById('progressFill');
+    if (fill) fill.style.width = pct.toFixed(1) + '%';
+  }
+
+  /* ── Save toast ───────────────────────────────── */
+  function triggerSaveToast() {
+    var toast = document.getElementById('saveToast');
+    if (!toast) return;
+    toast.classList.add('visible');
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(function () {
+      toast.classList.remove('visible');
+    }, 1800);
+  }
+
+  /* ── Init ─────────────────────────────────────── */
+  function init() {
+    var params = new URLSearchParams(window.location.search);
+    var urlMode = params.get('mode');
+    var savedMode = localStorage.getItem('d2m_mode_global');
+    var mode = urlMode || savedMode || 'participant';
+    ROOT.dataset.mode = mode;
+    initFields();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
+</body>
+</html>

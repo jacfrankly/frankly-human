@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Service Design Brief</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f5f4f0;
+      --surface: #ffffff;
+      --border: #e0ddd6;
+      --border-focus: #1a1a1a;
+      --text: #1a1a1a;
+      --text-muted: #6b6860;
+      --accent: #1a1a1a;
+      --tag-bg: #eeecea;
+      --radius: 10px;
+      --font: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      font-size: 15px;
+      line-height: 1.6;
+      min-height: 100vh;
+      padding: 48px 16px 80px;
+    }
+
+    .wrapper {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 48px;
+    }
+
+    .header-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .header h1 {
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      line-height: 1.2;
+      margin-bottom: 12px;
+    }
+
+    .header p {
+      color: var(--text-muted);
+      max-width: 560px;
+    }
+
+    /* Section */
+    .section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px;
+      margin-bottom: 16px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .section-number {
+      flex-shrink: 0;
+      width: 28px;
+      height: 28px;
+      background: var(--tag-bg);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .section-title {
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: -0.2px;
+    }
+
+    .section-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* Fields */
+    .field {
+      margin-bottom: 24px;
+    }
+
+    .field:last-child {
+      margin-bottom: 0;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+
+    label .optional {
+      font-weight: 400;
+      color: var(--text-muted);
+      margin-left: 4px;
+    }
+
+    .hint {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      line-height: 1.5;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    select,
+    textarea {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: 10px 14px;
+      font-family: var(--font);
+      font-size: 14px;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.15s;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--border-focus);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 96px;
+    }
+
+    select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b6860' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 36px;
+      cursor: pointer;
+    }
+
+    /* Checkbox grid */
+    .check-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    @media (max-width: 480px) {
+      .check-grid { grid-template-columns: 1fr; }
+    }
+
+    .check-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: 10px 14px;
+      cursor: pointer;
+      transition: border-color 0.15s;
+      user-select: none;
+    }
+
+    .check-item:hover {
+      border-color: #c8c5be;
+    }
+
+    .check-item input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
+    .check-item span {
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    /* Divider */
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 24px 0;
+    }
+
+    /* Submit */
+    .submit-section {
+      margin-top: 32px;
+      text-align: center;
+    }
+
+    .submit-hint {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+
+    button[type="submit"] {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 14px 40px;
+      font-family: var(--font);
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+
+    button[type="submit"]:hover {
+      opacity: 0.85;
+    }
+
+    /* Success state */
+    #success {
+      display: none;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 48px 32px;
+      text-align: center;
+    }
+
+    #success h2 {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    #success p {
+      color: var(--text-muted);
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    /* Copy output */
+    #output-section {
+      display: none;
+      margin-top: 24px;
+    }
+
+    #output-section h3 {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    #output-box {
+      background: #1a1a1a;
+      color: #e8e6e0;
+      border-radius: 8px;
+      padding: 20px;
+      font-family: 'Courier New', monospace;
+      font-size: 12.5px;
+      line-height: 1.7;
+      white-space: pre-wrap;
+      word-break: break-word;
+      max-height: 480px;
+      overflow-y: auto;
+    }
+
+    .copy-btn {
+      margin-top: 12px;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: 8px 20px;
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      color: var(--text);
+      transition: background 0.15s;
+    }
+
+    .copy-btn:hover {
+      background: var(--tag-bg);
+    }
+
+    .required-note {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 32px;
+    }
+
+    .required-note span {
+      color: #c0392b;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+
+    <div class="header">
+      <div class="header-label">Service Design</div>
+      <h1>Client Brief</h1>
+      <p>Fill in as much detail as you can. The more context you provide, the more accurate and useful the output will be.</p>
+    </div>
+
+    <p class="required-note"><span>*</span> Required fields</p>
+
+    <form id="brief-form" novalidate>
+
+      <!-- 1. Organisation -->
+      <div class="section">
+        <div class="section-header">
+          <div class="section-number">1</div>
+          <div>
+            <div class="section-title">Organisation</div>
+            <div class="section-desc">Tell us about your organisation so we understand your context.</div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="org-name">Organisation name <span class="required">*</span></label>
+          <input type="text" id="org-name" name="org-name" placeholder="e.g. Acme Health" required />
+        </div>
+
+        <div class="field">
+          <label for="org-industry">Industry or sector <span class="required">*</span></label>
+          <select id="org-industry" name="org-industry" required>
+            <option value="">Select one…</option>
+            <option>Healthcare</option>
+            <option>Financial services</option>
+            <option>Education</option>
+            <option>Retail &amp; e-commerce</option>
+            <option>Government &amp; public sector</option>
+            <option>Transport &amp; logistics</option>
+            <option>Media &amp; entertainment</option>
+            <option>Real estate &amp; property</option>
+            <option>Technology &amp; software</option>
+            <option>Professional services</option>
+            <option>Non-profit</option>
+            <option>Other</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="org-size">Organisation size <span class="required">*</span></label>
+          <select id="org-size" name="org-size" required>
+            <option value="">Select one…</option>
+            <option>Startup (1–20 people)</option>
+            <option>Scale-up (21–200 people)</option>
+            <option>Mid-size (201–1,000 people)</option>
+            <option>Enterprise (1,000+ people)</option>
+            <option>Public sector / government</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="org-context">Relevant background <span class="optional">(optional)</span></label>
+          <div class="hint">Anything that helps us understand your organisation — recent growth, a merger, a major shift in direction, regulatory context.</div>
+          <textarea id="org-context" name="org-context" placeholder="e.g. We recently merged with a competitor and are consolidating two separate customer portals into one…"></textarea>
+        </div>
+      </div>
+
+      <!-- 2. The Service -->
+      <div class="section">
+        <div class="section-header">
+          <div class="section-number">2</div>
+          <div>
+            <div class="section-title">The Service</div>
+            <div class="section-desc">Describe the service this project is about.</div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="service-name">Service name <span class="required">*</span></label>
+          <input type="text" id="service-name" name="service-name" placeholder="e.g. Patient onboarding portal" required />
+        </div>
+
+        <div class="field">
+          <label for="project-short-name">Project short name <span class="required">*</span></label>
+          <div class="hint">2–4 words used to name output folders and files — no special characters. This will prefix every output file we produce. e.g. "App Onboarding", "Claims Portal", "Staff Hub"</div>
+          <input type="text" id="project-short-name" name="project-short-name" placeholder="e.g. App Onboarding" required />
+        </div>
+
+        <div class="field">
+          <label for="service-starting-point">Starting point <span class="required">*</span></label>
+          <select id="service-starting-point" name="service-starting-point" required>
+            <option value="">Select one…</option>
+            <option>Net new — this service doesn't exist yet</option>
+            <option>Redesign — replacing or overhauling an existing service</option>
+            <option>Optimisation — improving a service that broadly works</option>
+            <option>Expansion — extending a service to a new channel or audience</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="service-description">What does the service do today? <span class="required">*</span></label>
+          <div class="hint">If net new, describe what it will do. If redesigning, describe what it does now.</div>
+          <textarea id="service-description" name="service-description" placeholder="e.g. Patients register, upload documents, and schedule their first appointment. Currently this is done by phone and a paper form sent by post…" required></textarea>
+        </div>
+
+        <div class="field">
+          <label>Channels involved <span class="optional">(select all that apply)</span></label>
+          <div class="check-grid" id="channels-grid">
+            <label class="check-item"><input type="checkbox" name="channels" value="Web app" /><span>Web app</span></label>
+            <label class="check-item"><input type="checkbox" name="channels" value="Mobile app" /><span>Mobile app</span></label>
+            <label class="check-item"><input type="checkbox" name="channels" value="In-person" /><span>In-person</span></label>
+            <label class="check-item"><input type="checkbox" name="channels" value="Phone / call centre" /><span>Phone / call centre</span></label>
+            <label class="check-item"><input type="checkbox" name="channels" value="Email" /><span>Email</span></label>
+            <label class="check-item"><input type="checkbox" name="channels" value="SMS / messaging" /><span>SMS / messaging</span></label>
+            <label class="check-item"><input type="checkbox" name="channels" value="Third-party integrations" /><span>Third-party integrations</span></label>
+            <label class="check-item"><input type="checkbox" name="channels" value="Physical / print" /><span>Physical / print</span></label>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="service-delivery">Who delivers the service? <span class="optional">(optional)</span></label>
+          <div class="hint">Internal teams, outsourced providers, partners, automated systems — or a mix.</div>
+          <textarea id="service-delivery" name="service-delivery" placeholder="e.g. Our internal operations team handles intake. Verification is outsourced to a third-party provider. Notifications are automated via our CRM…"></textarea>
+        </div>
+      </div>
+
+      <!-- 3. Users and Actors -->
+      <div class="section">
+        <div class="section-header">
+          <div class="section-number">3</div>
+          <div>
+            <div class="section-title">Users and Actors</div>
+            <div class="section-desc">Who is involved in this service — and what do they need?</div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="primary-users">Primary users <span class="required">*</span></label>
+          <div class="hint">Who uses this service and what are they trying to achieve?</div>
+          <textarea id="primary-users" name="primary-users" placeholder="e.g. Adult patients aged 35–65 who need to register with a specialist clinic. They want a fast, low-effort process and are often anxious or unwell when they engage with it…" required></textarea>
+        </div>
+
+        <div class="field">
+          <label for="secondary-actors">Secondary actors <span class="optional">(optional)</span></label>
+          <div class="hint">Staff, partners, carers, or systems involved in delivering or enabling the service.</div>
+          <textarea id="secondary-actors" name="secondary-actors" placeholder="e.g. Reception staff who process incoming forms. The GP referral system that triggers onboarding. Insurance verification providers…"></textarea>
+        </div>
+
+        <div class="field">
+          <label for="pain-points">Known user pain points <span class="optional">(optional)</span></label>
+          <div class="hint">What frustrates or blocks users today? Share complaints, support tickets, or observations if you have them.</div>
+          <textarea id="pain-points" name="pain-points" placeholder="e.g. Patients frequently abandon the paper form. 40% of calls to the clinic are status enquiries because people don't know if their registration was received…"></textarea>
+        </div>
+      </div>
+
+      <!-- 4. Business Goals -->
+      <div class="section">
+        <div class="section-header">
+          <div class="section-number">4</div>
+          <div>
+            <div class="section-title">Business Goals</div>
+            <div class="section-desc">What does your organisation need to get out of this?</div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="why-now">Why now? <span class="required">*</span></label>
+          <div class="hint">What is triggering this work — a growth target, a compliance deadline, customer complaints, a new market opportunity?</div>
+          <textarea id="why-now" name="why-now" placeholder="e.g. We've grown 3x in the past year and the manual onboarding process can no longer scale. We're also preparing for a CQC inspection in Q3…" required></textarea>
+        </div>
+
+        <div class="field">
+          <label for="desired-outcome">Desired outcome <span class="required">*</span></label>
+          <div class="hint">What does success look like for the business in 6–12 months?</div>
+          <textarea id="desired-outcome" name="desired-outcome" placeholder="e.g. Reduce onboarding time from 14 days to 3 days. Cut inbound status calls by 60%. Enable the team to handle 2x the volume without adding headcount…" required></textarea>
+        </div>
+
+        <div class="field">
+          <label for="okrs">Existing OKRs or KPIs <span class="optional">(optional)</span></label>
+          <div class="hint">If your organisation has already defined success metrics for this, list them here.</div>
+          <textarea id="okrs" name="okrs" placeholder="e.g. Objective: Reduce time-to-care. KR1: Onboarding completion rate ≥ 85%. KR2: Average onboarding time ≤ 3 days…"></textarea>
+        </div>
+      </div>
+
+      <!-- 5. Scope -->
+      <div class="section">
+        <div class="section-header">
+          <div class="section-number">5</div>
+          <div>
+            <div class="section-title">Scope</div>
+            <div class="section-desc">Define the boundaries of this engagement clearly.</div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="in-scope">In scope <span class="required">*</span></label>
+          <div class="hint">What parts of the service does this engagement cover?</div>
+          <textarea id="in-scope" name="in-scope" placeholder="e.g. The full patient onboarding journey — from GP referral to first appointment confirmed. Includes the digital form, identity verification, and appointment booking…" required></textarea>
+        </div>
+
+        <div class="field">
+          <label for="out-of-scope">Out of scope <span class="optional">(optional)</span></label>
+          <div class="hint">Explicit exclusions prevent scope creep later. Be specific.</div>
+          <textarea id="out-of-scope" name="out-of-scope" placeholder="e.g. Post-appointment follow-up. The clinical records system. Billing and insurance claims…"></textarea>
+        </div>
+      </div>
+
+      <!-- 6. Constraints -->
+      <div class="section">
+        <div class="section-header">
+          <div class="section-number">6</div>
+          <div>
+            <div class="section-title">Constraints</div>
+            <div class="section-desc">What limits or requirements must we design within?</div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="regulatory">Regulatory or compliance requirements <span class="optional">(optional)</span></label>
+          <div class="hint">GDPR, industry-specific regulations, accessibility standards, data residency, etc.</div>
+          <textarea id="regulatory" name="regulatory" placeholder="e.g. Must comply with GDPR. Health data must stay within UK borders. WCAG 2.1 AA accessibility required for all digital touchpoints…"></textarea>
+        </div>
+
+        <div class="field">
+          <label for="technical">Technical constraints <span class="optional">(optional)</span></label>
+          <div class="hint">Existing systems, platforms, or integrations that must be respected or worked around.</div>
+          <textarea id="technical" name="technical" placeholder="e.g. Must integrate with our existing Salesforce CRM. Cannot replace the NHS Spine connection. Built on our current AWS infrastructure…"></textarea>
+        </div>
+
+        <div class="field">
+          <label for="org-constraints">Organisational constraints <span class="optional">(optional)</span></label>
+          <div class="hint">Budget range, timeline, team capacity, political sensitivities, or anything else that shapes what's possible.</div>
+          <textarea id="org-constraints" name="org-constraints" placeholder="e.g. Budget is approximately £150k. Must launch before Q3 inspection. The operations team is resistant to change — any new process needs clear training…"></textarea>
+        </div>
+      </div>
+
+      <!-- 7. Risks and Tensions -->
+      <div class="section">
+        <div class="section-header">
+          <div class="section-number">7</div>
+          <div>
+            <div class="section-title">Risks and Tensions</div>
+            <div class="section-desc">What are you worried about? Surface it early.</div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="risks">Known risks or tensions <span class="optional">(optional)</span></label>
+          <div class="hint">Conflicts between teams, assumptions you're not sure about, political sensitivities, or red flags. Honesty here makes the output more useful.</div>
+          <textarea id="risks" name="risks" placeholder="e.g. The operations lead wants to keep the phone channel, but leadership wants to go fully digital. We're not sure if our elderly patient cohort can use a digital form unaided…"></textarea>
+        </div>
+      </div>
+
+      <!-- 8. What You Want -->
+      <div class="section">
+        <div class="section-header">
+          <div class="section-number">8</div>
+          <div>
+            <div class="section-title">What You Need From Us</div>
+            <div class="section-desc">Help us deliver the right output for you.</div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="engagement-type">Engagement type <span class="required">*</span></label>
+          <div class="hint">This determines which agent pipelines run. If unsure, choose the broadest option that applies — agents can be skipped later.</div>
+          <select id="engagement-type" name="engagement-type" required>
+            <option value="">Select one…</option>
+            <option value="full-pipeline">Full pipeline — PM strategy → service design → product design</option>
+            <option value="pm-service-design">PM strategy + service design — stops at design-ready handoff</option>
+            <option value="service-design-only">Service design only — context, journey maps, blueprint, handoff spec</option>
+            <option value="ui-review-service-context">UI review with service context — service context + touchpoint design</option>
+            <option value="touchpoint-design-only">Touchpoint design only — Designpowers pipeline from an existing brief</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Deliverables expected <span class="optional">(select all that apply)</span></label>
+          <div class="hint">Your engagement type determines what runs — tick anything you specifically need to confirm or prioritise.</div>
+          <div class="check-grid">
+            <label class="check-item"><input type="checkbox" name="deliverables" value="Market & competitive research" /><span>Market &amp; competitive research</span></label>
+            <label class="check-item"><input type="checkbox" name="deliverables" value="User research & JTBD analysis" /><span>User research &amp; JTBD analysis</span></label>
+            <label class="check-item"><input type="checkbox" name="deliverables" value="Business case & ROI model" /><span>Business case &amp; ROI model</span></label>
+            <label class="check-item"><input type="checkbox" name="deliverables" value="Product strategy & North Star metric" /><span>Product strategy &amp; North Star metric</span></label>
+            <label class="check-item"><input type="checkbox" name="deliverables" value="Risk assessment & assumptions log" /><span>Risk assessment &amp; assumptions log</span></label>
+            <label class="check-item"><input type="checkbox" name="deliverables" value="Product requirements & PRD" /><span>Product requirements &amp; PRD</span></label>
+            <label class="check-item"><input type="checkbox" name="deliverables" value="Service research report" /><span>Service research report</span></label>
+            <label class="check-item"><input type="checkbox" name="deliverables" value="User journey maps (AS-IS & TO-BE)" /><span>User journey maps (AS-IS &amp; TO-BE)</span></label>
+            <label class="check-item"><input type="checkbox" name="deliverables" value="Service blueprint" /><span>Service blueprint</span></label>
+            <label class="check-item"><input type="checkbox" name="deliverables" value="Policy & process review" /><span>Policy &amp; process review</span></label>
+            <label class="check-item"><input type="checkbox" name="deliverables" value="Touchpoint design specifications" /><span>Touchpoint design specifications</span></label>
+            <label class="check-item"><input type="checkbox" name="deliverables" value="Metrics & measurement plan" /><span>Metrics &amp; measurement plan</span></label>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="anything-else">Anything else we should know? <span class="optional">(optional)</span></label>
+          <textarea id="anything-else" name="anything-else" placeholder="Previous research, stakeholder dynamics, prior attempts at solving this, external reports — anything that gives us a head start…"></textarea>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="field">
+          <label for="contact-name">Your name <span class="required">*</span></label>
+          <input type="text" id="contact-name" name="contact-name" placeholder="Full name" required />
+        </div>
+
+        <div class="field">
+          <label for="contact-email">Your email <span class="required">*</span></label>
+          <input type="email" id="contact-email" name="contact-email" placeholder="you@organisation.com" required />
+        </div>
+      </div>
+
+      <div class="submit-section">
+        <p class="submit-hint">Your answers will be compiled into a structured brief ready to use.</p>
+        <button type="submit">Generate brief</button>
+      </div>
+
+    </form>
+
+    <!-- Success + output -->
+    <div id="success">
+      <h2>Brief generated</h2>
+      <p>Your brief is ready below. Copy it and share it with your team or paste it directly into the agent pipeline.</p>
+    </div>
+
+    <div id="output-section">
+      <h3>Your brief</h3>
+      <pre id="output-box"></pre>
+      <button class="copy-btn" id="copy-btn">Copy to clipboard</button>
+    </div>
+
+  </div>
+
+  <script>
+    const form = document.getElementById('brief-form');
+    const successEl = document.getElementById('success');
+    const outputSection = document.getElementById('output-section');
+    const outputBox = document.getElementById('output-box');
+    const copyBtn = document.getElementById('copy-btn');
+
+    function getChecked(name) {
+      return Array.from(document.querySelectorAll(`input[name="${name}"]:checked`))
+        .map(el => el.value);
+    }
+
+    function val(id) {
+      const el = document.getElementById(id);
+      return el ? el.value.trim() : '';
+    }
+
+    function sel(id) {
+      const el = document.getElementById(id);
+      return el ? el.options[el.selectedIndex].text : '';
+    }
+
+    function line(label, value, fallback) {
+      const v = value || fallback || 'Not provided';
+      return `${label}\n${v}\n`;
+    }
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      // Basic validation
+      const required = form.querySelectorAll('[required]');
+      let valid = true;
+      required.forEach(el => {
+        el.style.borderColor = '';
+        if (!el.value.trim()) {
+          el.style.borderColor = '#c0392b';
+          valid = false;
+        }
+      });
+
+      if (!valid) {
+        const first = form.querySelector('[required][style*="c0392b"]');
+        if (first) first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+      }
+
+      const channels = getChecked('channels');
+      const deliverables = getChecked('deliverables');
+
+      const engagementPipelines = {
+        'full-pipeline': 'market-researcher → user-researcher → business-analyst → strategy-architect → opportunity-mapper → risk-assessor → experiment-designer → requirements-writer → service-researcher → journey-architect → service-blueprinter → policy-reviewer → design-scout → design-strategist → inspiration-scout → design-lead + content-writer + motion-designer → design-builder → accessibility-reviewer + design-critic + heuristic-evaluator',
+        'pm-service-design': 'market-researcher → user-researcher → business-analyst → strategy-architect → opportunity-mapper → risk-assessor → experiment-designer → requirements-writer → service-researcher → journey-architect → service-blueprinter → policy-reviewer',
+        'service-design-only': 'service-researcher → journey-architect → service-blueprinter → policy-reviewer → requirements-writer',
+        'ui-review-service-context': 'service-researcher (context only) → design-scout → design-strategist → inspiration-scout → design-lead + content-writer + motion-designer → design-builder → accessibility-reviewer + design-critic + heuristic-evaluator',
+        'touchpoint-design-only': 'design-scout → design-strategist → inspiration-scout → design-lead + content-writer + motion-designer → design-builder → accessibility-reviewer + design-critic + heuristic-evaluator'
+      };
+      const engagementVal = document.getElementById('engagement-type').value;
+      const engagementLabel = sel('engagement-type');
+      const pipeline = engagementPipelines[engagementVal] || 'Not specified';
+
+      const brief = `# CLIENT BRIEF
+Generated: ${new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
+Submitted by: ${val('contact-name')} <${val('contact-email')}>
+Project short name: ${val('project-short-name')}
+Output folder: outputs/${val('project-short-name')}/
+
+${'─'.repeat(60)}
+
+ENGAGEMENT TYPE: ${engagementLabel}
+PIPELINE: ${pipeline}
+
+${'─'.repeat(60)}
+
+## 1. ORGANISATION
+
+Name: ${val('org-name')}
+Industry: ${sel('org-industry')}
+Size: ${sel('org-size')}
+Background: ${val('org-context') || 'Not provided'}
+
+${'─'.repeat(60)}
+
+## 2. THE SERVICE
+
+Service name: ${val('service-name')}
+Project short name: ${val('project-short-name')}
+Starting point: ${sel('service-starting-point')}
+
+What the service does:
+${val('service-description')}
+
+Channels involved: ${channels.length ? channels.join(', ') : 'Not specified'}
+
+Who delivers it:
+${val('service-delivery') || 'Not provided'}
+
+${'─'.repeat(60)}
+
+## 3. USERS AND ACTORS
+
+Primary users:
+${val('primary-users')}
+
+Secondary actors:
+${val('secondary-actors') || 'Not provided'}
+
+Known user pain points:
+${val('pain-points') || 'Not provided'}
+
+${'─'.repeat(60)}
+
+## 4. BUSINESS GOALS
+
+Why now:
+${val('why-now')}
+
+Desired outcome:
+${val('desired-outcome')}
+
+Existing OKRs / KPIs:
+${val('okrs') || 'Not provided'}
+
+${'─'.repeat(60)}
+
+## 5. SCOPE
+
+In scope:
+${val('in-scope')}
+
+Out of scope:
+${val('out-of-scope') || 'Not specified'}
+
+${'─'.repeat(60)}
+
+## 6. CONSTRAINTS
+
+Regulatory / compliance:
+${val('regulatory') || 'Not provided'}
+
+Technical:
+${val('technical') || 'Not provided'}
+
+Organisational:
+${val('org-constraints') || 'Not provided'}
+
+${'─'.repeat(60)}
+
+## 7. RISKS AND TENSIONS
+
+${val('risks') || 'Not provided'}
+
+${'─'.repeat(60)}
+
+## 8. EXPECTED DELIVERABLES
+
+${deliverables.length ? deliverables.map(d => `- ${d}`).join('\n') : 'Not specified'}
+
+Additional context:
+${val('anything-else') || 'Not provided'}`;
+
+      outputBox.textContent = brief;
+      form.style.display = 'none';
+      successEl.style.display = 'block';
+      outputSection.style.display = 'block';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    copyBtn.addEventListener('click', function () {
+      navigator.clipboard.writeText(outputBox.textContent).then(() => {
+        copyBtn.textContent = 'Copied!';
+        setTimeout(() => { copyBtn.textContent = 'Copy to clipboard'; }, 2000);
+      });
+    });
+  </script>
+</body>
+</html>

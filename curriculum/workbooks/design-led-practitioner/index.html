@@ -1,0 +1,556 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Design-Led: Practitioner — Curriculum Overview · Frankly Human</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..900,0..100;1,9..144,300..900,0..100&family=Inter:wght@400;500;600&family=Allura&family=Patrick+Hand&display=swap" rel="stylesheet">
+<style>
+/* =====================================================================
+   DESIGN-LED: PRACTITIONER — Curriculum Overview
+   Palette: Ink · Paper · Teal · Pink · Yellow · Plum
+   ===================================================================== */
+
+:root {
+  --ink:      #100000;
+  --charcoal: #423B3B;
+  --paper:    #FBF7EE;
+  --paper-2:  #F4EFE2;
+  --sand:     #E0D2B5;
+  --teal:     #47ACA4;
+  --pink:     #FF3990;
+  --yellow:   #FFBD59;
+  --plum:     #7A1F4A;
+  --muted:    #5E584F;
+  --teal-text: #1F6E67;
+  --pink-text: #C40060;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: 'Inter', sans-serif;
+  font-size: 16px; line-height: 1.55;
+  background: var(--paper); color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* TOPBAR */
+.topbar {
+  position: sticky; top: 0;
+  background: var(--paper);
+  border-bottom: 1px solid rgba(16,0,0,0.12);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 48px; height: 56px;
+  z-index: 50;
+}
+.topbar-brand {
+  font-family: 'DM Serif Display', serif;
+  font-size: 18px; letter-spacing: -0.01em;
+  text-decoration: none; color: var(--ink);
+}
+.topbar-brand em { font-style: italic; color: var(--plum); }
+.topbar-right { display: flex; align-items: center; gap: 24px; }
+.topbar-link {
+  font-family: 'Inter'; font-size: 10px;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--muted); text-decoration: none;
+  transition: color 0.15s;
+}
+.topbar-link:hover { color: var(--ink); }
+.topbar-cta {
+  font-family: 'Inter'; font-size: 10px;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--ink); text-decoration: none;
+  border: 1px solid var(--ink); padding: 6px 16px;
+  transition: background 0.15s, color 0.15s;
+}
+.topbar-cta:hover { background: var(--ink); color: var(--paper); }
+
+.stripe-bar {
+  height: 5px;
+  background: linear-gradient(90deg,
+    var(--teal) 0 25%, var(--pink) 25% 50%,
+    var(--yellow) 50% 75%, var(--plum) 75% 100%);
+}
+
+/* HERO */
+.hero {
+  background: var(--ink); color: var(--paper);
+  padding: 88px 72px 80px;
+  position: relative; overflow: hidden;
+  min-height: 70vh;
+  display: flex; flex-direction: column; justify-content: center;
+}
+.hero-eyebrow {
+  font-family: 'Inter'; font-size: 10px;
+  letter-spacing: 0.24em; text-transform: uppercase;
+  color: rgba(251,247,238,0.5);
+  display: flex; align-items: center; gap: 14px;
+  margin-bottom: 20px;
+}
+.hero-eyebrow::before {
+  content: ''; width: 28px; height: 1px;
+  background: var(--pink); flex-shrink: 0;
+}
+.hero-sig {
+  font-family: 'Allura', cursive;
+  font-size: 32px; color: rgba(251,247,238,0.55);
+  display: block; transform: rotate(-2deg);
+  transform-origin: left; margin-bottom: 12px; line-height: 1;
+}
+.hero-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(56px, 10vw, 128px);
+  line-height: 0.9; letter-spacing: -0.02em;
+  margin: 0 0 28px;
+}
+.hero-title em { font-style: italic; color: var(--pink); }
+.hero-desc {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(17px, 2vw, 22px); line-height: 1.6;
+  font-variation-settings: "SOFT" 50, "opsz" 144;
+  color: rgba(251,247,238,0.82);
+  max-width: 680px; margin: 0 0 48px;
+}
+.hero-desc em { font-style: italic; color: var(--pink); }
+.hero-stats { display: flex; gap: 48px; flex-wrap: wrap; }
+.hero-stat { display: flex; flex-direction: column; gap: 4px; }
+.hero-stat-n {
+  font-family: 'DM Serif Display', serif;
+  font-size: 40px; line-height: 1; color: var(--paper);
+}
+.hero-stat-l {
+  font-family: 'Inter'; font-size: 9px;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: rgba(251,247,238,0.45);
+}
+.hero-blob-1 {
+  position: absolute; right: -80px; top: -60px;
+  width: 520px; height: 520px; border-radius: 50% 40% 55% 45%;
+  background: rgba(255,57,144,0.1);
+  pointer-events: none;
+}
+.hero-blob-2 {
+  position: absolute; right: 120px; bottom: -100px;
+  width: 360px; height: 360px; border-radius: 40% 55% 45% 50%;
+  background: rgba(71,172,164,0.08);
+  pointer-events: none;
+}
+.hero-content { position: relative; z-index: 1; max-width: 1200px; }
+
+/* CLAIM BAND */
+.claim-band {
+  background: var(--plum); color: var(--paper);
+  padding: 52px 72px;
+}
+.claim-band-inner {
+  max-width: 1200px; margin: 0 auto;
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 64px; align-items: start;
+}
+.claim-heading {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(32px, 4vw, 52px);
+  line-height: 1; letter-spacing: -0.01em;
+  margin: 0 0 20px;
+}
+.claim-heading em { font-style: italic; color: var(--yellow); }
+.claim-body {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(15px, 1.6vw, 18px); line-height: 1.65;
+  font-variation-settings: "SOFT" 50, "opsz" 144;
+  color: rgba(251,247,238,0.85);
+  margin: 0 0 16px;
+}
+.claim-rule {
+  font-family: 'DM Serif Display', serif; font-style: italic;
+  font-size: clamp(20px, 2.5vw, 30px);
+  line-height: 1.2; color: var(--paper);
+  border-left: 3px solid var(--yellow);
+  padding-left: 20px; margin: 0;
+}
+.who-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0; }
+.who-list li {
+  display: flex; gap: 14px; align-items: baseline;
+  padding: 11px 0; border-bottom: 1px solid rgba(255,255,255,0.1);
+  font-family: 'Fraunces', serif;
+  font-size: clamp(14px, 1.5vw, 17px); line-height: 1.45;
+  font-variation-settings: "SOFT" 50, "opsz" 144;
+  color: rgba(251,247,238,0.82);
+}
+.who-list li::before {
+  content: '—'; font-family: 'Inter'; font-size: 11px;
+  color: var(--yellow); flex-shrink: 0;
+}
+
+/* SECTION WRAPPER */
+.section { padding: 72px 72px; }
+.section-inner { max-width: 1200px; margin: 0 auto; }
+.section-paper  { background: var(--paper); }
+.section-paper2 { background: var(--paper-2); }
+.section-sand   { background: var(--sand); }
+.section-label {
+  font-family: 'Inter'; font-size: 10px;
+  letter-spacing: 0.24em; text-transform: uppercase; color: var(--muted);
+  display: flex; align-items: center; gap: 16px;
+  margin-bottom: 40px;
+}
+.section-label::after { content: ''; flex: 1; height: 1px; background: rgba(16,0,0,0.12); }
+.section-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(36px, 5vw, 64px); line-height: 0.95;
+  letter-spacing: -0.015em; margin: 0 0 20px;
+}
+.section-title em { font-style: italic; color: var(--plum); }
+.section-body {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(15px, 1.6vw, 18px); line-height: 1.65;
+  font-variation-settings: "SOFT" 50, "opsz" 144;
+  color: var(--charcoal); max-width: 680px;
+  margin: 0 0 48px;
+}
+
+/* ENTRY POINT CALLOUT */
+.entry-callout {
+  border: 1px solid var(--ink); background: var(--paper-2);
+  padding: 28px 32px; max-width: 720px; margin-top: 8px;
+  display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap;
+}
+.entry-callout-text { font-family: 'Fraunces', serif; font-size: 15px; color: var(--charcoal); font-variation-settings: "SOFT" 50, "opsz" 144; }
+.entry-callout-text strong { color: var(--pink-text); }
+.entry-callout-cta {
+  font-family: 'Inter'; font-size: 10px; font-weight: 600;
+  letter-spacing: 0.14em; text-transform: uppercase; white-space: nowrap;
+  color: var(--pink-text); text-decoration: none;
+}
+
+/* MODULE GRID */
+.curriculum-header {
+  display: flex; align-items: baseline; justify-content: space-between;
+  margin-bottom: 40px; flex-wrap: wrap; gap: 16px;
+}
+.curriculum-count {
+  font-family: 'Inter'; font-size: 10px;
+  letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted);
+}
+.module-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 1px; background: rgba(16,0,0,0.1);
+  border: 1px solid rgba(16,0,0,0.1);
+}
+.module-card {
+  background: var(--paper-2);
+  padding: 28px 26px 24px;
+  text-decoration: none; color: var(--ink);
+  display: flex; flex-direction: column;
+  transition: background 0.15s;
+  position: relative;
+}
+.module-card:hover { background: var(--paper); }
+.module-card.inactive { background: var(--paper-2); opacity: 0.55; cursor: default; }
+.module-card.inactive:hover { background: var(--paper-2); }
+.card-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 16px; }
+.card-num {
+  font-family: 'DM Serif Display', serif; font-style: italic;
+  font-size: 48px; line-height: 0.85; letter-spacing: -0.03em;
+  color: rgba(16,0,0,0.1);
+}
+.card-tag {
+  font-family: 'Inter'; font-size: 8px;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  padding: 3px 8px; border: 1px solid var(--pink-text); color: var(--pink-text);
+}
+.card-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(20px, 2vw, 24px); line-height: 1;
+  letter-spacing: -0.01em; margin: 0 0 8px;
+}
+.card-title em { font-style: italic; color: var(--plum); }
+.card-tagline {
+  font-family: 'Fraunces', serif; font-style: italic;
+  font-size: 13px; line-height: 1.5;
+  font-variation-settings: "SOFT" 50, "opsz" 144;
+  color: var(--muted); margin: 0 0 20px; flex: 1;
+}
+.card-footer {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: auto; padding-top: 14px;
+  border-top: 1px solid rgba(16,0,0,0.07);
+}
+.card-duration {
+  font-family: 'Inter'; font-size: 9px;
+  letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted);
+}
+.card-cta {
+  font-family: 'Inter'; font-size: 9px;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--pink-text); display: flex; align-items: center; gap: 6px;
+}
+.module-card.inactive .card-cta { color: var(--muted); }
+.card-cta-coming {
+  font-family: 'Inter'; font-size: 9px;
+  letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted);
+}
+
+/* HOW IT WORKS */
+.how-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; margin-top: 8px; }
+.how-item-num { font-family: 'DM Serif Display', serif; font-style: italic; font-size: 52px; line-height: 0.85; color: rgba(16,0,0,0.08); margin-bottom: 12px; }
+.how-item-title { font-family: 'DM Serif Display', serif; font-size: 22px; letter-spacing: -0.01em; margin: 0 0 8px; }
+.how-item-desc { font-family: 'Fraunces', serif; font-size: 14px; line-height: 1.6; font-variation-settings: "SOFT" 50, "opsz" 144; color: var(--charcoal); margin: 0; }
+
+/* FOOTER */
+footer {
+  background: var(--ink); color: rgba(251,247,238,0.55);
+  padding: 36px 72px;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 16px;
+}
+.footer-brand { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--paper); }
+.footer-brand em { font-style: italic; color: var(--pink); }
+.footer-meta {
+  font-family: 'Inter'; font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase;
+  text-align: right; line-height: 1.9;
+}
+
+/* RESPONSIVE */
+@media (max-width: 960px) {
+  .hero { padding: 64px 36px 56px; }
+  .section { padding: 56px 36px; }
+  .claim-band { padding: 48px 36px; }
+  .claim-band-inner { grid-template-columns: 1fr; gap: 40px; }
+  .module-grid { grid-template-columns: repeat(2, 1fr); }
+  .how-grid { grid-template-columns: 1fr 1fr; }
+  footer { padding: 28px 36px; }
+  .topbar { padding: 0 28px; }
+}
+@media (max-width: 600px) {
+  .hero { padding: 52px 24px 44px; }
+  .section { padding: 48px 24px; }
+  .claim-band { padding: 40px 24px; }
+  .module-grid { grid-template-columns: 1fr; }
+  .how-grid { grid-template-columns: 1fr; }
+  .hero-stats { gap: 28px; }
+  .topbar { padding: 0 16px; }
+  .topbar-right .topbar-link { display: none; }
+  footer { padding: 24px; flex-direction: column; }
+  .footer-meta { text-align: left; }
+}
+</style>
+</head>
+<body>
+
+<nav class="topbar">
+  <a href="../../../index.html" class="topbar-brand">design‑led: <em>practitioner</em></a>
+  <div class="topbar-right">
+    <a href="../../../index.html" class="topbar-link">← Frankly Human Studio</a>
+    <a href="01-foundations.html" class="topbar-cta">Start Module 01 →</a>
+  </div>
+</nav>
+
+<div class="stripe-bar"></div>
+
+<section class="hero">
+  <div class="hero-blob-1"></div>
+  <div class="hero-blob-2"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">Frankly Human · Jacinta McMahon</div>
+    <span class="hero-sig">for mid-weight designers tired of being executors</span>
+    <h1 class="hero-title">Design‑<em>Led</em></h1>
+    <p class="hero-desc">
+      Design has always been about judgment. AI just made that harder to ignore.<br>
+      Across 13 half-day modules, you learn the disciplines that sit underneath<br>
+      good design decisions — research, analysis, strategy, product thinking,<br>
+      service design, AI-era interaction patterns, data literacy, and the craft<br>
+      of <em>making sense.</em>
+    </p>
+    <div class="hero-stats">
+      <div class="hero-stat"><span class="hero-stat-n">13</span><span class="hero-stat-l">Modules</span></div>
+      <div class="hero-stat"><span class="hero-stat-n">½</span><span class="hero-stat-l">Day per module</span></div>
+      <div class="hero-stat"><span class="hero-stat-n">1</span><span class="hero-stat-l">Companion track: Leader</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="claim-band">
+  <div class="claim-band-inner">
+    <div>
+      <h2 class="claim-heading">What Design‑Led <em>is</em></h2>
+      <p class="claim-body">
+        Design-Led is a program about judgment — the kind that shapes products, services, teams, and organisations. It's not a design course. It's a thinking course.
+      </p>
+      <p class="claim-body">
+        It's about how to see clearly, decide wisely, and act intentionally in complex systems full of humans, constraints, politics, and possibility.
+      </p>
+      <blockquote class="claim-rule">
+        "AI compressed the execution layer of design. It didn't compress judgment — and judgment is where the seat at the table lives now."
+      </blockquote>
+    </div>
+    <div>
+      <h2 class="claim-heading" style="font-size:clamp(24px,3vw,36px);margin-bottom:16px;">Who it's <em>for</em></h2>
+      <ul class="who-list">
+        <li>Mid-weight designers tired of being treated as executors, not strategic partners</li>
+        <li>Designers who want to build real product-management capability, not just the language of it</li>
+        <li>Designers who keep getting the credit for craft and skipped for strategy</li>
+        <li>Teams who want a shared discipline for research, analysis, and decision-making</li>
+        <li>Anyone who wants to be impossible for a product manager to out-judge</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<section class="section section-paper">
+  <div class="section-inner">
+    <div class="section-label">The entry point</div>
+    <h2 class="section-title">Start with the <em>diagnostic</em></h2>
+    <p class="section-body">
+      Before the full curriculum, the Design Thinking Diagnostic names the specific pattern keeping you in an executor role — a scored read on your last real project across the three lenses, your weakest design mindset, and a direct line to the module that addresses it.
+    </p>
+    <div class="entry-callout">
+      <p class="entry-callout-text">A 20–30 minute AI-coached conversation. Produces a <strong>Design Influence Profile</strong> — a diagnosis, not a fix.</p>
+      <a class="entry-callout-cta" href="#modules">See where it leads ↓</a>
+    </div>
+  </div>
+</section>
+
+<section class="section section-paper2" id="modules">
+  <div class="section-inner">
+    <div class="curriculum-header">
+      <div>
+        <div class="section-label" style="margin-bottom:12px;">The curriculum</div>
+        <h2 class="section-title" style="margin-bottom:0;">13 <em>modules</em></h2>
+      </div>
+      <div class="curriculum-count">13 half-day modules · one discipline each</div>
+    </div>
+
+    <div class="module-grid">
+      <a class="module-card" href="01-foundations.html">
+        <div class="card-top"><div class="card-num">01</div><span class="card-tag">Foundations</span></div>
+        <div class="card-title">Foundations</div>
+        <p class="card-tagline">Design has always been about judgment. AI just made that harder to ignore.</p>
+        <div class="card-footer"><span class="card-duration">Half day</span><span class="card-cta">Open module →</span></div>
+      </a>
+
+      <a class="module-card" href="02-research.html">
+        <div class="card-top"><div class="card-num">02</div><span class="card-tag">Research</span></div>
+        <div class="card-title">Research</div>
+        <p class="card-tagline">The most expensive thing you can build is the wrong thing.</p>
+        <div class="card-footer"><span class="card-duration">Half day</span><span class="card-cta">Open module →</span></div>
+      </a>
+
+      <a class="module-card" href="03-analysis.html">
+        <div class="card-top"><div class="card-num">03</div><span class="card-tag">Analysis</span></div>
+        <div class="card-title">Analysis</div>
+        <p class="card-tagline">Data doesn't speak for itself. Someone has to make sense of it.</p>
+        <div class="card-footer"><span class="card-duration">Half day</span><span class="card-cta">Open module →</span></div>
+      </a>
+
+      <a class="module-card" href="04-strategy.html">
+        <div class="card-top"><div class="card-num">04</div><span class="card-tag">Strategy</span></div>
+        <div class="card-title">Strategy</div>
+        <p class="card-tagline">Good design decisions are also good business decisions.</p>
+        <div class="card-footer"><span class="card-duration">Half day</span><span class="card-cta">Open module →</span></div>
+      </a>
+
+      <a class="module-card" href="05-product.html">
+        <div class="card-top"><div class="card-num">05</div><span class="card-tag">Product</span></div>
+        <div class="card-title">Product</div>
+        <p class="card-tagline">Empowered teams own outcomes. Feature teams own roadmaps.</p>
+        <div class="card-footer"><span class="card-duration">Half day</span><span class="card-cta">Open module →</span></div>
+      </a>
+
+      <a class="module-card" href="06-devex-and-product-intelligence.html">
+        <div class="card-top"><div class="card-num">06</div><span class="card-tag">DevEx</span></div>
+        <div class="card-title">DevEx &amp; Product <em>Intelligence</em></div>
+        <p class="card-tagline">Internal tools are real products. Treat them like it.</p>
+        <div class="card-footer"><span class="card-duration">Half day</span><span class="card-cta">Open module →</span></div>
+      </a>
+
+      <a class="module-card" href="07-service-design.html">
+        <div class="card-top"><div class="card-num">07</div><span class="card-tag">Service Design</span></div>
+        <div class="card-title">Service <em>Design</em></div>
+        <p class="card-tagline">Most experiences fail in the back stage, not the front.</p>
+        <div class="card-footer"><span class="card-duration">Half day</span><span class="card-cta">Open module →</span></div>
+      </a>
+
+      <a class="module-card" href="08-information-architecture.html">
+        <div class="card-top"><div class="card-num">08</div><span class="card-tag">IA</span></div>
+        <div class="card-title">Information <em>Architecture</em></div>
+        <p class="card-tagline">Structure is invisible until it breaks.</p>
+        <div class="card-footer"><span class="card-duration">Half day</span><span class="card-cta">Open module →</span></div>
+      </a>
+
+      <a class="module-card" href="09-conversational-ui.html">
+        <div class="card-top"><div class="card-num">09</div><span class="card-tag">Conversational UI</span></div>
+        <div class="card-title">Conversational <em>UI</em></div>
+        <p class="card-tagline">When there's no button to press, language is the design.</p>
+        <div class="card-footer"><span class="card-duration">Half day</span><span class="card-cta">Open module →</span></div>
+      </a>
+
+      <a class="module-card" href="10-ai-era-design.html">
+        <div class="card-top"><div class="card-num">10</div><span class="card-tag">AI-Era Design</span></div>
+        <div class="card-title">AI‑Era <em>Design</em></div>
+        <p class="card-tagline">AI changes what we build. It doesn't change why.</p>
+        <div class="card-footer"><span class="card-duration">Half day</span><span class="card-cta">Open module →</span></div>
+      </a>
+
+      <a class="module-card" href="11-data-and-decisions.html">
+        <div class="card-top"><div class="card-num">11</div><span class="card-tag">Data</span></div>
+        <div class="card-title">Data &amp; <em>Decisions</em></div>
+        <p class="card-tagline">Leaders don't need more data. They need to trust the data they have.</p>
+        <div class="card-footer"><span class="card-duration">Half day</span><span class="card-cta">Open module →</span></div>
+      </a>
+
+      <a class="module-card" href="12-judgment-in-practice.html">
+        <div class="card-top"><div class="card-num">12</div><span class="card-tag">Judgment</span></div>
+        <div class="card-title">Judgment in <em>Practice</em></div>
+        <p class="card-tagline">Tools matter. Judgment decides.</p>
+        <div class="card-footer"><span class="card-duration">Half day</span><span class="card-cta">Open module →</span></div>
+      </a>
+
+      <a class="module-card" href="13-capstone-integration.html">
+        <div class="card-top"><div class="card-num">13</div><span class="card-tag">Capstone</span></div>
+        <div class="card-title">Capstone / <em>Integration</em></div>
+        <p class="card-tagline">Design is a discipline. Integration is the skill.</p>
+        <div class="card-footer"><span class="card-duration">Half day</span><span class="card-cta">Open module →</span></div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="section section-sand">
+  <div class="section-inner">
+    <div class="section-label">How it works</div>
+    <h2 class="section-title" style="margin-bottom:48px;">Three ways to <em>use</em> this</h2>
+    <div class="how-grid">
+      <div class="how-item">
+        <div class="how-item-num">01</div>
+        <h3 class="how-item-title">Present it</h3>
+        <p class="how-item-desc">Each module is a scroll-snap presentation deck. Open in <strong>Present</strong> mode to facilitate a half-day session. Facilitator notes are pinned at the bottom of each slide.</p>
+      </div>
+      <div class="how-item">
+        <div class="how-item-num">02</div>
+        <h3 class="how-item-title">Work through it</h3>
+        <p class="how-item-desc">Switch to <strong>Workbook</strong> mode and the page transforms — teaching content collapses, activities open, your responses save automatically. Print a clean A4 workbook to take home.</p>
+      </div>
+      <div class="how-item">
+        <div class="how-item-num">03</div>
+        <h3 class="how-item-title">Go deeper with Claude</h3>
+        <p class="how-item-desc">Each module has a draft Claude coaching spec — exercises, deepening prompts, and distress protocols. Not wired to a live tool yet, but ready for when it is.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div><div class="footer-brand"><em>design‑led:</em> practitioner</div></div>
+  <div class="footer-meta">
+    Design-Led: Practitioner · Jacinta McMahon<br>
+    franklyhuman.com · @franklyhumanux
+  </div>
+</footer>
+
+</body>
+</html>
